@@ -14,15 +14,15 @@ const font = Figtree({ subsets: ['latin'] })
 export const revalidate = 0;
 
 export const metadata: Metadata = {
-  title: 'Spotify - Web Player: Music for everyone',
-  description: 'Listen to music!',
+  title: 'Fasberry Music | Web Player',
+  description: 'Слушай музыку, находись на чилле, а также позволяй это делать другим!',
 }
 
 export default async function RootLayout({ children, }: { children: React.ReactNode }) {
   const userSongs = await getSongsByUserId();
-  
+
   return (
-    <html lang="en">
+    <html lang="ru">
       <body className={font.className}>
         <ToasterProvider/>
         <SupabaseProvider>

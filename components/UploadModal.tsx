@@ -63,7 +63,7 @@ const UploadModal = () => {
 
       if (songError) {
         setIsLoading(false);
-        return toast.error("Failed song upload.");
+        return toast.error("Что-то пошло не так! Повторите попытку позже.");
       }
 
       const {
@@ -79,7 +79,7 @@ const UploadModal = () => {
 
       if (imageError) {
         setIsLoading(false);
-        return toast.error("Failed image upload.");
+        return toast.error("Не удалось загрузить изображение!");
       }
 
       const {
@@ -150,7 +150,7 @@ const UploadModal = () => {
             {...register("image", { required: true })}
           />
         </div>
-        <Button disabled={isLoading} type="submit">Опубликовать.</Button>
+        <Button className="text-xl font-semibold" disabled={isLoading} type="submit">Опубликовать.</Button>
       </form>
     </Modal>
   );
