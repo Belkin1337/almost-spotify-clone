@@ -50,36 +50,34 @@ const UploadModal = () => {
 
       const uniqueID = uniqid();
 
-      // Upload song
       const {
         data: songData,
         error: songError,
       } = await supabaseClient
-      .storage 
-      .from("songs")
-      .upload(`song-${values.title}-${uniqueID}`, songFile, {
-        cacheControl: "3600",
-        upsert: false
-      });
+        .storage
+        .from("songs")
+        .upload(`song-${values.title}-${uniqueID}`, songFile, {
+          cacheControl: "3600",
+          upsert: false
+        });
 
-      if (songError){
+      if (songError) {
         setIsLoading(false);
         return toast.error("Failed song upload.");
       }
 
-      // Upload image
       const {
         data: imageData,
         error: imageError,
       } = await supabaseClient
-      .storage 
-      .from("images")
-      .upload(`image-${values.title}-${uniqueID}`, imageFile, {
-        cacheControl: "3600",
-        upsert: false
-      });
+        .storage
+        .from("images")
+        .upload(`image-${values.title}-${uniqueID}`, imageFile, {
+          cacheControl: "3600",
+          upsert: false
+        });
 
-      if (imageError){
+      if (imageError) {
         setIsLoading(false);
         return toast.error("Failed image upload.");
       }
@@ -87,29 +85,26 @@ const UploadModal = () => {
       const {
         error: supabaseError
       } = await supabaseClient
-      .from("songs")
-      .insert({
-        user_id: user.id,
-        title: values.title,
-        author: values.author,
-        image_path: imageData.path,
-        song_path: songData.path
-      });
+        .from("songs")
+        .insert({
+          user_id: user.id,
+          title: values.title,
+          author: values.author,
+          image_path: imageData.path,
+          song_path: songData.path
+        });
 
       if (supabaseError) {
         setIsLoading(false);
         return toast.error(supabaseError.message)
       }
-
       router.refresh();
       setIsLoading(false);
-      toast.success("Song created");
+      toast.success("Трек опубликован. Подождите, пока он пройдет проверку.");
       reset();
       uploadModal.onClose();
-
     } catch (error) {
-      toast.error("Something went wrong!")
-
+      toast.error("Что-то пошло не так! Попробуйте позже.")
     } finally {
       setIsLoading(false);
     }
@@ -117,31 +112,26 @@ const UploadModal = () => {
 
   return (
     <Modal
-      title="Add a song"
-      description="Upload an mp3 file."
+      title="Добавление своего трека."
+      description="Все поля обязательно должны быть заполнены."
       isOpen={uploadModal.isOpen}
       onChange={onChange}
     >
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-y-4"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-4">
         <Input
           id="title"
           disabled={isLoading}
           {...register("title", { required: true })}
-          placeholder="Song title"
+          placeholder="Название трека."
         />
         <Input
           id="author"
           disabled={isLoading}
           {...register("author", { required: true })}
-          placeholder="Song author"
+          placeholder="Автор трека."
         />
         <div>
-          <div className="pb-1">
-            Select a song file
-          </div>
+          <div className="pb-1">Выбрать аудиофайл. (только mp3).</div>
           <Input
             id="song"
             type="file"
@@ -151,9 +141,7 @@ const UploadModal = () => {
           />
         </div>
         <div>
-          <div className="pb-1">
-            Select an image
-          </div>
+          <div className="pb-1">Выбрать изображение (обложка трека).</div>
           <Input
             id="image"
             type="file"
@@ -162,12 +150,7 @@ const UploadModal = () => {
             {...register("image", { required: true })}
           />
         </div>
-        <Button
-          disabled={isLoading}
-          type="submit"
-        >
-          Create
-        </Button>
+        <Button disabled={isLoading} type="submit">Опубликовать.</Button>
       </form>
     </Modal>
   );
