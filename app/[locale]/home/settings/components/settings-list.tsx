@@ -14,7 +14,7 @@ export const SettingsList = () => {
           <div className="flex items-center gap-x-2">
             <p className="text-white text-xl font-medium">{settingsLocale('theme')}</p>
             <div className="bg-neutral-700 rounded-md">
-              <p>{settingsLocale('is-not-available')}</p>
+              <p>{settingsLocale('error.is-not-available')}</p>
             </div>
           </div>
         </div>

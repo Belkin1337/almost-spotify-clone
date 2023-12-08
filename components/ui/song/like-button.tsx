@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { toast } from "react-toastify";
 import { useScopedI18n } from "@/locales/client";
-import { UserTips } from "../tooltip/user-tips";
 
 interface LikeButtonProps {
   songId: string,

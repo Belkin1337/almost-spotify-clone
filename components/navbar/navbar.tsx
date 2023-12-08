@@ -11,7 +11,7 @@ import { HiHome } from 'react-icons/hi';
 import { BiSearch } from 'react-icons/bi';
 import { RxCaretLeft, RxCaretRight } from 'react-icons/rx';
 import { FaUserAlt } from "react-icons/fa";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/components/ui/button";
 import { useScopedI18n } from "@/locales/client";
 
 export const Navbar = ({ children }: { children: React.ReactNode }) => {

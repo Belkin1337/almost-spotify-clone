@@ -9,10 +9,10 @@ interface WidgetItemProps {
 
 const WidgetItem = ({ title, content }: WidgetItemProps) => {
   return (
-    <div className="flex flex-col p-6 gap-y-2 w-full rounded-md border duration-200 border-neutral-700 bg-neutral-950 
+    <div className="flex flex-col p-4 md:p-5 lg:p-6 gap-y-2 w-full rounded-md border duration-200 border-neutral-700 bg-neutral-950 
     hover:bg-neutral-900 hover:duration-200">
-      <p className="text-WHITE text-[1.6rem]">{title}</p>
-      <p className="text-neutral-400 text-[1.4rem]">{content}</p>
+      <p className="text-WHITE text-[0.8rem] xl:text-[1.6rem]">{title}</p>
+      <p className="text-neutral-400 text-[0.8rem] xl:text-[1.4rem]">{content}</p>
     </div>
   )
 }
@@ -30,26 +30,26 @@ export default async function Main({ params: { locale } }: { params: { locale: s
   ]
 
   return (
-    <div className="flex flex-col justify-center bg-black/90 relative pb-8 gap-y-12">
+    <div className="flex flex-col justify-center bg-black/90 relative pb-8 gap-y-4 lg:gap-y-8 xl:gap-y-12">
       <div className="relative right-0 left-0 w-full bg-neutral-950 border-y-[1px] border-neutral-700 rounded-md">
         <BackgroundIntro />
         <div className="flex absolute justify-center bottom-0 right-0 left-0 items-center gap-x-4 px-4 h-[112px] bg-black/80">
-          <p className="text-[1.8rem]">
+          <p className="text-[0.8em] md:text-[1rem] lg:text-[1.4rem] xl:text-[1.8rem]">
             &ldquo;{brandLocale('content.intro.quote')}&bdquo;
           </p>
-          <p className="text-[1.6rem]">{brandLocale('content.intro.quote-author')}</p>
+          <p className="text-[0.8rem] md:text-[1rem] lg:text-[1.2rem] xl:text-[1.6rem]">{brandLocale('content.intro.quote-author')}</p>
         </div>
       </div>
-      <div className="flex flex-col px-16 items-center mt-16 gap-y-4">
-        <p className="text-WHITE text-[3rem] mb-8">{brandLocale('content.intro.main-title')}
-          <span className="text-neutral-400 text-[2.4rem]">&nbsp;{brandLocale('content.intro.main-subtitle')}</span>
+      <div className="flex flex-col px-2 md:px-6 lg:px-10 xl:px-16 items-center mt-16 gap-y-4">
+        <p className="text-WHITE text-[1.6rem] xl:text-[3rem] mb-8">{brandLocale('content.intro.main-title')}
+          <span className="text-neutral-400 text-[1.5rem] xl:text-[2.4rem]">&nbsp;{brandLocale('content.intro.main-subtitle')}</span>
         </p>
-        <div className="grid grid-cols-2 grid-rows-1 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 grid-rows-1 gap-4">
           {widgets.slice(0, 2).map((item) => (
             <WidgetItem key={item.title} title={item.title} content={item.content} />
           ))}
         </div>
-        <div className="grid grid-cols-3 grid-rows-1 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid-rows-1 gap-4">
           {widgets.slice(2).map((item) => (
             <WidgetItem key={item.title} title={item.title} content={item.content} />
           ))}

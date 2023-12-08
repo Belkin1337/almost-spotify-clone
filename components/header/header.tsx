@@ -1,9 +1,54 @@
 "use client"
 
 import { useScopedI18n } from "@/locales/client";
-import { useRouter } from "next/navigation";
-import { Suspense } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
 import { ChangeLang } from "../tools/change-lang";
+
+import { motion } from "framer-motion"
+import Link from "next/link";
+import { toast } from "react-toastify";
+
+const variants = {
+  open: {
+    x: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.3,
+      ease: "easeInOut",
+    },
+  },
+  closed: {
+    x: 200,
+    opacity: 0,
+    transition: {
+      duration: 0.3,
+      ease: "easeInOut",
+    },
+  },
+};
+
+interface IconProps {
+  isOpen: boolean;
+  color: string
+}
+
+const Icon = ({ isOpen, color }: IconProps) => {
+  const [icon, setIcon] = useState("bars");
+
+  return (
+    <motion.svg initial="bars" animate={isOpen ? "cross" : "bars"} variants={variants} className="w-[44px] h-[50px]">
+      <svg
+        fill={color}
+        stroke="none"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d={icon === "bars" ? "M12,4L15.5,10.5L12,17L8.5,10.5L12,4" : "M12,12L15,8L12,4L9,8L12,12"}/>
+      </svg>
+    </motion.svg>
+  );
+};
 
 const Github = (props: any) => (
   <svg
@@ -20,45 +65,91 @@ const Github = (props: any) => (
 );
 
 export const Header = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
   const router = useRouter();
   const headerLocale = useScopedI18n('brand.main.const-components.header')
+
+  const pathDetect = (route: string) => {
+    if (pathname === route) {
+      toast.warn("Вы уже на этой странице")
+    } else {
+      setIsOpen(false);
+      router.push(route)
+    }
+  }
 
   const listComponents = [
     {
       name: headerLocale('main'),
-      route: ""
+      route: "/"
     },
     {
       name: headerLocale('about'),
-      route: "int/about"
+      route: "/about"
     },
     {
-      name: headerLocale('listen'),
-      route: "home"
+      name: headerLocale('start'),
+      route: "/home"
     },
   ]
 
   return (
-    <div className="absolute top-0 right-0 left-0 px-16 pt-8 z-10 flex flex-row h-[84px] items-center justify-between w-full">
-      <div onClick={() => router.push('/')} className="flex flex-row items-center gap-x-2 cursor-pointer">
-        <img src="/images/logo.png" className="w-[42px] h-[42px]" />
-        <div className="center font-bold text-[1rem]">
-          <p>Smotify</p>
+    <>
+      <div className="hidden md:flex absolute top-0 right-0 left-0 px-16 pt-8 z-10 flex-row h-[84px] items-center justify-between w-full">
+        <div onClick={() => router.push('/')} className="flex flex-row items-center gap-x-2 cursor-pointer">
+          <img src="/images/logo.png" className="w-[42px] h-[42px]" />
+          <div className="center font-bold text-[1rem]">
+            <p>Smotify</p>
+          </div>
+        </div>
+        <div className="flex flex-row items-center justify-start gap-x-6">
+          {listComponents.map((item, idx) => (
+            <button
+              key={idx}
+              onClick={() => pathDetect(item.route)}
+              className="font-bold text-[1rem] text-WHITE uppercase decoration-MAIN duration-200 hover:underline-offset-8 hover:underline hover:duration-500 hover:transition"
+            >
+              {item.name}
+            </button>
+          ))}
+        </div>
+        <div className="flex items-center justify-start gap-x-4">
+          <Suspense>
+            <ChangeLang />
+          </Suspense>
+          <Link href="https://github.com/Belkin1337/smotify-service">
+            <Github className="rounded-md p-2 bg-black fill-WHITE hover:fill-black duration-500 hover:bg-white hover:shadow-linked hover:duration-700 hover:transition" />
+          </Link>
         </div>
       </div>
-      <div className="flex flex-row items-center justify-start gap-x-6">
-        {listComponents.map((item, idx) => (
-          <p key={idx} onClick={() => router.push(`/${item.route}`)} className="font-bold text-[1rem] text-WHITE uppercase decoration-MAIN duration-200 cursor-pointer 
-          hover:underline-offset-8 hover:underline hover:duration-500 hover:transition">{item.name}</p>
-        ))}
+      <div className="md:hidden absolute top-10 right-10 z-20 bg-white rounded-lg w-[44px] h-[44px]">
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <Icon isOpen={isOpen} color="black" />
+        </motion.button>
       </div>
-      <div className="flex items-center justify-start gap-x-4">
-        <Suspense>
-          <ChangeLang />
-        </Suspense>
-        <Github className="rounded-md p-2 cursor-pointer bg-black fill-WHITE hover:fill-black duration-500 
-        hover:bg-white hover:shadow-[3px_3px_2px_1px_#0DCECD] hover:duration-700 hover:transition" />
-      </div>
-    </div>
+      <motion.div
+        initial="closed"
+        animate={isOpen ? "open" : "closed"}
+        variants={variants}
+        className="md:hidden absolute z-10 top-0 right-0 bg-neutral-950/90 h-screen w-[200px] p-2"
+      >
+        <div className="flex flex-col justify-center h-full w-full gap-y-2">
+          {listComponents.map((item) => (
+            <div
+              key={item.name}
+              onClick={() => pathDetect(item.route)}
+              className="flex items-center cursor-pointer hover:bg-neutral-700 bg-neutral-800 rounded-md p-2"
+            >
+              <p className="text-[1.2rem] font-semibold uppercase">{item.name}</p>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+    </>
   );
 }

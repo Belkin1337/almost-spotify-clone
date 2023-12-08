@@ -35,7 +35,7 @@ export const LikedContent = ({ songs }: LikedContentProps) => {
       <>
         <div className="w-full h-[44px] p-6">
           <div className="flex flex-row items-center gap-y-2">
-            <p className="text-neutral-400 text-[0.9rem] font-medium pl-2">{configLocale('song-name')}</p>
+            <p className="text-neutral-400 text-[0.9rem] font-medium pl-2">{configLocale('song-attributes.song-name')}</p>
           </div>
           <hr className="border border-neutral-600 w-full h-[1px]" />
         </div>

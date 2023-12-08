@@ -128,11 +128,11 @@ export const PlayerContent = ({ song, songUrl }: PlayerContentProps) => {
       <div className="hidden md:flex w-full justify-end pr-2">
         <div className="flex items-center gap-x-2 w-[120px]">
           {volume === 0 ? (
-            <UserTips content={playerLocale('unmute')}>
+            <UserTips content={playerLocale('player.unmute')}>
               <VolumeX onClick={toggleMute} className="cursor-pointer" color="white" size={32} />
             </UserTips>
           ) : (
-            <UserTips content={playerLocale('mute')}>
+            <UserTips content={playerLocale('player.mute')}>
               <Volume1 onClick={toggleMute} className="cursor-pointer" color="white" size={32} />
             </UserTips>
           )}

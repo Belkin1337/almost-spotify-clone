@@ -18,6 +18,9 @@ const config: Config = {
         MAIN_VIOLET: "var(--MAIN-VIOLET)",
         RYZADUST: "var(--RYZADUST)",
       },
+      boxShadow: {
+        linked: '3px 3px 2px 1px #0DCECD'
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],

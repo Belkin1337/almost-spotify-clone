@@ -67,7 +67,7 @@ export const UploadModal = () => {
       if (songError) {
         setIsLoading(false);
 
-        return toast.error("Что-то пошло не так! Повторите попытку позже.");
+        return toast.error(uploadModalLocale('error.something-error'));
       }
 
       const {
@@ -84,7 +84,7 @@ export const UploadModal = () => {
       if (imageError) {
         setIsLoading(false);
 
-        return toast.error("Не удалось загрузить изображение!");
+        return toast.error(uploadModalLocale('error.song-image-error'));
       }
 
       const {
@@ -107,13 +107,13 @@ export const UploadModal = () => {
       router.refresh();
       setIsLoading(false);
 
-      toast.success("Трек опубликован. ");
+      toast.success(uploadModalLocale('publishing.success'));
 
       reset();
       uploadModal.onClose();
     } catch (error) {
 
-      toast.error("Что-то пошло не так! Попробуйте позже.")
+      toast.error(uploadModalLocale('error.something-error'))
     } finally {
 
       setIsLoading(false);
@@ -124,11 +124,11 @@ export const UploadModal = () => {
     <Modal title={uploadModalLocale('modal.upload.title')} description={uploadModalLocale('modal.upload.note-title') + '*'} isOpen={uploadModal.isOpen} onChange={onChange}>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-8">
         <div className="flex flex-col gap-y-1">
-          <label className="text-WHITE text-[1.1rem]">{uploadModalLocale('song-name')}</label>
+          <label className="text-WHITE text-[1.1rem]">{uploadModalLocale('song-attributes.song-name')}</label>
           <Input id="title" disabled={isLoading} {...register("title", { required: true })} placeholder={uploadModalLocale('placeholder.fields.example') + ' Awakening'} />
         </div>
         <div className="flex flex-col gap-y-1">
-          <label className="text-WHITE text-[1.1rem]">{uploadModalLocale('song-author')}</label>
+          <label className="text-WHITE text-[1.1rem]">{uploadModalLocale('song-attributes.song-author')}</label>
           <Input
             id="author"
             disabled={isLoading} {...register("author", {
@@ -138,7 +138,7 @@ export const UploadModal = () => {
           />
         </div>
         <div className="flex flex-col gap-y-1">
-          <label className="text-WHITE text-[1.1rem]">{uploadModalLocale('song-file')} (mp3)</label>
+          <label className="text-WHITE text-[1.1rem]">{uploadModalLocale('song-attributes.song-file')} (mp3)</label>
           <Input
             id="song"
             type="file"
@@ -149,7 +149,7 @@ export const UploadModal = () => {
           />
         </div>
         <div className="flex flex-col gap-y-1">
-          <label className="text-WHITE text-[1.1rem]">{uploadModalLocale('song-image')} (webp, jpeg, jpg, png)</label>
+          <label className="text-WHITE text-[1.1rem]">{uploadModalLocale('song-attributes.song-image')} (webp, jpeg, jpg, png)</label>
           <Input
             id="image"
             type="file"

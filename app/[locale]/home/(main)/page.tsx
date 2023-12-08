@@ -13,16 +13,17 @@ export default async function Home({ params: { locale } }: { params: { locale: s
   
   const songs = await getSongs();
   const mainPageLocale = await getScopedI18n('main-service.pages.main-content.navbar')
+  const configLocale = await getScopedI18n('main-service.pages.liked-content.navbar')
 
   return (
-    <div className="bg-DARK_SECONDARY_BACKGROUND rounded-lg h-full w-full overflow-hidden overflow-y-auto">
+    <div className="bg-DARK_SECONDARY_BACKGROUND rounded-lg h-full w-full overflow-y-hidden">
       <Navbar>
         <div className="mb-2">
           <h1 className="text-white text-4xl font-semibold">
             {mainPageLocale('welcome-message')}
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cold-3 2xl:grid-cols-4 gap-3 mt-4">
-            <ListItem name="Любимые треки" image="/images/liked.png" href="/home/liked" />
+            <ListItem name={configLocale('subtitle-message')} image="/images/liked.png" href="/home/liked" />
           </div>
         </div>
       </Navbar>
