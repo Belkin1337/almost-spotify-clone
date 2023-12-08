@@ -1,6 +1,6 @@
 "use client"
 
-import { Header } from "components/header/header"
+import { Header } from "@/components/header/header"
 import { Footer } from "./[locale]/(brand)/components/header/footer"
 
 export default function ErrorPage() {
