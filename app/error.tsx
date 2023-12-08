@@ -8,8 +8,7 @@ export default function ErrorPage() {
     <>
       <Header />
       <div className="flex min-h-screen items-center flex-col">
-        <p className="text-red-600 text-[4rem] uppercase">error</p>
-        "то что вы искали здесь отсутствует."
+        <p className="text-red-600 text-[4rem] uppercase">error то что вы искали здесь отсутствует.</p>
       </div>
       <Footer />
     </>

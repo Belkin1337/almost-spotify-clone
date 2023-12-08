@@ -7,10 +7,6 @@ interface WidgetItemProps {
   content: string,
 }
 
-export function generateStaticParams() {
-  return getStaticParams();
-}
-
 const WidgetItem = ({ title, content }: WidgetItemProps) => {
   return (
     <div className="flex flex-col p-6 gap-y-2 w-full rounded-md border duration-200 border-neutral-700 bg-neutral-950 
