@@ -1,22 +1,23 @@
 "use client"
 
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
-import { RxCaretLeft, RxCaretRight } from 'react-icons/rx';
+import { toast } from "react-toastify";
+import { useUser } from "@/hooks/use-user";
+import { useAuthModal } from "@/hooks/use-auth-modal";
+
 import { HiHome } from 'react-icons/hi';
 import { BiSearch } from 'react-icons/bi';
-
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useUser } from "@/hooks/use-user";
-
-import { useAuthModal } from "@/hooks/use-auth-modal";
+import { RxCaretLeft, RxCaretRight } from 'react-icons/rx';
 import { FaUserAlt } from "react-icons/fa";
-import { toast } from "react-toastify";
-import { Button } from "../ui/button/button";
+import { Button } from "@/components/ui/button/button";
+import { useScopedI18n } from "@/locales/client";
 
 export const Navbar = ({ children }: { children: React.ReactNode }) => {
   const authModal = useAuthModal();
   const router = useRouter();
+  const navbarLocale = useScopedI18n('main-service.main-part.config')
 
   const supabaseClient = useSupabaseClient();
   const { user } = useUser();
@@ -30,7 +31,7 @@ export const Navbar = ({ children }: { children: React.ReactNode }) => {
         position: toast.POSITION.BOTTOM_CENTER
       });
     } else {
-      toast.success('Logged out!', {
+      toast.success(navbarLocale('toast.log-out'), {
         position: toast.POSITION.BOTTOM_CENTER
       });
     }
@@ -58,21 +59,15 @@ export const Navbar = ({ children }: { children: React.ReactNode }) => {
         <div className="flex justify-between items-center gap-x-4">
           {user ? (
             <div className="flex gap-x-4 items-center">
-              <Button onClick={handleLogout} className="bg-white text-black px-6 py-2">
-                Выйти
-              </Button>
+              <Button onClick={handleLogout} className="bg-white text-black px-6 py-2">{navbarLocale('log-out')}</Button>
               <Button onClick={() => router.push('/home/account')} className="bg-white">
                 <FaUserAlt />
               </Button>
             </div>
           ) : (
             <>
-              <div>
-                <Button onClick={authModal.onOpen} className="bg-transparent text-neutral-300 font-medium">Зарегистрироваться</Button>
-              </div>
-              <div>
-                <Button onClick={authModal.onOpen} className="bg-white px-6 py-2 text-black font-medium">Войти</Button>
-              </div>
+              <Button onClick={authModal.onOpen} className="bg-transparent text-neutral-300 font-medium">{navbarLocale('sign-up')}</Button>
+              <Button onClick={authModal.onOpen} className="bg-white px-6 py-2 text-black font-medium">{navbarLocale('log-in')}</Button>
             </>
           )}
         </div>

@@ -16,14 +16,13 @@ export const revalidate = 0;
 export const metadata: Metadata = {
   title: 'Smotify | Web Player',
   description: 'Слушай музыку, находись на чилле, вдохновляйся писать свою!',
+  robots: "no follow",
+  viewport: "initial-scale=1.0, width=device-width"
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru" suppressHydrationWarning>
-      <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-      </head>
       <body className={`${font.className}`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           {children}

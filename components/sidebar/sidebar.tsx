@@ -2,15 +2,16 @@
 
 import { usePathname } from "next/navigation"
 import { useMemo } from "react";
-import { HiHome } from "react-icons/hi"
-import { BiSearch } from "react-icons/bi"
-import { Box } from "../ui/box";
-import { SidebarItem } from "./sidebar-item";
-import { Library } from "../library/library";
 import { Song } from "@/types";
 import { twMerge } from "tailwind-merge";
 import { usePlayer } from "@/hooks/use-player";
+
+import { HiHome } from "react-icons/hi"
+import { Box } from "../ui/box";
+import { SidebarItem } from "./sidebar-item";
+import { Library } from "../library/library";
 import { Settings } from 'lucide-react';
+import { useScopedI18n } from "@/locales/client";
 
 interface SidebarProps {
   children: React.ReactNode;
@@ -20,23 +21,24 @@ interface SidebarProps {
 export const Sidebar = ({ children, songs }: SidebarProps) => {
   const pathname = usePathname();
   const player = usePlayer();
-
+  const sidebarLocale = useScopedI18n('main-service.sidebar.widgets')
+  
   const routes = useMemo(() => [
     {
       icon: HiHome,
-      label: 'Главная',
+      label: sidebarLocale('main-route'),
       active: pathname !== '/home/search',
       href: '/home',
     },
-    {
-      icon: BiSearch,
-      label: 'Поиск',
-      active: pathname === '/home/search',
-      href: '/home/search',
-    },
+    // {
+    //   icon: BiSearch,
+    //   label: sidebarLocale('search-route'),
+    //   active: pathname === '/home/search',
+    //   href: '/home/search',
+    // },
     {
       icon: Settings,
-      label: 'Настройки',
+      label: sidebarLocale('settings-route'),
       active: pathname === '/home/settings',
       href: '/home/settings',
     }

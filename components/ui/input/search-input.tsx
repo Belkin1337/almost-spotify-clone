@@ -5,10 +5,12 @@ import { useState, useEffect } from "react"
 
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
+import { useScopedI18n } from "@/locales/client";
 
 export const SearchInput = () => {
   const router = useRouter();
   const [value, setValue] = useState<string>("");
+  const searchLocale = useScopedI18n('main-service.pages.search-content')
 
   useEffect(() => {
     const url = qs.stringifyUrl({
@@ -19,6 +21,6 @@ export const SearchInput = () => {
   }, [router])
 
   return (
-    <Input placeholder="Что сегодня вы хотите послушать?" value={value} onChange={(e) => setValue(e.target.value)}/>
+    <Input placeholder={searchLocale('navbar.input-message')} value={value} onChange={(e) => setValue(e.target.value)}/>
   );
 }

@@ -1,4 +1,6 @@
-import Link from 'next/link';
+import { useAuthModal } from "@/hooks/use-auth-modal";
+import { useUser } from "@/hooks/use-user";
+import { useRouter } from "next/navigation"
 import { IconType } from 'react-icons';
 import { twMerge } from 'tailwind-merge';
 
@@ -9,13 +11,24 @@ interface SidebarItemProps {
 }
 
 export const SidebarItem = ({ icon: Icon, label, href }: SidebarItemProps) => {
+  const router = useRouter();
+
+  const authModal = useAuthModal();
+  const { user } = useUser();
+
+  const handleRoute = async () => {
+    if (!user) {
+      return authModal.onOpen();
+    }
+
+    return router.push(href)
+  }
+
   return (
-    <div>
-      <Link href={href}
-        className={twMerge(`flex flex-row h-auto items-center w-full gap-x-4 text-md font-medium cursor-pointer hover:text-white transition text-neutral-400 py-1 `)}>
-        <Icon size={26} />
-        <p className="truncate w-full">{label}</p>
-      </Link>
+    <div onClick={handleRoute} className={twMerge(`flex flex-row h-auto items-center w-full gap-x-4 text-md font-medium cursor-pointer 
+      hover:text-white transition text-neutral-400 py-1 `)}>
+      <Icon size={26} />
+      <p className="truncate w-full">{label}</p>
     </div>
   );
 }

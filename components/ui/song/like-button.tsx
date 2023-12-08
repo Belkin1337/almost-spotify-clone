@@ -7,19 +7,21 @@ import { useSessionContext } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/navigation";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { toast } from "react-toastify";
+import { useScopedI18n } from "@/locales/client";
+import { UserTips } from "../tooltip/user-tips";
 
 interface LikeButtonProps {
   songId: string,
 }
 
 export const LikeButton = ({ songId }: LikeButtonProps) => {
+  const [isLiked, setIsLiked] = useState(false);
   const router = useRouter();
   const { supabaseClient } = useSessionContext();
 
+  const likeButtonLocale = useScopedI18n('main-service.main-part.config')
   const authModal = useAuthModal();
   const { user } = useUser();
-
-  const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
     if (!user?.id) {
@@ -60,10 +62,10 @@ export const LikeButton = ({ songId }: LikeButtonProps) => {
         toast.error(error.message);
       } else {
         setIsLiked(false);
-        
-        toast.success("Удалено из любимых треков", {
+
+        toast.success(likeButtonLocale('toast.remove-liked-songs'), {
           position: toast.POSITION.BOTTOM_CENTER,
-          icon: ({theme, type}) =>  <img src="/images/liked.png"/>,
+          icon: ({ theme, type }) => <img src="/images/liked.png" />,
         });
       }
     } else {
@@ -79,9 +81,9 @@ export const LikeButton = ({ songId }: LikeButtonProps) => {
       } else {
         setIsLiked(true);
 
-        toast.success("Добавлено в любимые треки", {
+        toast.success(likeButtonLocale('toast.add-liked-songs'), {
           position: toast.POSITION.BOTTOM_CENTER,
-          icon: ({theme, type}) =>  <img src="/images/liked.png"/>
+          icon: ({ theme, type }) => <img src="/images/liked.png" />
         });
       }
     }

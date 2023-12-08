@@ -2,6 +2,7 @@
 
 import { useKeenSlider } from "keen-slider/react"
 import "keen-slider/keen-slider.min.css"
+import Image from "next/image"
 
 export const BackgroundIntro = ({ ...className }) => {
   const [sliderRef] = useKeenSlider<HTMLDivElement>(
@@ -43,9 +44,9 @@ export const BackgroundIntro = ({ ...className }) => {
   ]
 
   return (
-    <div ref={sliderRef} className="keen-slider brightness-75 hover:brightness-100 hover:duration-300 duration-300">
+    <div ref={sliderRef} className="keen-slider brightness-75 hover:brightness-100 hover:duration-300 duration-300 h-[640px] overflow-hidden">
       {images.map((item, idx) => (
-        <img src={item} key={idx} className="keen-slider__slide h-[640px] object-cover"/>
+        <Image alt="Image" width={1920} height={640} src={item} key={idx} className="keen-slider__slide object-cover"/>
       ))}
     </div>
   );

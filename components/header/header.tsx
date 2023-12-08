@@ -1,8 +1,9 @@
 "use client"
 
 import { useScopedI18n } from "@/locales/client";
-import { LocaleProvider } from "@/providers/locale-provider";
 import { useRouter } from "next/navigation";
+import { Suspense } from "react";
+import { ChangeLang } from "../tools/change-lang";
 
 const Github = (props: any) => (
   <svg
@@ -20,34 +21,44 @@ const Github = (props: any) => (
 
 export const Header = () => {
   const router = useRouter();
-  const header_lang = useScopedI18n('brand.main.const-components.header')
+  const headerLocale = useScopedI18n('brand.main.const-components.header')
 
   const listComponents = [
-    { name: header_lang('main'), route: "" },
-    { name: header_lang('about'), route: "int/about" },
-    { name: header_lang('listen'), route: "home" },
+    {
+      name: headerLocale('main'),
+      route: ""
+    },
+    {
+      name: headerLocale('about'),
+      route: "int/about"
+    },
+    {
+      name: headerLocale('listen'),
+      route: "home"
+    },
   ]
 
   return (
-    <>
-      <div className="absolute top-0 right-0 left-0 px-16 pt-8 z-10 flex flex-row h-[84px] items-center justify-between w-full">
-        <div onClick={() => router.push('/')} className="flex flex-row items-center gap-x-2 cursor-pointer">
-          <img src="/images/logo.png" className="w-[42px] h-[42px]" />
-          <div className="center font-bold text-[1rem]">
-            <p>Smotify</p>
-          </div>
-        </div>
-        <div className="flex flex-row items-center justify-start gap-x-6">
-          {listComponents.map((item, idx) => (
-            <p key={idx} onClick={() => router.push(`/${item.route}`)} className="font-bold text-[1rem] text-WHITE uppercase decoration-MAIN duration-200 cursor-pointer 
-          hover:underline-offset-8 hover:underline hover:duration-500 hover:transition">{item.name}</p>
-          ))}
-        </div>
-        <div className="flex items-center justify-start">
-          <Github className="rounded-md p-2 cursor-pointer bg-black fill-WHITE hover:fill-black duration-500 
-        hover:bg-white hover:shadow-[3px_3px_2px_1px_#0DCECD] hover:duration-700 hover:transition" />
+    <div className="absolute top-0 right-0 left-0 px-16 pt-8 z-10 flex flex-row h-[84px] items-center justify-between w-full">
+      <div onClick={() => router.push('/')} className="flex flex-row items-center gap-x-2 cursor-pointer">
+        <img src="/images/logo.png" className="w-[42px] h-[42px]" />
+        <div className="center font-bold text-[1rem]">
+          <p>Smotify</p>
         </div>
       </div>
-    </>
+      <div className="flex flex-row items-center justify-start gap-x-6">
+        {listComponents.map((item, idx) => (
+          <p key={idx} onClick={() => router.push(`/${item.route}`)} className="font-bold text-[1rem] text-WHITE uppercase decoration-MAIN duration-200 cursor-pointer 
+          hover:underline-offset-8 hover:underline hover:duration-500 hover:transition">{item.name}</p>
+        ))}
+      </div>
+      <div className="flex items-center justify-start gap-x-4">
+        <Suspense>
+          <ChangeLang />
+        </Suspense>
+        <Github className="rounded-md p-2 cursor-pointer bg-black fill-WHITE hover:fill-black duration-500 
+        hover:bg-white hover:shadow-[3px_3px_2px_1px_#0DCECD] hover:duration-700 hover:transition" />
+      </div>
+    </div>
   );
 }

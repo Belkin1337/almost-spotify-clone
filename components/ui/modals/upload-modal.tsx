@@ -7,18 +7,21 @@ import { Modal } from "./modal";
 import { useState } from "react"
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useUser } from "@/hooks/use-user";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/navigation";
+import { useScopedI18n } from "@/locales/client";
 
 export const UploadModal = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  
+
   const uploadModal = useUploadModal();
   const { user } = useUser();
   const supabaseClient = useSupabaseClient();
+
+  const uploadModalLocale = useScopedI18n('main-service.main-part.config')
 
   const { register, handleSubmit, reset } = useForm<FieldValues>({
     defaultValues: {
@@ -46,7 +49,7 @@ export const UploadModal = () => {
 
       if (!imageFile || !songFile || !user) {
         toast.error("Нужно заполнить все поля!");
-        
+
         return;
       }
 
@@ -118,30 +121,50 @@ export const UploadModal = () => {
   }
 
   return (
-    <Modal title="Публикация аудиозаписи" description="поля обязательно должны быть заполнены*" isOpen={uploadModal.isOpen} onChange={onChange}>
+    <Modal title={uploadModalLocale('modal.upload.title')} description={uploadModalLocale('modal.upload.note-title') + '*'} isOpen={uploadModal.isOpen} onChange={onChange}>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-8">
         <div className="flex flex-col gap-y-1">
-          <label className="text-WHITE text-[1.1rem]">Название</label>
-          <Input id="title" disabled={isLoading} {...register("title", { required: true })} placeholder="например: Awakening" />
+          <label className="text-WHITE text-[1.1rem]">{uploadModalLocale('song-name')}</label>
+          <Input id="title" disabled={isLoading} {...register("title", { required: true })} placeholder={uploadModalLocale('placeholder.fields.example') + ' Awakening'} />
         </div>
         <div className="flex flex-col gap-y-1">
-          <label className="text-WHITE text-[1.1rem]">Автор</label>
-          <Input id="author" disabled={isLoading} {...register("author", { required: true })} placeholder="например: Sidewalks and Skeletons" />
+          <label className="text-WHITE text-[1.1rem]">{uploadModalLocale('song-author')}</label>
+          <Input
+            id="author"
+            disabled={isLoading} {...register("author", {
+              required: true
+            })}
+            placeholder={uploadModalLocale('placeholder.fields.example') + ' Sidewalks and Skeletons'}
+          />
         </div>
         <div className="flex flex-col gap-y-1">
-          <label className="text-WHITE text-[1.1rem]">Аудиофайл (только формата mp3)</label>
-          <Input id="song" type="file" disabled={isLoading} accept=".mp3" {...register("song", { required: true })} />
+          <label className="text-WHITE text-[1.1rem]">{uploadModalLocale('song-file')} (mp3)</label>
+          <Input
+            id="song"
+            type="file"
+            disabled={isLoading}
+            accept=".mp3" {...register("song", {
+              required: true
+            })}
+          />
         </div>
         <div className="flex flex-col gap-y-1">
-          <label className="text-WHITE text-[1.1rem]">Обложка аудиозаписи</label>
-          <Input id="image" type="file" disabled={isLoading} accept="image/*" {...register("image", { required: true })} />
+          <label className="text-WHITE text-[1.1rem]">{uploadModalLocale('song-image')} (webp, jpeg, jpg, png)</label>
+          <Input
+            id="image"
+            type="file"
+            disabled={isLoading}
+            accept="image/*" {...register("image", {
+              required: true
+            })}
+          />
         </div>
         <button
           className="bg-black/80 rounded-md py-2 hover:bg-black/60 hover:duration-200 duration-200 text-[1.3rem] text-MAIN font-semibold"
           disabled={isLoading}
           type="submit"
         >
-          Опубликовать
+          {uploadModalLocale('modal.submit')}
         </button>
       </form>
     </Modal>

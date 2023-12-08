@@ -1,9 +1,7 @@
 "use client"
 
-import { ChoiceLang } from "@/components/tools/lang"
 import { useScopedI18n } from "@/locales/client"
 import Link from "next/link"
-import { Suspense } from "react"
 
 export const Footer = () => {
   const footer_lang = useScopedI18n('brand.main.const-components.footer')
@@ -18,9 +16,6 @@ export const Footer = () => {
           <p>pureawake</p>
         </div>
       </div>
-      <Suspense>
-        <ChoiceLang />
-      </Suspense>
       <p className="text-neutral-400 underline underline-offset-8 text-[1.4rem]">{footer_lang('not-real-project')}</p>
     </div>
   )

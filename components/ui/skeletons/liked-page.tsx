@@ -1,6 +1,5 @@
 "use client"
 
-import { Skeleton } from "../skeleton"
 import { NavbarSkeleton } from "./navbar"
 
 export const LikedPageSkeleton = () => {

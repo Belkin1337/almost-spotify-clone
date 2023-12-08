@@ -1,5 +1,5 @@
-import { getScopedI18n, getStaticParams } from "@/locales/server";
-import { BackgroundIntro } from "./components/header/background";
+import { getScopedI18n } from "@/locales/server";
+import { BackgroundIntro } from "./components/main-background-slides";
 import { setStaticParamsLocale } from "next-international/server";
 
 interface WidgetItemProps {
@@ -19,14 +19,14 @@ const WidgetItem = ({ title, content }: WidgetItemProps) => {
 
 export default async function Main({ params: { locale } }: { params: { locale: string } }) {
   setStaticParamsLocale(locale);
-  const main_lang = await getScopedI18n('brand.main');
+  const brandLocale = await getScopedI18n('brand.main');
 
   const widgets = [
-    { title: main_lang('content.widgets.high-quality.title'), content: main_lang('content.widgets.high-quality.content'), },
-    { title: main_lang('content.widgets.new-artists.title'), content: main_lang('content.widgets.new-artists.content'), },
-    { title: main_lang('content.widgets.new-genres.title'), content: main_lang('content.widgets.new-genres.content'), },
-    { title: main_lang('content.widgets.new-opportunities.title'), content: main_lang('content.widgets.new-opportunities.content'), },
-    { title: main_lang('content.widgets.uploaded-tracks.title'), content: main_lang('content.widgets.uploaded-tracks.content'), },
+    { title: brandLocale('content.widgets.high-quality.title'), content: brandLocale('content.widgets.high-quality.content'), },
+    { title: brandLocale('content.widgets.new-artists.title'), content: brandLocale('content.widgets.new-artists.content'), },
+    { title: brandLocale('content.widgets.new-genres.title'), content: brandLocale('content.widgets.new-genres.content'), },
+    { title: brandLocale('content.widgets.new-opportunities.title'), content: brandLocale('content.widgets.new-opportunities.content'), },
+    { title: brandLocale('content.widgets.uploaded-tracks.title'), content: brandLocale('content.widgets.uploaded-tracks.content'), },
   ]
 
   return (
@@ -35,14 +35,14 @@ export default async function Main({ params: { locale } }: { params: { locale: s
         <BackgroundIntro />
         <div className="flex absolute justify-center bottom-0 right-0 left-0 items-center gap-x-4 px-4 h-[112px] bg-black/80">
           <p className="text-[1.8rem]">
-            &ldquo;{main_lang('content.intro.quote')}&bdquo;
+            &ldquo;{brandLocale('content.intro.quote')}&bdquo;
           </p>
-          <p className="text-[1.6rem]">{main_lang('content.intro.quote-author')}</p>
+          <p className="text-[1.6rem]">{brandLocale('content.intro.quote-author')}</p>
         </div>
       </div>
       <div className="flex flex-col px-16 items-center mt-16 gap-y-4">
-        <p className="text-WHITE text-[3rem] mb-8">{main_lang('content.intro.main-title')}
-          <span className="text-neutral-400 text-[2.4rem]">&nbsp;{main_lang('content.intro.main-subtitle')}</span>
+        <p className="text-WHITE text-[3rem] mb-8">{brandLocale('content.intro.main-title')}
+          <span className="text-neutral-400 text-[2.4rem]">&nbsp;{brandLocale('content.intro.main-subtitle')}</span>
         </p>
         <div className="grid grid-cols-2 grid-rows-1 gap-4">
           {widgets.slice(0, 2).map((item) => (

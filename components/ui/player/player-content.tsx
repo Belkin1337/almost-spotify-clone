@@ -1,16 +1,20 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import useSound from 'use-sound';
+
+import { usePlayer } from '@/hooks/use-player';
+
 import { Song } from "@/types"
-import { LikeButton } from './like-button';
-import MediaItem from './library-song-item';
+import { LikeButton } from '../song/like-button';
+import MediaItem from '../song/library-song-item';
 import { Volume1, VolumeX } from 'lucide-react';
 import { BsPauseFill, BsPlayFill } from "react-icons/bs"
 import { AiFillStepBackward, AiFillStepForward } from 'react-icons/ai';
-import { VolumeSlider } from './slider/volume-slider';
-import { usePlayer } from '@/hooks/use-player';
-import { DurationSlider } from './slider/duration-slider';
+import { VolumeSlider } from '../slider/volume-slider';
+import { UserTips } from '../tooltip/user-tips';
+import { useScopedI18n } from '@/locales/client';
+// import { DurationSlider } from './slider/duration-slider';
 
 interface PlayerContentProps {
   song: Song;
@@ -21,7 +25,8 @@ export const PlayerContent = ({ song, songUrl }: PlayerContentProps) => {
   const player = usePlayer();
   const [volume, setVolume] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [duration, setDuration] = useState(0);
+  // const [duration, setDuration] = useState(0);
+  const playerLocale = useScopedI18n('main-service.main-part.config')
 
   const Icon = isPlaying ? BsPauseFill : BsPlayFill;
 
@@ -108,20 +113,28 @@ export const PlayerContent = ({ song, songUrl }: PlayerContentProps) => {
       </div>
       <div className="hidden h-full md:flex flex-col justify-center gap-y-[10px] items-center w-full max-h-[760px]">
         <div className="flex flex-row gap-x-6 w-full justify-center items-center">
-          <AiFillStepBackward onClick={onPlayPrevious} size={30} className="text-neutral-400 cursor-pointer hover:text-white transition" />
+          <UserTips content={playerLocale('prev-page')}>
+            <AiFillStepBackward onClick={onPlayPrevious} size={30} className="text-neutral-400 cursor-pointer hover:text-white transition" />
+          </UserTips>
           <div onClick={handlePlay} className="flex items-center justify-center h-10 w-10 rounded-full bg-white p-1 cursor-pointer">
             <Icon size={30} className="text-black" />
           </div>
-          <AiFillStepForward onClick={onPlayNext} size={30} className="text-neutral-400 cursor-pointer hover:text-white transition" />
+          <UserTips content={playerLocale('next-page')}>
+            <AiFillStepForward onClick={onPlayNext} size={30} className="text-neutral-400 cursor-pointer hover:text-white transition" />
+          </UserTips>
         </div>
-        <DurationSlider songUrl={songUrl} />
+        {/* <DurationSlider songUrl={songUrl} /> */}
       </div>
       <div className="hidden md:flex w-full justify-end pr-2">
         <div className="flex items-center gap-x-2 w-[120px]">
           {volume === 0 ? (
-            <VolumeX onClick={toggleMute} className="cursor-pointer" color="white" size={32} />
+            <UserTips content={playerLocale('unmute')}>
+              <VolumeX onClick={toggleMute} className="cursor-pointer" color="white" size={32} />
+            </UserTips>
           ) : (
-            <Volume1 onClick={toggleMute} className="cursor-pointer" color="white" size={32} />
+            <UserTips content={playerLocale('mute')}>
+              <Volume1 onClick={toggleMute} className="cursor-pointer" color="white" size={32} />
+            </UserTips>
           )}
           <VolumeSlider value={volume} onChange={(value) => setVolume(value)} />
         </div>
