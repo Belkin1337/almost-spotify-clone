@@ -1,39 +1,33 @@
-import Sidebar from '@/components/Sidebar'
-import './globals.css'
-import type { Metadata } from 'next'
-import { Figtree } from 'next/font/google'
-import SupabaseProvider from '@/providers/SupabaseProvider'
-import UserProvider from '@/providers/UserProvider'
-import ModalProvider from '@/providers/ModalProvider'
-import ToasterProvider from '@/providers/ToasterProvider'
-import getSongsByUserId from '@/actions/getSongsByUserId'
-import Player from '@/components/Player'
+import { ThemeProvider } from '@/providers/theme-provider';
 
-const font = Figtree({ subsets: ['latin'] })
+import './globals.css'
+import 'react-toastify/dist/ReactToastify.css';
+
+import type { Metadata } from 'next'
+
+import localFont from "next/font/local"
+
+const font = localFont({
+  src: "../public/font/Montserrat.ttf",
+});
 
 export const revalidate = 0;
 
 export const metadata: Metadata = {
-  title: 'Spotify | Web Player',
-  description: 'Слушай музыку, находись на чилле, а также позволяй это делать другим!',
+  title: 'Smotify | Web Player',
+  description: 'Слушай музыку, находись на чилле, вдохновляйся писать свою!',
 }
 
-export default async function RootLayout({ children, }: { children: React.ReactNode }) {
-  const userSongs = await getSongsByUserId();
-
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru">
-      <body className={font.className}>
-        <ToasterProvider/>
-        <SupabaseProvider>
-          <UserProvider>
-            <ModalProvider />
-            <Sidebar songs={userSongs}>
-              {children}
-            </Sidebar>
-            <Player/>
-          </UserProvider>
-        </SupabaseProvider>
+    <html lang="ru" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+      </head>
+      <body className={`${font.className}`}>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )
