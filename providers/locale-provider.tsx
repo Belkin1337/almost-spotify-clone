@@ -1,14 +1,14 @@
-'use client';
+"use client"
 
 import type { ReactNode } from 'react';
 import { I18nProviderClient } from '../locales/client';
 
-type ProviderProps = {
+interface ProviderProps {
   locale: string;
   children: ReactNode;
 };
 
-export function LocaleProvider({ locale, children }: ProviderProps) {
+export const LocaleProvider = ({ locale, children }: ProviderProps) => {
   return (
     <I18nProviderClient locale={locale}>
       {children}

@@ -167,7 +167,7 @@ export default {
     },
   },
   "language": {
-    'ru': "Russian",
-    'en': "English",
+    'ru': "RU",
+    'en': "EN",
   }
 } as const;
