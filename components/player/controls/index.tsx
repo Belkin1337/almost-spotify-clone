@@ -34,14 +34,14 @@ export const PlayerControls = ({
   return (
     <>
       <PlayerPlayPause variant="mobile" state={playing} onClick={onTogglePlay} />
-      <div className="hidden h-full md:flex flex-col justify-center gap-y-[8px] items-center w-[40%] max-h-[760px]">
+      <div className="hidden h-full md:flex flex-col justify-center gap-y-[6px] items-center w-[40%] max-h-[760px]">
         <div className="flex flex-row gap-x-6 w-full justify-center items-center">
           <PlayerPrevSong onClick={onPlayPrev} />
           <PlayerPlayPause state={playing} onClick={onTogglePlay} />
           <PlayerNextSong onClick={onPlayNext} />
         </div>
         <div className="flex items-center gap-x-2 w-full">
-          <Typography variant="secondary">
+          <Typography variant="secondary" className="text-[12px] font-medium">
             {displayPosition}
           </Typography>
           <SeekSlider 
@@ -49,7 +49,7 @@ export const PlayerControls = ({
             value={currentPosition} 
             onValueChange={onSliderChange} 
           />
-          <Typography variant="secondary">
+          <Typography variant="secondary" className="text-[12px] font-medium">
             {currentDuration}
           </Typography>
         </div>

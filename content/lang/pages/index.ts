@@ -1,53 +1,59 @@
-export const about = (a_lang: Function) => {
+const about = (translate_func: Function) => {
   return [
     {
-      content: a_lang("about-widgets.explore"),
+      content: translate_func("about-widgets.explore"),
       image: "/images/headphones.jpg",
     },
     {
-      content: a_lang("about-widgets.connect"),
+      content: translate_func("about-widgets.connect"),
       image: "/images/people-listen.jpg",
     },
     {
-      content: a_lang("about-widgets.connect"),
+      content: translate_func("about-widgets.connect"),
       image: "/images/people-listen-metro.jpg",
     },
   ];
 };
 
-export const listComponents = (headerLocale: Function) => {
+const listComponents = (translate_func: Function) => {
   return [
     {
-      name: headerLocale("main"),
+      name: translate_func("main"),
       route: "/",
     },
     {
-      name: headerLocale("about"),
+      name: translate_func("about"),
       route: "/about",
     },
     {
-      name: headerLocale("start"),
+      name: translate_func("start"),
       route: "/home",
     },
   ];
 };
 
-export const widgets = (brandLocale: Function) => {
+const widgets = (translate_func: Function) => {
   return [
     {
-      title: brandLocale("content.widgets.high-quality.title"),
-      content: brandLocale("content.widgets.high-quality.content"),
+      title: translate_func("content.widgets.high-quality.title"),
+      content: translate_func("content.widgets.high-quality.content"),
       image: "/images/music_card1.jpeg"
     },
     {
-      title: brandLocale("content.widgets.new-artists.title"),
-      content: brandLocale("content.widgets.new-artists.content"),
+      title: translate_func("content.widgets.new-artists.title"),
+      content: translate_func("content.widgets.new-artists.content"),
       image: "/images/music_card2.jpg"
     },
     {
-      title: brandLocale("content.widgets.new-genres.title"),
-      content: brandLocale("content.widgets.new-genres.content"),
+      title: translate_func("content.widgets.new-genres.title"),
+      content: translate_func("content.widgets.new-genres.content"),
       image: "/images/music_card3.jpg"
     },
   ];
 };
+
+export { 
+  about,
+  listComponents,
+  widgets
+}

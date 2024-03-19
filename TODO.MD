@@ -1,11 +1,16 @@
-# this todo was created to correctly manage all project writing processes... am yep
+Progress:
+1. **[X]** - Create changing locale
+2. **[x]** - Create song/playlist/album page
+3. **[ ]** - Create personal artist account (details, songs)
+    - [ ] Implement artist entity
+    - [ ] Finish artist profile component
+4. **[ ]** - Create playlist functions (add/delete/share)
+    - [ ] Implement playlist entity
+    - [ ] Finish playlist component
+5. **[ ]** - Create recommendations playlist/songs
+    - [ ] Create queuing songs system
 
-X - Full Completed
-x - 50/50
-null - 0
-
-[**X**] create changing locale
-[x] create song/playlist/album page
-[ ] create personal artist account (details, songs)
-[ ] create playlist function (add/delete/share)
-[ ] create recommendations playlist/songs
+*Tips:*
+- **X** - 100%
+- **x** - 50%
+- **null** - 0%

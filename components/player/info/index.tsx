@@ -1,29 +1,29 @@
 "use client"
 
-import { FollowTrackButton } from "@/components/buttons/follow/follow-button"
+import { SongFollowButton } from "@/components/song/child/song-follow-button"
 import { SongItem } from "@/components/song/song-item"
 import { SongEntity } from "@/types/entities/song"
 
-interface PlayerSongInfoGeneric {
-  songArr: SongEntity[],
+interface PlayerSongInfoProps {
+  list: SongEntity[],
   song: SongEntity
 }
 
 export const PlayerSongInfo = ({
   song,
-  songArr
-}: PlayerSongInfoGeneric) => {
+  list
+}: PlayerSongInfoProps) => {
   return (
-    <div className="flex w-1/6 justify-start">
-      <div className="flex items-center gap-x-4">
-        <SongItem
-          variant="player"
-          player
-          array_data={songArr}
-          data={song}
-        />
-        <FollowTrackButton songId={song?.id} />
-      </div>
+    <div className="flex items-center gap-x-4 max-w-[284px] overflow-hidden justify-start">
+      <SongItem
+        variant="player"
+        player
+        song={song}
+        list={{
+          data: list
+        }}
+      />
+      <SongFollowButton songId={song?.id!} />
     </div>
   )
 }

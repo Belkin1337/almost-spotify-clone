@@ -1,6 +1,7 @@
 export interface SongEntity {
   id: string,
   created_at: string,
+  created_at_by_list?: string,
   user_id: string,
   author: string,
   title: string,

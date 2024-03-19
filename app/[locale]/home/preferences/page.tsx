@@ -1,14 +1,23 @@
-import { SettingsList } from "@/components/lists/settings-list";
+import { SettingsList } from "@/components/lists/settings";
 import { getScopedI18n } from "@/locales/server";
 import { setStaticParamsLocale } from "next-international/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/utils/supabase/server";
 import { redirect } from "next/navigation";
+import { Wrapper } from "@/ui/wrapper";
 
-export default async function Settings({ params: { locale } }: { params: { locale: string } }) {
+export default async function Settings({ 
+  params: { locale } 
+}: { 
+  params: { locale: string } 
+}) {
   const cookieStore = cookies()
   const supabase = createClient(cookieStore)
-  const { data: { user }, error } = await supabase.auth.getUser()
+
+  const { data: { 
+    user 
+  }, error } = await supabase.auth.getUser()
+
   setStaticParamsLocale(locale);
   
   const settingsLocale = await getScopedI18n('main-service.pages.settings-content.navbar')
@@ -18,13 +27,13 @@ export default async function Settings({ params: { locale } }: { params: { local
   }
 
   return (
-    <>
+    <Wrapper variant="page">
       <div className="flex flex-col gap-y-6 p-4">
         <h1 className="text-white text-4xl font-semibold">
           {settingsLocale('welcome-message')}
         </h1>
       </div>
       <SettingsList />
-    </>
+    </Wrapper>
   )
 }

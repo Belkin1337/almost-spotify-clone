@@ -12,14 +12,15 @@ export const usePlayPrev = () => {
   const { playerState, setActiveId } = usePlayer();
   const { data: user } = useUser();
   const { data: followedSongs, isFetching } = useQuery<SongEntity[]>(
-    getFollowedSongs(supabase, user?.id!),{
+    getFollowedSongs(supabase, user?.id!),
+    {
       enabled: !!user,
       refetchOnWindowFocus: false,
     }
   );
 
   const followedRandSongIds = useMemo(
-    () => followedSongs?.map((song) => song.id) || [],
+    () => followedSongs?.map((song) => song) || [],
     [followedSongs]
   );
 
@@ -42,29 +43,35 @@ export const usePlayPrev = () => {
       }
     } else {
       const currentIndex = playerState.ids.findIndex(
-        (song) => song.id === playerState.activeId
+        (song) => song === playerState.active
       );
 
       const prevIndex = currentIndex - 1;
 
       if (prevIndex < playerState.ids.length) {
-        const prevSongId = playerState.ids[prevIndex]?.id;
+        const prevSongId = playerState.ids[prevIndex];
+
         if (prevSongId) {
           setActiveId(prevSongId, playerState.ids);
         } else {
-          setActiveId(playerState.activeId, playerState.ids);
+          setActiveId(playerState.active, playerState.ids);
         }
-
       } else {
         const randomIndex = Math.floor(
           Math.random() * followedRandSongIds.length
         );
-        
+
         const prevSongId = followedRandSongIds[randomIndex];
         setActiveId(prevSongId, followedSongs);
       }
     }
-  }, [playerState.activeId, playerState.ids, setActiveId, followedRandSongIds,followedSongs]);
+  }, [
+    playerState.active,
+    playerState.ids,
+    setActiveId,
+    followedRandSongIds,
+    followedSongs,
+  ]);
 
   return {
     onPlayPrev,

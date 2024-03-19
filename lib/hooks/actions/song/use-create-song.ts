@@ -7,19 +7,19 @@ import { useToast } from "../../ui/use-toast";
 import { useScopedI18n } from "@/locales/client";
 import { useUser } from "../user/auth/use-user";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { SongAttributes } from "@/types/song";
 import { useDialog } from "../../ui/use-dialog";
 
 const supabase = createClient();
+const uniqueID = uniqid();
 
-export default function useCreateSong() {
-  const [isLoading, setIsLoading] = useState(false);
+export const useCreateSong = () => {
   const { toast } = useToast();
-  const { data: user } = useUser();
   const { closeDialog } = useDialog()
-  const uniqueID = uniqid();
-  const router = useRouter();
+  const { refresh } = useRouter();
+
+  const { data: user } = useUser();
+
   const uploadModalLocale = useScopedI18n("main-service.main-part.config");
 
   const uploadSongFile = useMutation({
@@ -42,8 +42,7 @@ export default function useCreateSong() {
         return songData;
       } catch (error) {
         toast({
-          title:
-            "Что-то пошло не так при загрузке файла трека: " + String(error),
+          title: String(error),
         });
       }
     },
@@ -52,7 +51,10 @@ export default function useCreateSong() {
   const uploadSongImage = useMutation({
     mutationFn: async (values: SongAttributes) => {
       try {
-        const { data: imageData, error: imageErr } = await supabase.storage
+        const { 
+          data: imageData, 
+          error: imageErr 
+        } = await supabase.storage
           .from("images")
           .upload(`image-${values.title}-${uniqueID}`, values.image, {
             upsert: true,
@@ -65,11 +67,11 @@ export default function useCreateSong() {
             description: imageErr.message,
           });
         }
+        
         return imageData;
       } catch (error) {
         toast({
-          title:
-            "Что-то пошло не так при загрузке файла обложки: " + String(error),
+          title: String(error),
         });
       }
     },
@@ -86,8 +88,6 @@ export default function useCreateSong() {
         if (songData === null || imageData === null) {
           throw new Error("Ошибка загрузки файла");
         }
-        
-        setIsLoading(true);
 
         const { error: supabaseErr } = await supabase
           .from("songs")
@@ -106,25 +106,22 @@ export default function useCreateSong() {
             title: String(supabaseErr),
           });
         } else {
-          setIsLoading(false);
           toast({
             title: uploadModalLocale("publishing.success"),
           });
           
-          closeDialog()
-          router.refresh();
+          closeDialog();
+          refresh();
         }
-      } catch (error) {
-        setIsLoading(false);
+      } catch (e) {
         toast({
-          title: "Данные не были загружены. Пожалуйста, попробуйте еще раз."
+          title: String(e)
         });
       }
     },
   });
 
   return {
-    isLoading,
     uploadSong,
   };
 }

@@ -3,15 +3,16 @@
 import React, { useEffect, useState } from "react"
 import { useLoadUserAvatar } from "@/lib/hooks/actions/user/preferences/use-load-user-avatar"
 import { VariantProps, cva } from "class-variance-authority"
-import { FaRegUser } from "react-icons/fa"
-import Image from "next/image"
 import { UserGeneric } from "@/types/entities/user"
+import { Skeleton } from "@/ui/skeleton"
+import Image from "next/image"
 
-const userAvatarVariants = cva("", {
+const userAvatarVariants = cva("rounded-full", {
   variants: {
     variant: {
-      default: "h-full w-full object-cover rounded-full",
-      navbar: "h-[34px] w-[34px] rounded-full"
+      default: "h-full w-full object-cover",
+      navbar: "h-[34px] w-[34px]",
+      playlist: "h-[24px] w-[24px]"
     }
   },
   defaultVariants: {
@@ -22,38 +23,42 @@ const userAvatarVariants = cva("", {
 interface UserAvatarGeneric
   extends React.HTMLAttributes<HTMLDivElement>,
   VariantProps<typeof userAvatarVariants> {
-    user: UserGeneric
+  user: UserGeneric
 }
 
-export const UserAvatar = ({ 
-  user, 
-  variant, 
-  className 
+export const UserAvatar = ({
+  user,
+  variant,
+  className
 }: UserAvatarGeneric) => {
-  const [isAvatar, setIsAvatar] = useState(false);
-  const { data: avatar } = useLoadUserAvatar(user?.id)
+  const [avatar, setAvatar] = useState<string | undefined>(undefined);
   
+  const { data, isLoading } = useLoadUserAvatar(user?.id)
+
   useEffect(() => {
-    if (avatar !== '') {
-      setIsAvatar(true)
-    } else (
-      setIsAvatar(false)
+    setAvatar(data || '/images/null-avatar.png');
+  }, [data])
+
+  if (isLoading) {
+    return (
+      <Skeleton className={`rounded-full
+        ${variant === "default" && "h-full w-full"}
+        ${variant === "navbar" && "h-[34px] w-[34px]"}
+        ${variant === "playlist" && "h-[24px] w-[24px]"}
+      `} />
     )
-  }, [])
-  
+  }
+
   return (
-    isAvatar ? (
-      <Image
-        src={avatar!}
-        width={600}
-        height={600}
-        className={userAvatarVariants(({ variant, className }))}
-        alt={user?.first_name || ""}
-      />
-    ) : (
-      <div className="flex items-center bg-neutral-700 w-full h-full justify-center">
-        <FaRegUser size={46} />
-      </div>
-    )
+    <Image
+      src={avatar!}
+      width={600}
+      height={600}
+      alt={user?.first_name || ""}
+      className={userAvatarVariants(({ 
+        variant, 
+        className 
+      }))}
+    />
   )
 }

@@ -1,16 +1,11 @@
-import analyze from 'rgbaster'
+import { FastAverageColor } from "fast-average-color";
 
-export async function getColorSampling (imageUrl: string | null) {
-  const raw = await analyze(imageUrl);
-  const convertedRaw = raw[0].color;
+const fac = new FastAverageColor();
 
-  const converted: number[] = convertedRaw.match(/\d+/g)!.map(Number);
-  const output: string = "#" + converted.map(value => {
-    const outputValue: string = value.toString(16);
-
-    return outputValue.length === 1 ? '0' + outputValue : outputValue }).join('');
-
-  return {
-    output
-  }
+export async function getColorAverage(
+  imageUrl: string
+): Promise<string | null> {
+  return (await fac
+    .getColorAsync(imageUrl))
+    .hex;
 }

@@ -23,7 +23,12 @@ export interface PlayerPlayPauseProps
   onClick: () => void;
 }
 
-export const PlayerPlayPause = ({ className, variant, onClick, state }: PlayerPlayPauseProps) => {
+export const PlayerPlayPause = ({
+  className,
+  variant,
+  onClick,
+  state
+}: PlayerPlayPauseProps) => {
   const Icon = state ? BsPauseFill : BsPlayFill;
 
   useEffect(() => {
@@ -41,8 +46,16 @@ export const PlayerPlayPause = ({ className, variant, onClick, state }: PlayerPl
   }, [onClick]);
 
   return (
-    <div onClick={onClick} className={playerPlayPauseVariants(({ variant, className }))}>
-      <Icon size={30} className="text-black" />
+    <div
+      onClick={onClick}
+      className={playerPlayPauseVariants(({
+        variant,
+        className
+      }))}>
+      <Icon
+        size={26}
+        className="cursor-pointer text-black"
+      />
     </div>
   )
 }

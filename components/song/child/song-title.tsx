@@ -1,5 +1,6 @@
 "use client"
 
+import { song_route } from "@/lib/constants/routes"
 import { SongEntity } from "@/types/entities/song"
 import { VariantProps, cva } from "class-variance-authority"
 import { useRouter } from "next/navigation"
@@ -11,7 +12,8 @@ const songTitleVariants = cva("text-white truncate", {
       default: "",
       library: "text-md font-medium",
       page: "font-bold text-6xl",
-      player: "hover:underline hover:cursor-pointer text-sm font-medium"
+      player: "hover:underline hover:cursor-pointer text-sm font-medium",
+      widget: "hover:underline text-xl cursor-pointer font-bold"
     }
   },
   defaultVariants: {
@@ -22,32 +24,30 @@ const songTitleVariants = cva("text-white truncate", {
 interface SongTitleProps
   extends React.HTMLAttributes<HTMLParagraphElement>,
   VariantProps<typeof songTitleVariants> {
-  data: SongEntity,
+  song: SongEntity,
   player?: boolean
 }
 
 export const SongTitle = ({
-  data,
+  song,
   variant,
   className,
   player
 }: SongTitleProps) => {
-  const router = useRouter()
+  const { push } = useRouter()
 
   const targetToTrack = useCallback(() => {
-    if (player && data) {
-      router.push(`/home/track/${data.id}`)
-    } else {
-      return null
+    if (player && song) {
+      push(`${song_route}/${song.id}`)
     }
-  }, [router, data, player])
+  }, [push, song, player])
 
   return (
     <p onClick={targetToTrack} className={songTitleVariants(({
       variant,
       className
     }))}>
-      {data?.title}
+      {song?.title}
     </p>
   )
 }

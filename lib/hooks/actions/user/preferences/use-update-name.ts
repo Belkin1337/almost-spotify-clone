@@ -1,13 +1,11 @@
 import { useToast } from "@/lib/hooks/ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react"
 import { createClient } from "@/lib/utils/supabase/client";
 import { UpdateGeneric } from "@/types/form/profile";
 
 const supabase = createClient();
 
 export const useUpdateName = () => {
-  const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast();
 
   const uploadUserName = useMutation({
@@ -15,7 +13,7 @@ export const useUpdateName = () => {
       try {
         if (!values.firstName) return null;
 
-        const { data: userName, error: userErr } = await supabase
+        const { data: userName,  error: userErr } = await supabase
           .from("users")
           .update({
             first_name: values.firstName,
@@ -31,8 +29,8 @@ export const useUpdateName = () => {
             toast({
               title: "Имя обновлено"
             })
-            console.log(userName)
-            return userName
+
+            return userName;
           }
       } catch (error) {
         toast({
@@ -43,7 +41,6 @@ export const useUpdateName = () => {
   })
 
   return {
-    uploadUserName, 
-    isLoading
+    uploadUserName,
   }
 }

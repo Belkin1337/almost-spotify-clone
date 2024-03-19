@@ -3,7 +3,11 @@ import { getScopedI18n } from "@/locales/server"
 import { setStaticParamsLocale } from "next-international/server";
 import Image from "next/image";
 
-export default async function About({ params: { locale } }: { params: { locale: string } }) {
+export default async function About({ 
+  params: { locale } 
+}: { 
+  params: { locale: string } 
+}) {
   setStaticParamsLocale(locale);
   const a_lang = await getScopedI18n('brand.about');
   const aboutLang = about(a_lang);

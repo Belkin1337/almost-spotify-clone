@@ -2,14 +2,16 @@ import { SongEntity } from "@/types/entities/song";
 import React, { createContext, useState } from "react";
 
 interface PlayerState {
-  activeId: string;
+  active: SongEntity | undefined;
   ids: SongEntity[];
 }
 
 interface PlayerContextType {
   playerState: PlayerState,
-  setActiveId: (id: string, ids: SongEntity[]) => void;
-  getActiveSong: () => SongEntity | undefined;
+  setActiveId: (
+    id: SongEntity | undefined, 
+    ids: SongEntity[]
+  ) => void;
 }
 
 export const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -20,26 +22,32 @@ export const PlayerProvider = ({
   children: React.ReactNode 
 }) => {
   const [playerState, setPlayerState] = useState<PlayerState>({
-    activeId: '',
+    active: undefined,
     ids: [],
   });
 
-  const setActiveId = (id: string, ids: SongEntity[]) => {
+  const setActiveId = (
+    id: SongEntity | undefined, 
+    ids: SongEntity[]
+  ) => {
     setPlayerState({
-      activeId: id,
+      active: id,
       ids: ids
     });
   };
-  
-  const getActiveSong = (): SongEntity | undefined => {
-    if (!playerState.ids || playerState.ids.length === 0) {
-      return undefined;
-    }
-    return playerState.ids.find(song => song.id === playerState.activeId);
-  };
+
+  console.log(
+    "\n\n=== Active Song State: \n\n", 
+    playerState.active, 
+    playerState.ids,
+    "\n\n=== \n\n"
+  )
 
   return (
-    <PlayerContext.Provider value={{ getActiveSong, playerState, setActiveId }}>
+    <PlayerContext.Provider value={{ 
+      playerState, 
+      setActiveId 
+    }}>
       {children}
     </PlayerContext.Provider>
   );

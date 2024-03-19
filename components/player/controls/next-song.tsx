@@ -11,7 +11,7 @@ export const PlayerNextSong = ({ onClick }: PlayerNextSongProps) => {
     <AiFillStepForward
       onClick={onClick}
       size={26}
-      className="text-neutral-400 hover:text-white transition"
+      className="text-neutral-400 cursor-pointer hover:text-white transition"
     />
   )
 }

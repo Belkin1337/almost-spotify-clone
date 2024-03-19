@@ -16,8 +16,13 @@ export function useLoadSongUrl(song: SongEntity) {
     queryKey: ["songUrl", song?.song_path],
     queryFn: async () => {
       try {
-        const publicUrl = await getSongUrl(supabase, song?.song_path);
-        return { song: { publicUrl } };
+        const publicUrl = await getSongUrl(
+          supabase, 
+          song?.song_path
+        );
+        return { song: { 
+          publicUrl 
+        } };
       } catch (error) {
         throw new Error("Failed to fetch song URL");
       }

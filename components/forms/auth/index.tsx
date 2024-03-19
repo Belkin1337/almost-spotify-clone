@@ -29,7 +29,7 @@ export const AuthForm = () => {
           Уже есть аккаунт / Вход
         </p>
       </Button>
-      <Button onClick={handleSignUpForm} className="w-full h-min bg-white " rounded="medium">
+      <Button onClick={handleSignUpForm} className="w-full h-min bg-white" rounded="medium">
         <p className="text-neutral-900 font-semibold">
           Нет аккаунта / Регистрация
         </p>

@@ -37,8 +37,10 @@
     "canvas": "^2.11.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "dayjs": "^1.11.10",
     "eslint": "8.49.0",
     "eslint-config-next": "13.4.19",
+    "fast-average-color": "^9.4.0",
     "framer-motion": "^10.6.8",
     "howler": "^2.2.4",
     "lucide-react": "^0.294.0",
@@ -63,8 +65,7 @@
     "typescript": "5.2.2",
     "uniqid": "^5.4.0",
     "use-sound": "^4.0.1",
-    "zod": "^3.22.4",
-    "zustand": "^4.4.1"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/howler": "^2.2.11",

@@ -1,33 +1,35 @@
 import { createClient } from "@/lib/utils/supabase/client";
-import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/lib/hooks/ui/use-toast";
 import { UpdateGeneric } from "@/types/form/profile";
-import unique from "uniqid"
+import { useDialog } from "@/lib/hooks/ui/use-dialog";
+import { useRouter } from "next/navigation";
+import { useUser } from "../auth/use-user";
 
 const supabase = createClient();
 
 export const useUpdateAvatar = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
   const { toast } = useToast();
-  const uniqueID = unique()
+  const { refresh } = useRouter();
+  const { closeDialog } = useDialog();
+  const { data: user } = useUser();
 
-  const uploadAvatarFile = useMutation({
+  const uploadFile = useMutation({
     mutationFn: async (values: UpdateGeneric) => {
       try {
         if (!values.avatarUrl || !values.userId) return null;
 
-        const { data: userAvatar, error: userError } = await supabase
-          .storage
+        const { data: userAvatar, error: uploadError } = await supabase.storage
           .from("users")
-          .upload(`user-${values.userId}-avatar-${uniqueID}`, values.avatarUrl, {
+          .upload(`${values.userId}-avatar`, values.avatarUrl, {
             upsert: true,
-            contentType: "fileBody"
+            contentType: "fileBody",
           });
 
-        if (userError) {
+        if (uploadError) {
           toast({
-            title: userError.message,
+            title: uploadError.message,
           });
         } else {
           toast({
@@ -38,8 +40,8 @@ export const useUpdateAvatar = () => {
         }
       } catch (error) {
         toast({
-          title: String(error)
-        })
+          title: String(error),
+        });
       }
     },
   });
@@ -47,36 +49,39 @@ export const useUpdateAvatar = () => {
   const uploadAvatar = useMutation({
     mutationFn: async (values: UpdateGeneric) => {
       const [userData] = await Promise.all([
-        uploadAvatarFile.mutateAsync(values),
+        uploadFile.mutateAsync(values),
       ]);
 
       if (userData !== null) {
         try {
-          setIsLoading(true)
-          const { data: userUpdate, error: userErr } = await supabase
+          const { error: userError } = await supabase
             .from("users")
             .update({
               avatar_url: userData?.path,
             })
             .eq("id", values.userId)
             .select();
-  
-          if (!userErr) {
-            setIsLoading(false)
 
-            return userUpdate;
-          } else {
-            setIsLoading(false)
-          }
+          if (userError) return;
         } catch (error) {
-          console.log(error);
+          toast({
+            title: String(error),
+            variant: "red",
+          });
         }
       }
+    },
+    onSuccess: () => {
+      closeDialog();
+      refresh();
+
+      queryClient.invalidateQueries({
+        queryKey: [`${user?.id}-avatar`],
+      });
     },
   });
 
   return {
     uploadAvatar,
-    isLoading,
   };
 };

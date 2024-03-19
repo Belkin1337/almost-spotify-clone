@@ -1,5 +1,3 @@
-import { createClient } from "@/lib/utils/supabase/client";
-import { getSongsAll } from "./get-songs";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export function getSongsByTitle(client: SupabaseClient, title: string) {

@@ -5,9 +5,13 @@ import { prefetchQuery } from "@supabase-cache-helpers/postgrest-react-query";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 
-export default async function TrackPage({ params }: { params: { id: string } }) {
-  const queryClient = new QueryClient()
-  const cookieStore = cookies()
+export default async function TrackPage({ 
+  params 
+}: { 
+  params: { id: string } 
+}) {
+  const queryClient = new QueryClient();
+  const cookieStore = cookies();
   const supabase = createClient(cookieStore)
 
   await prefetchQuery(queryClient, getSongById(supabase, params.id), {

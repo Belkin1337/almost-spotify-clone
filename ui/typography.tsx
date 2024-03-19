@@ -2,7 +2,7 @@
 
 import { VariantProps, cva } from "class-variance-authority"
 
-const typographyVariants = cva("truncate", {
+const typographyVariants = cva("", {
   variants: {
     variant: {
       default: "text-white font-medium",

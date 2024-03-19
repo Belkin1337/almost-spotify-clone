@@ -2,7 +2,11 @@
 
 import { UserTips } from "@/components/tooltip/action"
 import { useScopedI18n } from "@/locales/client"
-import { PiSpeakerSimpleHighThin, PiSpeakerSimpleLowThin, PiSpeakerSimpleSlashThin } from "react-icons/pi"
+import { 
+  PiSpeakerSimpleHighThin, 
+  PiSpeakerSimpleLowThin, 
+  PiSpeakerSimpleSlashThin 
+} from "react-icons/pi"
 
 interface PlayerToggleVolumeProps {
   volume: number,
@@ -10,10 +14,10 @@ interface PlayerToggleVolumeProps {
   unmute: () => void,
 }
 
-export const PlayerToggleVolume = ({ 
-  volume, 
-  mute, 
-  unmute 
+export const PlayerToggleVolume = ({
+  volume,
+  mute,
+  unmute
 }: PlayerToggleVolumeProps) => {
   const playerLocale = useScopedI18n('main-service.main-part.config')
 
@@ -25,6 +29,7 @@ export const PlayerToggleVolume = ({
             onClick={unmute}
             color="white"
             size={18}
+            className="cursor-pointer hover:brightness-150"
           />
         </UserTips>
       )}
@@ -33,6 +38,7 @@ export const PlayerToggleVolume = ({
           onClick={mute}
           color="white"
           size={24}
+          className="cursor-pointer hover:brightness-150"
         />
       )}
       {volume > 0.7 && (
@@ -41,6 +47,7 @@ export const PlayerToggleVolume = ({
             onClick={mute}
             color="white"
             size={18}
+            className="cursor-pointer hover:brightness-150"
           />
         </UserTips>
       )}

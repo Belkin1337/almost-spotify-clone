@@ -21,7 +21,7 @@ export const SongListTableHead = () => {
           <p className="text-neutral-400 text-[0.9rem] font-medium">
             Альбом
           </p>
-          <p className="text-neutral-400 text-[0.9rem] font-medium">
+          <p className="text-neutral-400 text-[0.9rem] pl-10 font-medium">
             Дата добавления
           </p>
           <div className="overflow-hidden pr-3">

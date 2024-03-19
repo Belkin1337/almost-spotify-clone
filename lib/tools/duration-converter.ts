@@ -1,8 +1,14 @@
-export function durationConverter(value: number) {
-  let minutes = Math.floor(value / 60);
-  let seconds = Math.round(value % 60);
+let minutes = 0;
+let seconds = 0;
+let formatted_time = '';
 
-  let formatted = minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+export function durationConverter(
+  value: number
+) {
+  minutes = Math.floor(value / 60);
+  seconds = Math.round(value % 60);
 
-  return formatted;
+  formatted_time = minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+
+  return formatted_time;
 }

@@ -1,15 +1,16 @@
 "use client"
 
-import { SongEntity } from "@/types/entities/song"
+import { artist_route } from "@/lib/constants/routes"
 import { VariantProps, cva } from "class-variance-authority"
 import { useRouter } from "next/navigation"
 import { useCallback } from "react"
 
-const songAuthorVariants = cva("text-neutral-400 text-sm truncate", {
+const songAuthorVariants = cva("text-neutral-400 truncate", {
   variants: {
     variant: {
-      default: "",
-      player: "hover:underline hover:cursor-pointer"
+      default: "text-sm",
+      player: "hover:underline hover:cursor-pointer text-sm",
+      widget: "hover:underline text-lg cursor-pointer font-medium"
     }
   },
   defaultVariants: {
@@ -20,29 +21,32 @@ const songAuthorVariants = cva("text-neutral-400 text-sm truncate", {
 interface SongAuthorProps
   extends React.HTMLAttributes<HTMLParagraphElement>,
   VariantProps<typeof songAuthorVariants> {
-  data: SongEntity,
+  author: string,
   player?: boolean
 }
 
 export const SongAuthor = ({
-  data,
+  author,
   variant,
   className,
   player
 }: SongAuthorProps) => {
-  const router = useRouter()
+  const { push } = useRouter()
 
   const targetToAuthor = useCallback(() => {
-    if (player && data) {
-      router.push(`/home/artist/${data.author}`)
-    } else {
-      return null
+    if (player && author) {
+      push(`${artist_route}/${author}`)
     }
-  }, [router, data, player])
+  }, [push, author, player])
 
   return (
-    <p onClick={targetToAuthor} className={songAuthorVariants(({ variant, className }))}>
-      {data?.author}
+    <p
+      onClick={targetToAuthor}
+      className={songAuthorVariants(({
+        variant, className
+      }))}
+    >
+      {author}
     </p>
   )
 }

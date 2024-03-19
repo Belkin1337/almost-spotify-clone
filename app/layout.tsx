@@ -11,11 +11,19 @@ export const metadata: Metadata = {
   title: 'Smotify | Web Player',
 }
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({
+  children
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="ru" suppressHydrationWarning>
       <body className={`${font.className}`}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+        >
           {children}
         </ThemeProvider>
       </body>

@@ -12,9 +12,13 @@ interface SidebarItemProps {
   href: string;
 }
 
-export const SidebarItem = ({ icon: Icon, label, href }: SidebarItemProps) => {
+export const SidebarItem = ({ 
+  icon: Icon, 
+  label, 
+  href 
+}: SidebarItemProps) => {
   const { openDialog } = useDialog();
-  const router = useRouter();
+  const { push } = useRouter();
   const { data: user } = useUser();
 
   const handleRoute = useCallback(() => {
@@ -25,8 +29,8 @@ export const SidebarItem = ({ icon: Icon, label, href }: SidebarItemProps) => {
       });
     }
 
-    return router.push(href)
-  }, [router, user, href])
+    return push(href)
+  }, [push, user, href])
   
   return (
     <div onClick={handleRoute} className="flex flex-row h-auto items-center w-full gap-x-4 text-md font-medium cursor-pointer 

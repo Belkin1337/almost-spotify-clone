@@ -11,7 +11,8 @@ const buttonVariants = cva(`flex items-center justify-center whitespace-nowrap r
         default: "bg-neutral-900 text-neutral-50 hover:bg-neutral-900/90",
         follow: "",
         main_play: "transition opacity-0 items-center flex bg-jade-500 p-2 translate translate-y-1/3 group-hover:opacity-100 group-hover:translate-y-0 hover:scale:105",
-        page_play: "bg-jade-500 p-4 translate hover:scale:105"
+        page_play: "bg-jade-500 p-4 translate hover:scale:105",
+        action: "font-semibold p-4 bg-jade-300 text-md truncate"
       },
       filter: {
         blurred: "backdrop-filter backdrop-blue-md"

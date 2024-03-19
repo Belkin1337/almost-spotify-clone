@@ -1,6 +1,6 @@
 import { setStaticParamsLocale } from 'next-international/server';
 import { FollowedTracksButton } from '@/components/buttons/follow/redirect-follow-list-button'
-import { MainTracksList } from '@/components/lists/main-tracks-list';
+import { MainTracksList } from '@/components/lists/main-tracks';
 import { getScopedI18n } from '@/locales/server';
 import { getSongsAll } from '@/lib/queries/get-songs';
 import { cookies } from 'next/headers';
@@ -8,12 +8,20 @@ import { prefetchQuery } from '@supabase-cache-helpers/postgrest-react-query'
 import { createClient } from '@/lib/utils/supabase/server';
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
 
-export default async function HomeMainPage({ params: { locale } }: { params: { locale: string } }) {
+export default async function HomeMainPage({ 
+  params: { locale } 
+}: { 
+  params: { locale: string } 
+}) {
   const cookieStore = cookies()
   const queryClient = new QueryClient()
   const supabase = createClient(cookieStore)
   setStaticParamsLocale(locale);
-  const { data: { user } } = await supabase.auth.getUser()
+
+  const { data: { 
+    user 
+  } } = await supabase.auth.getUser()
+
   await prefetchQuery(queryClient, getSongsAll(supabase))
   
   const mainPageLocale = await getScopedI18n('main-service.pages.main-content.navbar')

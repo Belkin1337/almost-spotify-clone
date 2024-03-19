@@ -1,18 +1,17 @@
 "use client"
 
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger
-} from "@/ui/dropdown-menu"
-import {
   useChangeLocale,
   useCurrentLocale,
   useScopedI18n
 } from '@/locales/client'
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger 
+} from "@/ui/select"
+import { Typography } from "@/ui/typography"
 
 export const ChangeLang = () => {
   const changeLocale = useChangeLocale()
@@ -43,25 +42,25 @@ export const ChangeLang = () => {
   ]
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <DropdownMenuLabel className="text-white text-[1rem]">
+    <Select>
+      <SelectTrigger className="w-[40%]">
+        <div className="text-white text-[1rem]">
           {currentLocale()}
-        </DropdownMenuLabel>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="p-0">
-        <DropdownMenuGroup>
-          {languages.map((item) => (
-            <DropdownMenuItem
-              key={item.fullname}
-              onClick={item.onClick}
-              className="flex items-start bg-neutral-950 text-[1.1rem] py-3 pr-6 pl-2 hover:bg-neutral-900 hover:transition"
-            >
+        </div>
+      </SelectTrigger>
+      <SelectContent className="p-0">
+        {languages.map((item) => (
+          <SelectItem
+            value={item.fullname}
+            key={item.fullname}
+            onClick={item.onClick}
+          >
+            <Typography>
               {item.fullname}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+            </Typography>
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select >
   )
 }

@@ -3,17 +3,20 @@ import { getScopedI18n } from "@/locales/server";
 import { setStaticParamsLocale } from "next-international/server";
 import { about, widgets } from "@/content/lang/pages";
 import { IntroBrand } from "@/components/preview/intro-brand";
-import { WidgetCard } from "@/components/card";
+import { WidgetCard } from "@/components/layout/card";
 
-export default async function BrandPage({ params: { 
-  locale 
-} }: { params: { 
-  locale: string 
-}  }) {
+export default async function BrandPage({ 
+  params: { locale } 
+}: { 
+  params: { locale: string } 
+}) {
   setStaticParamsLocale(locale);
+
   const brandLocale = await getScopedI18n('brand.main');
   const widgetsLocale = widgets(brandLocale);
+
   const a_lang = await getScopedI18n('brand.about');
+
   const aboutLang = about(a_lang);
 
   return (

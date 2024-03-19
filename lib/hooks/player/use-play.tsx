@@ -7,18 +7,18 @@ import { useDialog } from "../ui/use-dialog";
 import { AuthForm } from "@/components/forms/auth";
 import { SongEntity } from "@/types/entities/song";
 
-export const usePlay = () => {
-  const { setActiveId, playerState } = usePlayer();
+export const usePlay = ({ 
+  song, 
+  songs 
+}: { 
+  song: SongEntity, 
+  songs: SongEntity[] 
+}) => {
+  const { setActiveId } = usePlayer();
   const { openDialog } = useDialog();
   const { data: user, error } = useUser();
 
-  const onPlay = ({ 
-    songId, 
-    songs 
-  }: { 
-    songId: string, 
-    songs: SongEntity[] 
-  }) => {
+  const onPlay = () => {
     if (!user) {
       openDialog({
         title: "Войдите в аккаунт",
@@ -27,8 +27,7 @@ export const usePlay = () => {
     }
 
     if (!error && user) {
-      console.log(songId, songs, playerState.activeId)
-      setActiveId(songId, songs);
+      setActiveId(song, songs);
     }
   }
 

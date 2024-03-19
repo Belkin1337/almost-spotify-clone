@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback } from "react";
+import React, { cloneElement } from "react";
 import { useLogout } from "@/lib/hooks/actions/user/auth/use-logout";
 import { useScopedI18n } from "@/locales/client";
 import { Button } from "@/ui/button";
@@ -8,25 +8,27 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/ui/dropdown-menu"
-import { useToast } from "@/lib/hooks/ui/use-toast";
 import { AiOutlineUser } from "react-icons/ai";
 import { useRouter } from "next/navigation";
 import { AiOutlinePlus } from "react-icons/ai";
 import { MdOutlineSettings } from "react-icons/md";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
-import { UploadForm } from "@/components/forms/upload-form";
+import { UploadSongForm } from "@/components/forms/song/upload-song";
 import { AuthForm } from "@/components/forms/auth";
 import { UserAvatar } from "./child/user-avatar";
 import { Typography } from "@/ui/typography";
 import { UserGeneric } from "@/types/entities/user";
+import { profile_route, settings_route } from "@/lib/constants/routes";
 
-export const UserMenu = ({ user }: { user: UserGeneric }) => {
+export const UserMenu = ({ 
+  user 
+}: { 
+  user: UserGeneric 
+}) => {
   const { push } = useRouter();
   const { openDialog } = useDialog()
-  const { toast } = useToast()
   const logoutMutation = useLogout()
   const navbarLocale = useScopedI18n('main-service.main-part.config')
   const sidebarLocale = useScopedI18n('main-service.sidebar.widgets')
@@ -35,13 +37,9 @@ export const UserMenu = ({ user }: { user: UserGeneric }) => {
     push("/")
   }
 
-  const handleLogout = useCallback(() => {
+  const handleLogout = () => {
     logoutMutation.mutate()
-
-    toast({
-      title: navbarLocale('toast.log-out'),
-    });
-  }, [])
+  }
 
   const createSong = () => {
     if (!user) {
@@ -53,7 +51,7 @@ export const UserMenu = ({ user }: { user: UserGeneric }) => {
 
     if (user) {
       return openDialog({
-        dialogChildren: <UploadForm />
+        dialogChildren: <UploadSongForm />
       })
     }
   }
@@ -61,7 +59,7 @@ export const UserMenu = ({ user }: { user: UserGeneric }) => {
   const userContextMenu = [
     {
       name: "Профиль",
-      action: () => push(`/home/profile/${user.id}`),
+      action: () => push(`${profile_route}/${user.id}`),
       icon: <AiOutlineUser /> as JSX.Element,
     },
     {
@@ -71,7 +69,7 @@ export const UserMenu = ({ user }: { user: UserGeneric }) => {
     },
     {
       name: sidebarLocale('settings-route'),
-      action: () => push(`/home/preferences`),
+      action: () => push(settings_route),
       icon: <MdOutlineSettings /> as JSX.Element,
     },
     {
@@ -100,7 +98,7 @@ export const UserMenu = ({ user }: { user: UserGeneric }) => {
             className="flex p-3 items-center cursor-pointer group gap-x-1"
             onClick={item.action}
           >
-            {item.icon && React.cloneElement(item.icon, { 
+            {item.icon && cloneElement(item.icon, { 
               size: 20, 
               className: "text-neutral-400 hover:text-white" 
             })}

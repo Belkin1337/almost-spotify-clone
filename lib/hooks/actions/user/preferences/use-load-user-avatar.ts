@@ -1,26 +1,23 @@
+import { storage_users } from "@/lib/constants/routes";
 import { createClient } from "@/lib/utils/supabase/client";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const supabase = createClient();
 
 export const useLoadUserAvatar = (userId: string) => {
-  return useSuspenseQuery({
-    queryKey: [userId],
+  return useQuery({
+    queryKey: [`${userId}-avatar`],
     queryFn: () => {
-      const { data: userAvatar } = supabase
+      const { data: avatar } = supabase
         .storage
         .from('users')
-        .getPublicUrl(`${'user-' + userId + '-avatar'}`)
+        .getPublicUrl(`${userId}-avatar`)
 
-      if (userAvatar.publicUrl === 'https://huhpmogbdpibjlquvuli.supabase.co/storage/v1/object/public/users/user-undefined-avatar') {
-        return '';
+      if (avatar.publicUrl === `${storage_users}/undefined-avatar`) {
+        return "/images/null-avatar.png"
       } else {
-        return userAvatar.publicUrl;
+        return avatar.publicUrl;
       }
     },
-    retry: true,
-    refetchOnMount: true,
-    refetchOnReconnect: true,
-    refetchOnWindowFocus: true
   })
 }
