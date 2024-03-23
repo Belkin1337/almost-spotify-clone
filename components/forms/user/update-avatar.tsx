@@ -7,6 +7,7 @@ import { updateAvatarSchema } from "@/lib/schemas/user/update-avatar";
 import { Button } from "@/ui/button";
 import { Form, FormField } from "@/ui/form";
 import { FormFieldItem } from "@/ui/form-field";
+import { Typography } from "@/ui/typography";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -57,11 +58,11 @@ export const UpdateAvatarForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col p-6 gap-y-8">
         <FormField
           control={form.control}
           name="avatar"
-          render={({ field: { ref, ...field} }) => (
+          render={({ field: { ref, ...field } }) => (
             <FormFieldItem
               label="Аватар"
               input={{
@@ -69,19 +70,19 @@ export const UpdateAvatarForm = () => {
                 accept: "image/*",
                 type: "file",
                 ref: avatarRef
-              }} 
+              }}
               {...field}
             />
           )}
         />
         <Button
-          variant="action"
-          rounded="full"
-          className="text-black"
+          variant="form"
           disabled={uploadAvatar.isPending}
           type="submit"
         >
-          Обновить
+          <Typography>
+            Обновить
+          </Typography>
         </Button>
       </form>
     </Form>

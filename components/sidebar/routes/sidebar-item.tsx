@@ -24,7 +24,6 @@ export const SidebarItem = ({
   const handleRoute = useCallback(() => {
     if (!user) {
       return openDialog({
-        title: "Войдите в аккаунт",
         dialogChildren: <AuthForm/>
       });
     }

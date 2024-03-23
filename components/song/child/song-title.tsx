@@ -6,7 +6,7 @@ import { VariantProps, cva } from "class-variance-authority"
 import { useRouter } from "next/navigation"
 import React, { useCallback } from "react"
 
-const songTitleVariants = cva("text-white truncate", {
+const songTitleVariants = cva("text-white !truncate", {
   variants: {
     variant: {
       default: "",

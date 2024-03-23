@@ -7,24 +7,24 @@ export const SongListTableHead = () => {
   const configLocale = useScopedI18n('main-service.main-part.config')
 
   return (
-    <div className="flex flex-col gap-y-2 w-full h-[44px] px-10 py-6">
-      <div className="grid grid-rows-1 grid-cols-2 items-center gap-y-4 w-full">
-        <div className="flex flex-row items-center">
-          <p className="text-neutral-400 text-[0.9rem] font-medium pl-3">
+    <div className="flex flex-col gap-y-2 w-full h-[44px] p-6">
+      <div className="flex justify-between items-center gap-y-4 w-full">
+        <div className="flex flex-row items-center w-1/2">
+          <p className="text-neutral-400 text-[0.9rem] font-medium pl-6">
             #
           </p>
-          <p className="text-neutral-400 text-[0.9rem] font-medium pl-6">
+          <p className="text-neutral-400 text-[0.9rem] font-medium pl-7">
             {configLocale('song-attributes.song-name')}
           </p>
         </div>
-        <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-row items-center justify-between w-2/3">
           <p className="text-neutral-400 text-[0.9rem] font-medium">
             Альбом
           </p>
-          <p className="text-neutral-400 text-[0.9rem] pl-10 font-medium">
+          <p className="text-neutral-400 text-[0.9rem] pl-[100px] font-medium">
             Дата добавления
           </p>
-          <div className="overflow-hidden pr-3">
+          <div className="overflow-hidden pr-14">
             <CiClock2 size={22} />
           </div>
         </div>

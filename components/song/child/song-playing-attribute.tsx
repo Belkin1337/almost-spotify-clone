@@ -19,28 +19,31 @@ export const SongPlayingAttribute = ({
 
   return (
     <div className="px-4 relative overflow-hidden w-[46px]">
-      {playerState.active?.id === song.id ? (
-        <div className="group-hover:block hidden text-3xl">
-          <MdPause size={20} />
-        </div>
+      {(playerState.active?.id === song.id) ? (
+        <>
+          <div className="group-hover:hidden flex bars">
+            <div className="bars__item" />
+            <div className="bars__item" />
+            <div className="bars__item" />
+            <div className="bars__item" />
+          </div>
+          <div className="group-hover:block hidden">
+            <UserTips action="Pause">
+              <MdPause size={20} />
+            </UserTips>
+          </div>
+        </>
       ) : (
-        <div className="group-hover:block hidden text-3xl">
-          <UserTips action={`Play ${song.title} by ${song.author}`}>
-            <IoMdPlay size={20} />
-          </UserTips>
-        </div>
-      )}
-      {playerState.active?.id === song.id ? (
-        <div className="loading-wave group-hover:hidden visible">
-          <div className="loading-bar"></div>
-          <div className="loading-bar"></div>
-          <div className="loading-bar"></div>
-          <div className="loading-bar"></div>
-        </div>
-      ) : (
-        <p className="group-hover:hidden block">
-          {list_id}
-        </p>
+        <>
+          <p className="group-hover:hidden block">
+            {list_id}
+          </p>
+          <div className="group-hover:block hidden text-3xl">
+            <UserTips action={`Play ${song.title} by ${song.author}`}>
+              <IoMdPlay size={20} />
+            </UserTips>
+          </div>
+        </>
       )}
     </div>
   )

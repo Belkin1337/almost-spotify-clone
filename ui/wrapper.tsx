@@ -4,7 +4,7 @@ const wrapperVariants = cva("flex flex-col rounded-md bg-DARK_SECONDARY_BACKGROU
   variants: {
     variant: {
       page: "relative h-full overflow-y-auto w-full",
-      library: "h-full"
+      library: "h-full px-2 py-4 overflow-y-auto"
     }
   },
   defaultVariants: {

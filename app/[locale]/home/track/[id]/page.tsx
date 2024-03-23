@@ -5,7 +5,7 @@ import { prefetchQuery } from "@supabase-cache-helpers/postgrest-react-query";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 
-export default async function TrackPage({ 
+export default async function SongPage({ 
   params 
 }: { 
   params: { id: string } 

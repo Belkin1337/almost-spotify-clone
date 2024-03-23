@@ -1,6 +1,5 @@
 "use client"
 
-import { useRouter } from "next/navigation";
 import { ResizablePanel } from "@/ui/resizable";
 import { usePlayer } from "@/lib/hooks/player/use-player";
 import { UserGeneric } from "@/types/entities/user";
@@ -18,7 +17,7 @@ export const SongWidget = ({
   
   const activeSong = playerState.active;
 
-  if (!user || !playerState.active) {
+  if (!user || !activeSong) {
     return null
   }
 
@@ -29,7 +28,7 @@ export const SongWidget = ({
       defaultSize={462}
       className="hidden md:block md:max-w-[462px] md:w-[462px] md:min-w-[342px] p-1"
     >
-      <div className={`${playerState.active ? 'h-[calc(100%-84px)]' : 'h-full'} bg-DARK_SECONDARY_BACKGROUND overflow-y-auto p-4 rounded-md`}>
+      <div className={`${activeSong ? 'h-[calc(100%-84px)]' : 'h-full'} bg-DARK_SECONDARY_BACKGROUND overflow-y-auto p-4 rounded-md`}>
         <div className="flex flex-col gap-y-4 w-full">
           <WidgetSongItem song={activeSong!} />
           <ArtistWidgetCard song={activeSong!} />

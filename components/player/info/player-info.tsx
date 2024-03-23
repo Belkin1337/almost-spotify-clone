@@ -1,6 +1,6 @@
 "use client"
 
-import { SongFollowButton } from "@/components/song/child/song-follow-button"
+import { FollowButton } from "@/components/song/child/song-follow-button"
 import { SongItem } from "@/components/song/song-item"
 import { SongEntity } from "@/types/entities/song"
 
@@ -14,7 +14,7 @@ export const PlayerSongInfo = ({
   list
 }: PlayerSongInfoProps) => {
   return (
-    <div className="flex items-center gap-x-4 max-w-[284px] overflow-hidden justify-start">
+    <div className="flex items-center gap-x-4 w-[30%] overflow-hidden">
       <SongItem
         variant="player"
         player
@@ -23,7 +23,7 @@ export const PlayerSongInfo = ({
           data: list
         }}
       />
-      <SongFollowButton songId={song?.id!} />
+      <FollowButton songId={song?.id!} />
     </div>
   )
 }

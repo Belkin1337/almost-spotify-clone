@@ -1,6 +1,6 @@
 import { Typography } from "@/ui/typography"
 import { WidgetPreview } from "@/ui/widget-preview"
-import { AuthForm } from "../forms/auth"
+import { AuthForm } from "../../forms/auth"
 import Link from "next/link"
 import { useDialog } from "@/lib/hooks/ui/use-dialog"
 

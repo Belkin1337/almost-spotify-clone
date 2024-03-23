@@ -27,27 +27,24 @@ export const PlayerToggleVolume = ({
         <UserTips action={playerLocale('player.unmute')}>
           <PiSpeakerSimpleSlashThin
             onClick={unmute}
-            color="white"
             size={18}
-            className="cursor-pointer hover:brightness-150"
+            className="cursor-pointer text-neutral-400 hover:text-white"
           />
         </UserTips>
       )}
       {volume > 0 && Howler.volume() <= 0.7 && (
         <PiSpeakerSimpleLowThin
           onClick={mute}
-          color="white"
           size={24}
-          className="cursor-pointer hover:brightness-150"
+          className="cursor-pointer text-neutral-400 hover:text-white"
         />
       )}
       {volume > 0.7 && (
         <UserTips action={playerLocale('player.mute')}>
           <PiSpeakerSimpleHighThin
             onClick={mute}
-            color="white"
             size={18}
-            className="cursor-pointer hover:brightness-150"
+            className="cursor-pointer text-neutral-400 hover:text-white"
           />
         </UserTips>
       )}

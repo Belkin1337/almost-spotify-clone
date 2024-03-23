@@ -4,7 +4,7 @@ import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export default async function HomeArtistPage({
+export default async function ArtistPage({
   params
 }: {
   params: { id: string }

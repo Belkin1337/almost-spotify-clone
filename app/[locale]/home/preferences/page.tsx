@@ -1,12 +1,12 @@
-import { SettingsList } from "@/components/lists/settings";
 import { getScopedI18n } from "@/locales/server";
 import { setStaticParamsLocale } from "next-international/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { Wrapper } from "@/ui/wrapper";
+import { PreferencesList } from "@/components/lists/preferences/preferences";
 
-export default async function Settings({ 
+export default async function PreferencesPage({ 
   params: { locale } 
 }: { 
   params: { locale: string } 
@@ -33,7 +33,7 @@ export default async function Settings({
           {settingsLocale('welcome-message')}
         </h1>
       </div>
-      <SettingsList />
+      <PreferencesList />
     </Wrapper>
   )
 }

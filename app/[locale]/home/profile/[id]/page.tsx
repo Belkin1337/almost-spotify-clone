@@ -6,7 +6,7 @@ import { getUserById } from '@/lib/queries/get-user-by-id';
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
 import { ProfileUserItem } from '@/components/user/profile';
 
-export default async function Profile({ 
+export default async function ProfilePage({ 
   params 
 }: { 
   params: { id: string } 

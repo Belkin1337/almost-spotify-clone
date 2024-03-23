@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { UserAvatar } from "../../user/personal/child/user-avatar";
 import { FormFieldItem } from "@/ui/form-field";
+import { Typography } from "@/ui/typography";
 
 type uploadSchema = z.infer<typeof updateNameSchema>
 
@@ -21,7 +22,7 @@ export const UpdateNameForm = () => {
   const { closeDialog } = useDialog()
   const { refresh } = useRouter()
   const { uploadUserName } = useUpdateName();
-  
+
   const { data: user } = useUser();
 
   const form = useForm<uploadSchema>({
@@ -47,8 +48,7 @@ export const UpdateNameForm = () => {
         title: "Не удалось обновить информацию",
         variant: "red"
       })
-
-      console.log(error)
+      return;
     }
   }
 
@@ -56,45 +56,56 @@ export const UpdateNameForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex items-center gap-x-6 w-[560px] justify-between gap-y-6"
+        className="flex flex-col w-[560px] p-6"
       >
-        <div className="flex overflow-hidden h-[224px] w-[224px] rounded-full">
-          <UserAvatar user={user!} />
-        </div>
-        <div className="flex flex-col gap-y-8 w-1/2">
-          <FormField
-            control={form.control}
-            name="first_name"
-            render={({ field }) => (
-              <FormFieldItem
-                label="Имя"
-                input={{
-                  type: "text",
-                  placeholder: user?.first_name || "Имя...",
-                  name: "first_name"
-                }}
-                {...field}
-              />
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="last_name"
-            render={({ field }) => (
-              <FormFieldItem
-                label="Фамилия"
-                input={{
-                  type: "text",
-                  placeholder: user?.last_name || "Фамилия...",
-                  name: "last_name"
-                }}
-                {...field}
-              />
-            )}
-          />
-          <Button disabled={uploadUserName.isPending} type="submit">
-            Обновить
-          </Button>
+        <Typography>
+          Данные профиля
+        </Typography>
+        <div className="flex items-center gap-x-6 justify-between gap-y-6">
+          <div className="flex overflow-hidden h-[224px] w-[224px] rounded-full">
+            <UserAvatar user={user!} />
+          </div>
+          <div className="flex flex-col gap-y-8 w-1/2">
+            <FormField
+              control={form.control}
+              name="first_name"
+              render={({ field }) => (
+                <FormFieldItem
+                  label="Имя"
+                  input={{
+                    type: "text",
+                    placeholder: user?.first_name || "Имя...",
+                    name: "first_name"
+                  }}
+                  {...field}
+                />
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="last_name"
+              render={({ field }) => (
+                <FormFieldItem
+                  label="Фамилия"
+                  input={{
+                    type: "text",
+                    placeholder: user?.last_name || "Фамилия...",
+                    name: "last_name"
+                  }}
+                  {...field}
+                />
+              )}
+            />
+            <Button
+              disabled={uploadUserName.isPending}
+              variant="form"
+              type="submit"
+            >
+              <Typography>
+                Обновить
+              </Typography>
+            </Button>
+          </div>
         </div>
       </form>
     </Form>

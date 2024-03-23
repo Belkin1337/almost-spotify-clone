@@ -21,7 +21,6 @@ export const usePlay = ({
   const onPlay = () => {
     if (!user) {
       openDialog({
-        title: "Войдите в аккаунт",
         dialogChildren: <AuthForm />
       })
     }

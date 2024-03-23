@@ -9,7 +9,7 @@ import { SongItem } from "../../song/song-item";
 import { Typography } from "@/ui/typography";
 import { User } from "@supabase/supabase-js";
 import { SongEntity } from "@/types/entities/song";
-import { FollowTrackRouteButton } from "../../buttons/routes/follow-tracks";
+import { FollowTrackRouteButton } from "../../static/button/follow-tracks";
 
 const supabase = createClient();
 

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { createClient } from "@/lib/utils/supabase/client";
 import { AuthTokenResponsePassword } from "@supabase/supabase-js";
@@ -17,20 +17,20 @@ async function signIn(
 
 async function signUp(values: z.infer<any>) {
   return await supabase.auth.signUp({
-    options: {
-      data: {
-        first_name: values.first_name,
-        last_name: values.last_name,
-      }
-    },
     email: values.email,
     password: values.password,
-  })
+    options: {
+      data: {
+        first_name: "asdasd",
+        last_name: "asdsdsdsd",
+      },
+    },
+  });
 }
 
 export const useSignIn = () => {
   return {
     signIn,
-    signUp
-  }
-}
+    signUp,
+  };
+};

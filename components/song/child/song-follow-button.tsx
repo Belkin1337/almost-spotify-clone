@@ -6,7 +6,7 @@ import { LuPlusCircle } from "react-icons/lu";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { UserTips } from "@/components/tooltip/action";
 
-export interface SongFollowButtonProps {
+export interface FollowButtonProps {
   variant?: {
     default?: boolean,
     page: boolean
@@ -14,10 +14,10 @@ export interface SongFollowButtonProps {
   songId: string,
 }
 
-export const SongFollowButton = ({
+export const FollowButton = ({
   songId,
   variant
-}: SongFollowButtonProps) => {
+}: FollowButtonProps) => {
   const { followedSong, followMutation } = useFollowSong(songId);
 
   const handleLike = () => {
@@ -27,12 +27,12 @@ export const SongFollowButton = ({
   return (
     <div
       onClick={handleLike}
-      className="hover:opacity-75 transition cursor-pointer justify-self-end"
+      className="flex items-center justify-center hover:scale-[1.04] transition cursor-pointer"
     >
       {followedSong?.data?.song_id === songId ? (
         <UserTips action="Удалить из любимых треков">
           <IoCheckmarkCircle
-            size={variant?.page ? 42 : 22}
+            size={variant?.page ? 44 : 22}
             className="text-jade-400"
           />
         </UserTips>
@@ -40,7 +40,7 @@ export const SongFollowButton = ({
         <UserTips action="Добавить в любимые треки">
           <LuPlusCircle
             className={`${variant?.page && "text-neutral-400"}`}
-            size={variant?.page ? 42 : 22}
+            size={variant?.page ? 44 : 22}
           />
         </UserTips>
       )}

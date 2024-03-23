@@ -4,7 +4,7 @@ import { features } from "@/content/features"
 import { useScopedI18n } from "@/locales/client"
 import { Typography } from "@/ui/typography"
 
-export const SettingsList = () => {
+export const PreferencesList = () => {
   const settingsLocale = useScopedI18n('main-service.main-part.config')
 
   return (

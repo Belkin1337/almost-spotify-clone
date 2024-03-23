@@ -1,19 +1,14 @@
 "use client"
 
-import { useCallback } from "react";
 import {
   Dialog,
   DialogContent,
   DialogTrigger
 } from "@/ui/dialog";
 import { useLoadImage } from "@/lib/hooks/image/use-load-image";
-import { FaPlay } from "react-icons/fa";
-import { usePlay } from "@/lib/hooks/player/use-play";
-import { Button } from "@/ui/button";
 import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
 import { createClient } from "@/lib/utils/supabase/client";
 import { getSongById } from "@/lib/queries/get-song-by-id";
-import { usePlayer } from "@/lib/hooks/player/use-player";
 import { SongItem } from "../song-item";
 import { SongListTableHead } from "@/ui/song-list-table-head";
 import { SongType } from "../child/song-type";
@@ -24,7 +19,9 @@ import { SongEntity } from "@/types/entities/song";
 import { Typography } from "@/ui/typography";
 import { ArtistPlaylistCard } from "@/components/artist/card/playlist/artist-playlist-card";
 import { ColoredBackground } from "@/ui/colored-background";
-import { SongFollowButton } from "../child/song-follow-button";
+import { FollowButton } from "../child/song-follow-button";
+import { PlayButton } from "@/components/buttons/play-button";
+import { ShuffleButton } from "@/components/buttons/shuffle-button";
 import Image from "next/image";
 
 const supabase = createClient();
@@ -39,10 +36,6 @@ export const SongItemPage = ({
     refetchOnMount: false,
     refetchOnWindowFocus: false
   })
-  const { playerState } = usePlayer()
-  const { onPlay } = usePlay({ song: song!, songs: playerState.ids });
-
-  const handlePlay = useCallback(() => { onPlay() }, [onPlay])
 
   const imageUrl = useLoadImage(song?.image_path!);
 
@@ -63,7 +56,7 @@ export const SongItemPage = ({
                 height={660}
                 loading="lazy"
                 alt={song?.title || "Song"}
-                className="w-[224px] rounded-md h-[224px] shadow-lg shadow-black cursor-pointer hover:scale-[0.98] hover:duration-100 duration-100"
+                className="min-w-[224px] max-w-[224px] max-h-[224px] rounded-md min-h-[224px] shadow-lg shadow-black cursor-pointer hover:scale-[1.06] hover:duration-100 duration-100"
               />
             </DialogTrigger>
             <DialogContent className="w-[660px] h-[660px] p-0 rounded-lg overflow-hidden">
@@ -93,17 +86,14 @@ export const SongItemPage = ({
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-x-8 px-6 py-4">
-          <Button
-            onClick={handlePlay}
-            variant="page_play"
-            size="lg"
-            rounded="large"
-          >
-            <FaPlay className="text-black" />
-          </Button>
-          <div className="flex items-center gap-x-2">
-            <SongFollowButton
+        <div className="flex items-center gap-x-10 px-6 py-4">
+          <PlayButton 
+            variant="single_page"
+            song={song}
+          />
+          <div className="flex items-center gap-x-4">
+            <ShuffleButton />
+            <FollowButton
               songId={song.id}
               variant={{
                 page: true
@@ -117,7 +107,7 @@ export const SongItemPage = ({
             <SongItem
               song={song}
               list={{
-                data: playerState.ids
+                id: '1',
               }}
             />
           </div>

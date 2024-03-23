@@ -1,48 +1,53 @@
-import { 
-  FormControl, 
-  FormItem, 
-  FormLabel, 
-  FormMessage 
+import {
+  FormControl,
+  FormItem,
+  FormLabel,
+  FormMessage
 } from "./form"
 import { Input } from "./input"
 
-type FormItemProps = {
-  label: string,
-  input: {
+interface InputProps 
+  extends React.HTMLAttributes<HTMLInputElement> {
     name: string,
+    optional?: boolean,
     placeholder?: string,
-    autoCorrect?: boolean | 'false',
-    autoComplete?: boolean | 'true',
+    autoCorrect?: 'true' | 'false' | undefined; 
+    autoComplete?: 'true' | 'false' | undefined;
     accept?: string,
     type?: string,
-    ref?: any
-  },
+    ref?: any,
 }
 
-export const FormFieldItem = ({ 
+interface FormFieldItemProps {
+  label: string,
+  input: InputProps,
+}
+
+export const FormFieldItem = ({
   label,
   input,
   ...props
-}: FormItemProps) => {
+}: FormFieldItemProps) => {
   return (
     <FormItem>
       <FormLabel>
-        {label}
+        {label} {input.optional && "(опционально)"}
       </FormLabel>
       <FormControl>
-        <Input 
+        <Input
           name={input.name}
           placeholder={input.placeholder}
           autoCorrect={`${input.autoCorrect}`}
           autoComplete={`${input.autoComplete}`}
           spellCheck="false"
+          onChange={input.onChange}
           accept={input.accept}
           ref={input.ref}
           type={input.type}
           {...props}
         />
       </FormControl>
-      <FormMessage/>
+      <FormMessage />
       { }
     </FormItem>
   )

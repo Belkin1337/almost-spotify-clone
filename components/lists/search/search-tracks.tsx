@@ -7,6 +7,7 @@ import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
 import { getSongsAll } from "@/lib/queries/get-songs";
 import { SongListTableHead } from "@/ui/song-list-table-head";
 import { SongEntity } from "@/types/entities/song";
+import { Typography } from "@/ui/typography";
 
 const supabase = createClient();
 
@@ -19,6 +20,7 @@ export const SearchContent = ({
   const { data: searchedSongs } = useQuery<SongEntity[]>(getSongsByTitle(supabase, title), {
     enabled: !!title
   })
+  
   const { data: allSongs } = useQuery<SongEntity[]>(getSongsAll(supabase));
 
   return (
@@ -27,37 +29,37 @@ export const SearchContent = ({
       <div className="flex flex-col gap-y-2 w-full p-6">
         {title ? (
           searchedSongs ? (
-            searchedSongs.map((song) => (
+            searchedSongs.map((song, idx) => (
               <div key={song.id} className="flex items-center gap-x-4 w-full">
                 <div className="flex-1">
                   <SongItem
                     list={{
+                      id: String(idx + 1),
                       data: searchedSongs
                     }}
                     song={song}
                   />
                 </div>
               </div>
-            ))) : (
-            <div className="flex flex-col gap-y-2 w-full px-4 text-neutral-400">
-              Ничего не найдено.
-            </div>
-          )) : (
+            ))) : null) : (
           allSongs ? (
-            allSongs.map((song) => (
+            allSongs.map((song, idx) => (
               <div key={song.id} className="flex items-center gap-x-4 w-full">
                 <div className="flex-1">
                   <SongItem
                     list={{
+                      id: String(idx + 1),
                       data: searchedSongs!
                     }}
                     song={song}
                   />
                 </div>
               </div>
-            ))) : (
+            ))) : ( 
             <div className="flex flex-col gap-y-2 w-full px-4 text-neutral-400">
-              Ничего не найдено.
+              <Typography>
+                Ничего не найдено.
+              </Typography>
             </div>
           ))}
       </div>

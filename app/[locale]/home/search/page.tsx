@@ -1,5 +1,5 @@
 import { SearchInput } from "@/components/inputs/search-input";
-import { SearchContent } from "@/components/lists/search-tracks";
+import { SearchContent } from "@/components/lists/search/search-tracks";
 import { getScopedI18n } from "@/locales/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/utils/supabase/server";
@@ -14,7 +14,7 @@ interface SearchProps {
   }
 }
 
-export default async function Search({ 
+export default async function SearchPage({ 
   searchParams 
 }: SearchProps) {
   const cookieStore = cookies()

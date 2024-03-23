@@ -1,6 +1,6 @@
 import { setStaticParamsLocale } from 'next-international/server';
 import { FollowedTracksButton } from '@/components/buttons/follow/redirect-follow-list-button'
-import { MainTracksList } from '@/components/lists/main-tracks';
+import { MainTracksList } from '@/components/lists/main/main-tracks';
 import { getScopedI18n } from '@/locales/server';
 import { getSongsAll } from '@/lib/queries/get-songs';
 import { cookies } from 'next/headers';
@@ -34,13 +34,13 @@ export default async function HomeMainPage({
           <h1 className="text-white text-4xl font-semibold">
             {mainPageLocale('welcome-message')}
           </h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cold-3 2xl:grid-cols-4 gap-3 mt-4">
+          {/* <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cold-3 2xl:grid-cols-4 gap-3 mt-4">
             <FollowedTracksButton
               name={configLocale('subtitle-message')}
               image="/images/liked.png"
               href="/home/collection/tracks"
             />
-          </div>
+          </div> */}
         </div>
       )}
       <div className="flex justify-between items-center px-4">

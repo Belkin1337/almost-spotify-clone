@@ -1,7 +1,7 @@
 import { NavbarNavigation } from "@/components/layout/main-panel/navbar/navigation/auth"
 import { NavbarNavigationNoAuth } from "@/components/layout/main-panel/navbar/navigation/no-auth"
 import { UserMenu } from "@/components/user/personal/user-menu"
-import { WidgetMoreBrandInfo } from "@/components/widgets/static/more_information"
+import { WidgetMoreBrandInfo } from "@/components/static/widget/more_information"
 import { UserGeneric } from "@/types/entities/user"
 
 export const Navbar = ({

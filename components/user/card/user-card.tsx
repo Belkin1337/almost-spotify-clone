@@ -1,17 +1,18 @@
 "use client"
 
-import { VariantProps, cva } from "class-variance-authority"
 import React from "react"
+import { VariantProps, cva } from "class-variance-authority"
 import { UserAvatar } from "../personal/child/user-avatar"
 import { UserGeneric } from "@/types/entities/user"
 import { UserName } from "../personal/child/user-name"
 import { useUser } from "@/lib/hooks/actions/user/auth/use-user"
 import { Typography } from "@/ui/typography"
+import { FaCircle } from "react-icons/fa";
 
 const userCardVariants = cva("flex overflow-hidden min-w-[220px] w-fit", {
   variants: {
     variant: {
-      miniauture: "items-center justify-start gap-x-2"
+      miniauture: "items-center justify-start gap-x-1"
     }
   }
 })
@@ -19,12 +20,12 @@ const userCardVariants = cva("flex overflow-hidden min-w-[220px] w-fit", {
 interface UserCard
   extends React.HTMLAttributes<HTMLDivElement>,
   VariantProps<typeof userCardVariants> {
-  // followed_length: number
+  followed_length?: number
 }
 
 export const UserCard = ({
   variant,
-  // followed_length,
+  followed_length,
   className,
   ...props
 }: UserCard) => {
@@ -45,8 +46,14 @@ export const UserCard = ({
         user={user as UserGeneric}
         variant={variant === "miniauture" ? "playlist" : "profile"}
       />
-      {/* todo: impl followed songs length */}
-      {/* {variant === "miniauture" && <Typography>{followed_length}</Typography>} */}
+      {variant === "miniauture" && (
+        <>
+          <FaCircle size={4} className="fill-white" />
+          <Typography className="text-sm font-normal">
+            {followed_length} songs
+          </Typography>
+        </>
+      )}
     </div>
   )
 }

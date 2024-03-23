@@ -1,7 +1,5 @@
 "use client"
 
-import { Button } from "@/ui/button";
-import { FaPlay } from "react-icons/fa";
 import { useLoadImage } from "@/lib/hooks/image/use-load-image";
 import { usePlay } from "@/lib/hooks/player/use-play";
 import { usePlayer } from "@/lib/hooks/player/use-player";
@@ -9,6 +7,7 @@ import { SongAuthor } from "../child/song-author";
 import { SongTitle } from "../child/song-title";
 import { SongEntity } from "@/types/entities/song";
 import { useCallback } from "react";
+import { PlayButton } from "@/components/buttons/play-button";
 import Image from "next/image";
 
 interface SongItemProps {
@@ -44,14 +43,10 @@ export const SongItem = ({
         <SongAuthor author={song.author} />
       </div>
       <div className="absolute bottom-24 right-5">
-        <Button
-          onClick={handlePlay}
-          variant="main_play"
-          size="md"
-          rounded="large"
-        >
-          <FaPlay className="text-black" />
-        </Button>
+        <PlayButton
+          variant="single_medium"
+          song={song}
+        />
       </div>
     </div>
   );

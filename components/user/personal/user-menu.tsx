@@ -1,6 +1,6 @@
 "use client"
 
-import React, { cloneElement } from "react";
+import React, { cloneElement, useCallback } from "react";
 import { useLogout } from "@/lib/hooks/actions/user/auth/use-logout";
 import { useScopedI18n } from "@/locales/client";
 import { Button } from "@/ui/button";
@@ -20,7 +20,8 @@ import { AuthForm } from "@/components/forms/auth";
 import { UserAvatar } from "./child/user-avatar";
 import { Typography } from "@/ui/typography";
 import { UserGeneric } from "@/types/entities/user";
-import { profile_route, settings_route } from "@/lib/constants/routes";
+import { for_authors_route, profile_route, settings_route } from "@/lib/constants/routes";
+import { IoMdMusicalNote } from "react-icons/io";
 
 export const UserMenu = ({ 
   user 
@@ -28,18 +29,20 @@ export const UserMenu = ({
   user: UserGeneric 
 }) => {
   const { push } = useRouter();
-  const { openDialog } = useDialog()
-  const logoutMutation = useLogout()
-  const navbarLocale = useScopedI18n('main-service.main-part.config')
-  const sidebarLocale = useScopedI18n('main-service.sidebar.widgets')
+  const { openDialog } = useDialog();
 
-  if (logoutMutation.isSuccess) {
-    push("/")
-  }
+  const logoutMutation = useLogout();
 
-  const handleLogout = () => {
+  const navbarLocale = useScopedI18n('main-service.main-part.config');
+  const sidebarLocale = useScopedI18n('main-service.sidebar.widgets');
+
+  const handleLogout = useCallback(() => {
     logoutMutation.mutate()
-  }
+
+    if (logoutMutation.isSuccess) {
+      push("/");
+    }
+  }, [logoutMutation, push])
 
   const createSong = () => {
     if (!user) {
@@ -63,9 +66,9 @@ export const UserMenu = ({
       icon: <AiOutlineUser /> as JSX.Element,
     },
     {
-      name: "Добавить трек",
-      action: createSong,
-      icon: <AiOutlinePlus /> as JSX.Element,
+      name: "Для авторов",
+      action: () => push(for_authors_route),
+      icon: <IoMdMusicalNote /> as JSX.Element,
     },
     {
       name: sidebarLocale('settings-route'),
@@ -100,7 +103,7 @@ export const UserMenu = ({
           >
             {item.icon && cloneElement(item.icon, { 
               size: 20, 
-              className: "text-neutral-400 hover:text-white" 
+              className: item.name === "Для авторов" ? 'fill-[#ffd700]' : 'text-neutral-400 hover:text-white'
             })}
             <Typography
               variant="secondary"

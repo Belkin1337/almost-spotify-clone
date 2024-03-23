@@ -1,7 +1,7 @@
 "use client"
 
 import { useScopedI18n } from "@/locales/client";
-import { SongItem } from "../song/main/song-item";
+import { SongItem } from "../../song/main/song-item";
 import { getSongsAll } from "@/lib/queries/get-songs";
 import { createClient } from "@/lib/utils/supabase/client";
 import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";

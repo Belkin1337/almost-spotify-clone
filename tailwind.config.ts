@@ -17,8 +17,30 @@ const config: Config = {
         fourth: "moveHorizontal 40s ease infinite",
         fifth: "moveInCircle 20s ease infinite",
         shimmer: "shimmer 2s linear infinite",
+        'slide-in': "slide-in 0.3s linear",
+        'slide-out': "slide-out 0.3s linear"
       },
       keyframes: {
+        'slide-in': {
+          'from': {
+            transform: 'translateX(100%)',
+            opacity: '0',
+          },
+          'to': {
+            transform: 'translateX(0)',
+            opacity: '1',
+          },
+        },
+        'slide-out': {
+          'from': {
+            transform: 'translateX(0)',
+            opacity: '1',
+          },
+          'to': {
+            transform: 'translateX(100%)',
+            opacity: '0',
+          },
+        },
         moveHorizontal: {
           "0%": {
             transform: "translateX(-50%) translateY(-10%)",

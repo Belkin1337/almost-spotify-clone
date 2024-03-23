@@ -4,18 +4,29 @@ import { useRouter } from "next/navigation";
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, FormField } from "@/ui/form"
+import { Form, FormField, FormMessage } from "@/ui/form"
 import { Button } from "@/ui/button";
 import { signInSchema } from "@/lib/schemas/auth/sign-in";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
 import { toast } from "@/lib/hooks/ui/use-toast";
 import { FormFieldItem } from "@/ui/form-field";
 import { useSignIn } from "@/lib/hooks/actions/user/auth/use-auth";
+import { Typography } from "@/ui/typography";
+import { ReactElement, useState } from "react";
+import { FiUserPlus } from "react-icons/fi";
+import { SignUpForm } from "./sign-up";
 
 export const SignInForm = () => {
-  const { closeDialog } = useDialog()
+  const [error, setError] = useState('');
+  const { openDialog, closeDialog } = useDialog()
   const { refresh } = useRouter()
-  
+
+  const handleDialogForm = (element: ReactElement) => {
+    openDialog({
+      dialogChildren: element
+    })
+  };
+
   const { signIn } = useSignIn();
 
   const form = useForm<z.infer<typeof signInSchema>>({
@@ -31,9 +42,8 @@ export const SignInForm = () => {
       const response = await signIn(values);
 
       if (response.error) {
-        toast({
-          title: response.error.message
-        })
+        setError(response.error.message);
+        return;
       } else {
         closeDialog();
         refresh();
@@ -47,7 +57,18 @@ export const SignInForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-[440px] space-y-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={`w-[440px] space-y-6 p-6 ${error && 'border border-red-500'}`}
+      >
+        <Typography>
+          Авторизация
+        </Typography>
+        {error && (
+          <FormMessage>
+            {error}
+          </FormMessage>
+        )}
         <FormField
           control={form.control}
           name="email"
@@ -76,9 +97,24 @@ export const SignInForm = () => {
             />
           )}
         />
-        <Button type="submit" rounded="large">
-          Войти
+        <Button type="submit" variant="form">
+          <Typography className="relative z-20">
+            Войти
+          </Typography>
         </Button>
+        <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
+        <div
+          onClick={() => handleDialogForm(<SignUpForm />)}
+          className="flex items-center gap-x-2 cursor-pointer"
+        >
+          <FiUserPlus
+            size={18}
+            className="text-neutral-400"
+          />
+          <Typography variant="link">
+            Регистрация
+          </Typography>
+        </div>
       </form>
     </Form>
   );

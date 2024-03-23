@@ -8,5 +8,6 @@ export interface SongEntity {
   song_path: string,
   image_path: string,
   album: string,
-  genre: string
+  genre: string,
+  duration?: number
 }

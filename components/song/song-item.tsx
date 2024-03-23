@@ -5,7 +5,7 @@ import { VariantProps, cva } from "class-variance-authority"
 import { SongTitle } from "./child/song-title"
 import { SongAuthor } from "./child/song-author"
 import { useRouter } from "next/navigation"
-import { SongFollowButton } from "./child/song-follow-button"
+import { FollowButton } from "./child/song-follow-button"
 import { SongPlayingAttribute } from "./child/song-playing-attribute"
 import { usePlay } from "@/lib/hooks/player/use-play"
 import { useSongWidget } from "@/lib/hooks/actions/song/use-song-widget"
@@ -17,14 +17,17 @@ import { SongAlbum } from "./child/song-album"
 import { SongTimestamp } from "./child/song-timestamp"
 import { SongDuration } from "./child/song-duration"
 import { SongEntity } from "@/types/entities/song"
-import { getRelativeTime } from "@/lib/tools/created-at-convert"
+import { getRelativeTime } from "@/lib/tools/date-convert"
 import { song_route } from "@/lib/constants/routes"
+import { useDuration } from "@/lib/hooks/player/use-duration"
+import { SongToolsBar } from "./child/song-tools-bar"
+import { usePlayer } from "@/lib/hooks/player/use-player"
 
-const songItemVariants = cva("grid grid-rows-1 grid-cols-2 justify-items-start items-center w-full rounded-md", {
+const songItemVariants = cva("flex justify-between items-center rounded-md", {
   variants: {
     variant: {
-      default: "p-2 hover:bg-neutral-700/50 group focus-within:bg-neutral-500",
-      player: "",
+      default: "p-2 hover:bg-neutral-700/50 group focus-within:bg-neutral-700 w-full",
+      player: "w-fit",
       library: "p-2 hover:bg-neutral-700/50 cursor-pointer group min-h-[66px] w-full overflow-hidden focus-within:bg-neutral-700"
     }
   },
@@ -38,7 +41,7 @@ export interface SongItemGeneric
   VariantProps<typeof songItemVariants> {
   list: {
     id?: string,
-    data: SongEntity[],
+    data?: SongEntity[],
     created_at?: string,
     user_id?: string
   },
@@ -57,16 +60,19 @@ export const SongItem = ({
   list,
   song,
 }: SongItemGeneric) => {
-  const { push } = useRouter()
+  const { playerState } = usePlayer()
+  const { push } = useRouter();
   const { isSongWidgetVisible, toggleSongWidget } = useSongWidget();
+
+  const { formatted } = useDuration(song);
 
   const { onPlay } = usePlay({
     song: song,
-    songs: list.data
+    songs: list.data ? list.data : playerState.ids
   });
 
-  const created_by_list = getRelativeTime(list?.created_at || '');
-  const created_by_main = getRelativeTime(song?.created_at || '');
+  const created_by_list = getRelativeTime(song?.created_at || '');
+  const created_by_main = getRelativeTime(list?.created_at || '');
 
   const handleClickLibrary = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
@@ -101,7 +107,7 @@ export const SongItem = ({
         className
       }))}
     >
-      <div className="flex items-center gap-x-2 min-w-[264px] max-w-[564px] overflow-hidden">
+      <div className={`flex items-center gap-x-2 ${(library || player) ? 'w-full' : 'w-1/2'} overflow-hidden`}>
         {!(library || player) && (
           <SongPlayingAttribute
             song={song}
@@ -112,9 +118,9 @@ export const SongItem = ({
           song={song}
           imageVariant={
             follow ? "follow" :
-            player ? "player" :
-            library ? "library" :
-            undefined
+              player ? "player" :
+                library ? "library" :
+                  undefined
           }>
           {player && (
             isSongWidgetVisible ? (
@@ -152,23 +158,26 @@ export const SongItem = ({
         </div>
       </div>
       {!(library || player) && (
-        <div className="flex items-center h-full w-full justify-between">
+        <div className={`flex items-center h-full ${(library || player) ? 'w-full' : 'w-2/3'} justify-between`}>
           <div className="flex justify-between items-center h-full">
-            <div className="w-[160px] overflow-hidden">
+            <div className="w-[190px] overflow-hidden">
               <SongAlbum album={song.album || song.title} />
             </div>
           </div>
-          <div className="w-[134px] overflow-hidden">
+          <div className="w-[130px] overflow-hidden">
             {(created_by_list && follow)
               ? <SongTimestamp date={created_by_main} />
               : <SongTimestamp date={created_by_list} />
             }
           </div>
-          <div className="overflow-hidden min-w-[100px] flex items-center justify-between pr-4">
+          <div className="overflow-hidden min-w-[100px] flex items-center justify-between w-[110px] gap-x-4">
             <div className="group-hover:opacity-100 opacity-0">
-              <SongFollowButton songId={song.id} />
+              <FollowButton songId={song.id} />
             </div>
-            <SongDuration duration="1:00" />
+            <div className="flex items-center justify-between gap-x-2 pr-4">
+              <SongDuration duration={formatted} />
+              <SongToolsBar />
+            </div>
           </div>
         </div>
       )}

@@ -7,18 +7,21 @@ import { usePlayer } from "@/lib/hooks/player/use-player";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Howl } from "howler";
 import { usePlayPrev } from "./use-play-prev";
+import { useDuration } from "./use-duration";
 
 export const useAudio = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [position, setPosition] = useState<number>(0);
-  const [duration, setDuration] = useState<number>(0);
   const [playing, setPlaying] = useState<boolean>(false);
   const [howlInstance, setHowlInstance] = useState<Howl | null>(null);
+
   const { playerState } = usePlayer();
   const { song } = useGetSongById(playerState.active?.id!);
+  const { formatted, raw } = useDuration(song!);
   const { onPlayNext } = usePlayNext();
   const { onPlayPrev } = usePlayPrev();
   const { data: url } = useLoadSongUrl(song!);
+
   const songUrl = url?.song.publicUrl;
 
   useEffect(() => {
@@ -29,7 +32,7 @@ export const useAudio = () => {
     if (url && songUrl) {
       const newHowl = new Howl({
         src: songUrl,
-        autoplay: true,
+        autoplay: playerState.active?.id === song?.id!,
         format: ["mp3"],
         html5: true,
         onplay: () => {
@@ -58,28 +61,24 @@ export const useAudio = () => {
         howlInstance.unload();
       }
     };
-  }, [songUrl, url]);
+  }, [songUrl, url, playerState.active?.id, song?.id!]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (howlInstance && howlInstance.playing()) {
         setPosition(howlInstance.seek());
-        setDuration(howlInstance.duration());
       }
     }, 1000);
 
     return () => clearInterval(interval);
   }, [howlInstance]);
 
-  const handleSliderChange = useMemo(
-    () => (value: number) => {
-      if (howlInstance) {
-        howlInstance.seek(value);
-        setPosition(value);
-      }
-    },
-    [howlInstance]
-  );
+  const handleSliderChange = useMemo(() => (value: number) => {
+    if (howlInstance) {
+      howlInstance.seek(value);
+      setPosition(value);
+    }
+  }, [howlInstance]);
 
   const handleTogglePlay = useCallback(() => {
     if (howlInstance) {
@@ -104,8 +103,8 @@ export const useAudio = () => {
     isLoaded,
     setPosition,
     handleTogglePlay,
-    duration,
+    formatted,
+    raw,
     handleSliderChange,
-    setDuration,
   };
 };

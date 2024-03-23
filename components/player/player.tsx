@@ -2,8 +2,8 @@
 
 import { useUser } from "@/lib/hooks/actions/user/auth/use-user";
 import { PlayerVolumeControls } from "./controls/volume";
-import { PlayerControls } from "./controls";
-import { PlayerSongInfo } from "./info";
+import { PlayerControls } from "./controls/player-controls";
+import { PlayerSongInfo } from "./info/player-info";
 import { useVolume } from "@/lib/hooks/player/use-volume";
 import { useAudio } from "../../lib/hooks/player/use-audio";
 import { usePlayer } from "@/lib/hooks/player/use-player";
@@ -24,7 +24,7 @@ export const Player = () => {
     playing,
     song,
     position,
-    duration,
+    raw,
     handleTogglePlay,
     handleSliderChange
   } = useAudio();
@@ -33,8 +33,8 @@ export const Player = () => {
 
   return (
     (howlInstance && playerState.active && user) && (
-      <div className="fixed bottom-0 bg-black w-full py-1 md:py-2 h-[88px] px-4">
-        <div className="flex justify-between items-center h-full">
+      <div className="fixed bottom-0 bg-black w-full py-1 md:py-2 z-[40] h-[88px] px-4">
+        <div className="flex justify-stretch items-center h-full w-full">
           <PlayerSongInfo
             song={song!}
             list={playerState.ids}
@@ -45,8 +45,8 @@ export const Player = () => {
             onPlayNext={onPlayNext}
             onPlayPrev={onPlayPrev}
             currentPosition={position}
-            maxDuration={duration}
-            duration={duration}
+            maxDuration={raw}
+            duration={raw}
             onSliderChange={(value: number[]) => {
               handleSliderChange(value[0])
             }}

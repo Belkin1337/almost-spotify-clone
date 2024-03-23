@@ -5,6 +5,7 @@ import { useDialog } from "@/lib/hooks/ui/use-dialog"
 import { useScopedI18n } from "@/locales/client"
 import { UserGeneric } from "@/types/entities/user"
 import { Button } from "@/ui/button"
+import { Typography } from "@/ui/typography"
 
 export const NavbarNavigationNoAuth = ({
   user
@@ -12,13 +13,12 @@ export const NavbarNavigationNoAuth = ({
   user: UserGeneric
 }) => {
   const { openDialog } = useDialog();
-  
+
   const navbarLocale = useScopedI18n('main-service.main-part.config')
 
   const handleAuth = () => {
     if (!user) {
       openDialog({
-        title: "Войдите в аккаунт",
         dialogChildren: <AuthForm />
       })
     }
@@ -27,12 +27,13 @@ export const NavbarNavigationNoAuth = ({
   return (
     <Button
       filter="blurred"
-      variant="action"
+      variant="form"
       rounded="full"
-      className="text-black"
       onClick={handleAuth}
     >
-      {navbarLocale('log-in')}
+      <Typography>
+        {navbarLocale('log-in')}
+      </Typography>
     </Button>
   )
 }

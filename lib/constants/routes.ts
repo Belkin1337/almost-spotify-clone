@@ -5,6 +5,7 @@ const artist_route = "/home/artist"
 const followed_songs = "/home/collection/tracks"
 const profile_route = "/home/profile"
 const settings_route = "/home/preferences"
+const for_authors_route = "/home/for-authors"
 
 const storage_users = "https://huhpmogbdpibjlquvuli.supabase.co/storage/v1/object/public/users"
 
@@ -16,5 +17,6 @@ export {
   followed_songs,
   storage_users,
   profile_route,
-  settings_route
+  settings_route,
+  for_authors_route
 }
