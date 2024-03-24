@@ -8,17 +8,16 @@ import { useScopedI18n } from "@/locales/client";
 import { useUser } from "../user/auth/use-user";
 import { useRouter } from "next/navigation";
 import { SongAttributes } from "@/types/song";
-import { useDialog } from "../../ui/use-dialog";
+import { song_route } from "@/lib/constants/routes";
 
 const supabase = createClient();
 const uniqueID = uniqid();
 
 export const useCreateSong = () => {
   const { toast } = useToast();
-  const { closeDialog } = useDialog()
   const { refresh } = useRouter();
-
-  const { data: user } = useUser();
+  const { push } = useRouter()
+  const { user } = useUser();
 
   const uploadModalLocale = useScopedI18n("main-service.main-part.config");
 
@@ -51,10 +50,7 @@ export const useCreateSong = () => {
   const uploadSongImage = useMutation({
     mutationFn: async (values: SongAttributes) => {
       try {
-        const { 
-          data: imageData, 
-          error: imageErr 
-        } = await supabase.storage
+        const {  data: imageData,  error: imageErr } = await supabase.storage
           .from("images")
           .upload(`image-${values.title}-${uniqueID}`, values.image, {
             upsert: true,
@@ -95,7 +91,7 @@ export const useCreateSong = () => {
             user_id: user?.id,
             title: values.title,
             author: values.author,
-            album: values.album ? values.album : values.title,
+            // album: values.album,
             genre: values.genre,
             image_path: imageData?.path,
             song_path: songData?.path,
@@ -110,7 +106,6 @@ export const useCreateSong = () => {
             title: uploadModalLocale("publishing.success"),
           });
           
-          closeDialog();
           refresh();
         }
       } catch (e) {

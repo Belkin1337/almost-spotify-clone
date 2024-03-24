@@ -10,7 +10,7 @@ const supabase = createClient();
 
 export const usePlayPrev = () => {
   const { playerState, setActiveId } = usePlayer();
-  const { data: user } = useUser();
+  const { user } = useUser();
   const { data: followedSongs, isFetching } = useQuery<SongEntity[]>(
     getFollowedSongs(supabase, user?.id!),
     {

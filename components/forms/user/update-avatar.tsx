@@ -18,7 +18,7 @@ type uploadSchema = z.infer<typeof updateAvatarSchema>
 export const UpdateAvatarForm = () => {
   const { toast } = useToast()
   const { uploadAvatar } = useUpdateAvatar()
-  const { data: user } = useUser();
+  const { user } = useUser();
 
   const avatarRef = useRef<HTMLInputElement | null>(null);
 

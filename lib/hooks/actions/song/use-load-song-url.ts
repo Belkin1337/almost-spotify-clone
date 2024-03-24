@@ -12,25 +12,19 @@ type LoadedSong = {
 }
 
 export function useLoadSongUrl(song: SongEntity) {
-  const { data, isError } = useQuery<LoadedSong>({
-    queryKey: ["songUrl", song?.song_path],
+  const queryKey = ["songUrl", song?.song_path];
+
+  const { data } = useQuery<LoadedSong>({
+    queryKey: queryKey,
+    enabled: !!song,
     queryFn: async () => {
-      try {
-        const publicUrl = await getSongUrl(
-          supabase, 
-          song?.song_path
-        );
-        return { song: { 
-          publicUrl 
-        } };
-      } catch (error) {
-        throw new Error("Failed to fetch song URL");
-      }
+      const publicUrl = await getSongUrl(supabase, song?.song_path);
+
+      return { song: { 
+        publicUrl 
+      } };
     },
   })
 
-  return {
-    data,
-    isError
-  };
+  return data?.song.publicUrl ?? null;
 }

@@ -19,7 +19,7 @@ export const SidebarItem = ({
 }: SidebarItemProps) => {
   const { openDialog } = useDialog();
   const { push } = useRouter();
-  const { data: user } = useUser();
+  const { user } = useUser();
 
   const handleRoute = useCallback(() => {
     if (!user) {

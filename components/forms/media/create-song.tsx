@@ -12,22 +12,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useRef, useState } from "react";
 import { FormFieldItem } from "@/ui/form-field";
 import { Typography } from "@/ui/typography";
-import Image from "next/image";
 import { IoMdMusicalNote } from "react-icons/io";
+import Image from "next/image";
 
 type uploadSchema = z.infer<typeof createSongSchema>
 
-export const UploadSongForm = () => {
-  const [preview, setPreview] = useState<{
-    title?: string,
-    author?: string,
-    album?: string,
-    genre?: string,
-    image?: string
-  }>({
+type PreviewSongType = {
+  title?: string,
+  author?: string,
+  album?: number,
+  genre?: string,
+  image?: string
+}
+
+export const CreateSongForm = () => {
+  const [preview, setPreview] = useState<PreviewSongType>({
     title: '',
     author: '',
-    album: '',
+    album: 0,
     genre: '',
     image: ''
   });
@@ -43,32 +45,39 @@ export const UploadSongForm = () => {
   const form = useForm<uploadSchema>({
     resolver: zodResolver(createSongSchema),
     defaultValues: {
-      author: "",
       title: "",
-      album: "",
+      author: "",
+      album: 0,
       genre: "",
       image: null,
       song: null
     }
   });
 
-  const handleImageChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files ? event.target.files[0] : null;
+  const handleImageChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files ? event.target.files[0] : null;
 
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        setPreview({
-          image: reader.result as string
-        });
-      };
-    }
-  }, [])
+      if (file) {
+        const reader = new FileReader();
 
-  const handleInputChange = useCallback((fieldName: keyof uploadSchema) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPreview(prevState => ({ ...prevState, [fieldName]: e.target.value }));
-  }, []);
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          setPreview((prev) => ({
+            ...prev,
+            image: reader.result as string
+          }));
+        };
+      }
+    }, [])
+
+  const handleInputChange = useCallback(
+    (fieldName: keyof uploadSchema) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setPreview(prevState => ({
+        ...prevState,
+        [fieldName]: e.target.value
+      }));
+    }, []);
 
   const onSubmit = async (values: uploadSchema) => {
     try {
@@ -105,6 +114,10 @@ export const UploadSongForm = () => {
           album: values.album,
           genre: values.genre
         });
+
+        if (uploadSong.isSuccess) {
+          form.reset();
+        }
       }
     } catch (error) {
       toast({
@@ -125,7 +138,10 @@ export const UploadSongForm = () => {
             <FormField
               control={form.control}
               name="title"
-              render={({ field }) => (
+              render={({ field: {
+                onChange,
+                ...field
+              } }) => (
                 <FormFieldItem
                   label={uploadModalLocale('song-attributes.song-name')}
                   input={{
@@ -133,15 +149,22 @@ export const UploadSongForm = () => {
                     name: "song_title",
                     autoComplete: 'false',
                     autoCorrect: 'false',
-                    onChange: (e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('title')(e)
+                    onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                      handleInputChange('title')(e)
+                      onChange && onChange(e);
+                    }
                   }}
+                  {...field}
                 />
               )}
             />
             <FormField
               control={form.control}
               name="author"
-              render={({ field }) => (
+              render={({ field: {
+                onChange,
+                ...field
+              } }) => (
                 <FormFieldItem
                   label={uploadModalLocale('song-attributes.song-author')}
                   input={{
@@ -149,43 +172,64 @@ export const UploadSongForm = () => {
                     name: "song_author",
                     autoComplete: 'false',
                     autoCorrect: 'false',
-                    onChange: (e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('author')(e)
+                    onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                      handleInputChange('author')(e)
+                      onChange && onChange(e);
+                    }
                   }}
+                  {...field}
                 />
               )}
             />
             <FormField
               control={form.control}
               name="album"
-              render={({ field }) => (
+              render={({ field: {
+                onChange,
+                ...field
+              } }) => (
                 <FormFieldItem
                   label="Альбом (опционально)"
                   input={{
                     placeholder: "ex. Avatar Album",
                     name: "song_album",
-                    onChange: (e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('album')(e)
+                    onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                      handleInputChange('album')(e)
+                      onChange && onChange(e);
+                    }
                   }}
+                  {...field}
                 />
               )}
             />
             <FormField
               control={form.control}
               name="genre"
-              render={({ field }) => (
+              render={({ field: {
+                onChange,
+                ...field
+              } }) => (
                 <FormFieldItem
                   label="Жанр"
                   input={{
                     placeholder: "ex. Phonk",
                     name: "song_genre",
-                    onChange: (e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('genre')(e)
+                    onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                      handleInputChange('genre')(e);
+                      onChange && onChange(e);
+                    }
                   }}
+                  {...field}
                 />
               )}
             />
             <FormField
               control={form.control}
               name="song"
-              render={({ field: { ref, ...field } }) => (
+              render={({ field: {
+                ref,
+                ...field
+              } }) => (
                 <FormFieldItem
                   label={`${uploadModalLocale('song-attributes.song-file')} (mp3)`}
                   input={{
@@ -194,13 +238,18 @@ export const UploadSongForm = () => {
                     type: "file",
                     ref: songRef,
                   }}
+                  {...field}
                 />
               )}
             />
             <FormField
               control={form.control}
               name="image"
-              render={({ field: { ref, ...field } }) => (
+              render={({ field: {
+                ref,
+                onChange,
+                ...field
+              } }) => (
                 <FormFieldItem
                   label={`${uploadModalLocale('song-attributes.song-image')} (webp, jpeg, jpg, png)`}
                   input={{
@@ -208,8 +257,12 @@ export const UploadSongForm = () => {
                     accept: "image/*",
                     type: "file",
                     ref: imageRef,
-                    onChange: handleImageChange
+                    onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                      handleImageChange(e);
+                      onChange && onChange(e);
+                    }
                   }}
+                  {...field}
                 />
               )}
             />
@@ -219,31 +272,33 @@ export const UploadSongForm = () => {
               </Typography>
             </Button>
           </div>
-          <div className="flex flex-col items-center gap-y-4 w-1/4 h-full">
-            <Typography>
-              Предварительный результат
-            </Typography>
-            <div className="flex justify-center items-center w-[240px] h-[240px] bg-neutral-800 rounded-xl overflow-hidden">
-              {preview.image ? (
-                <Image
-                  src={preview.image}
-                  alt="Track"
-                  width={400}
-                  height={400}
-                  className="object-cover w-full h-full"
-                  loading="lazy"
-                />
-              ) : (
-                <IoMdMusicalNote size={42} />
-              )}
-            </div>
-            <div className="flex flex-col gap-y-2">
-              <Typography>
-                {preview.title || 'Без названия'}
+          <div className="flex flex-col items-center w-1/4 h-full">
+            <div className="flex flex-col items-start gap-y-4">
+              <Typography className="truncate">
+                Предварительный результат
               </Typography>
-              <Typography className="text-md !text-neutral-400">
-                {preview.author || 'Неизвестен'}
-              </Typography>
+              <div className="flex justify-center items-center w-[240px] h-[240px] bg-neutral-800 rounded-xl overflow-hidden">
+                {preview.image ? (
+                  <Image
+                    src={preview.image}
+                    alt="Track"
+                    width={400}
+                    height={400}
+                    className="object-cover w-full h-full"
+                    loading="lazy"
+                  />
+                ) : (
+                  <IoMdMusicalNote size={42} />
+                )}
+              </div>
+              <div className="flex flex-col gap-y-2">
+                <Typography className="truncate">
+                  {preview.title || 'Без названия'}
+                </Typography>
+                <Typography className="text-md !text-neutral-400 truncate">
+                  {preview.author || 'Неизвестен'}
+                </Typography>
+              </div>
             </div>
           </div>
         </div>

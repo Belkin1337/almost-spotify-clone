@@ -29,7 +29,7 @@ const ForAuthorsModule = ({
 
 export const ForAuthorsActions = () => {
   const { push } = useRouter();
-  const { data: user } = useUser();
+  const { user } = useUser();
 
   if (!user) return null;
 

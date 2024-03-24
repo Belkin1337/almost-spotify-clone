@@ -7,7 +7,7 @@ export async function getSongUrl(
   const { data } = client
     .storage
     .from("songs")
-    .getPublicUrl(song_path);
+    .getPublicUrl(song_path)
 
   return data.publicUrl;
 }

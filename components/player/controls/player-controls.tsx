@@ -42,6 +42,7 @@ export const PlayerControls = ({
         <div className="flex flex-row gap-x-6 w-full justify-center items-center">
           <PlayerPrevSong onClick={onPlayPrev} />
           <PlayerPlayPause
+            variant="desktop"
             state={playing}
             onClick={onTogglePlay}
           />

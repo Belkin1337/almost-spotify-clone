@@ -9,7 +9,7 @@ export const createSongSchema = z.object({
   }),
   song: z.any(),
   image: z.any(),
-  album: z.string().optional(),
+  album: z.number().optional(),
   genre: z.string().min(1, {
     message: "Поле обязательно"
   })

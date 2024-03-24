@@ -1,11 +1,12 @@
 "use client"
 
+import { useAudioContext } from "@/lib/hooks/player/use-audio"
 import { usePlay } from "@/lib/hooks/player/use-play"
 import { usePlayer } from "@/lib/hooks/player/use-player"
 import { SongEntity } from "@/types/entities/song"
 import { Button } from "@/ui/button"
 import { useCallback } from "react"
-import { FaPlay } from "react-icons/fa"
+import { FaPlay, FaPause } from "react-icons/fa"
 
 type PlayButtonVariants = {
   variant: "default" 
@@ -29,6 +30,7 @@ export const PlayButton = ({
   song,
   list
 }: PlayButtonProps) => {
+  const { playing, handleTogglePlay } = useAudioContext()
   const { playerState } = usePlayer()
 
   const { onPlay } = usePlay({
@@ -36,16 +38,26 @@ export const PlayButton = ({
     songs: list ? list : playerState.ids
   })
 
-  const handlePlay = useCallback(() => { onPlay() }, [onPlay])
+  const playingHandler = useCallback(() => {    
+    if (song.id === playerState.active?.id) {
+      handleTogglePlay()
+    } else {
+      onPlay()
+    }
+  }, [onPlay, song.id, playerState.active?.id, handleTogglePlay])
 
   return (
     <Button
-      onClick={handlePlay}
+      onClick={playingHandler}
       variant={variant}
       className="hover:scale-[1.06]"
       rounded="full"
     >
-      <FaPlay className="text-black" />
+      {song.id === playerState.active?.id && playing ? (
+        <FaPause className="text-black"/>
+      ) : (
+        <FaPlay className="text-black" />
+      )}
     </Button>
   )
 }

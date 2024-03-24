@@ -13,7 +13,7 @@ export const useUpdateAvatar = () => {
   const { toast } = useToast();
   const { refresh } = useRouter();
   const { closeDialog } = useDialog();
-  const { data: user } = useUser();
+  const { user } = useUser();
 
   const uploadFile = useMutation({
     mutationFn: async (values: UpdateGeneric) => {

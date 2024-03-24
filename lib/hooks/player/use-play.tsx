@@ -6,6 +6,7 @@ import { useUser } from "../actions/user/auth/use-user";
 import { useDialog } from "../ui/use-dialog";
 import { AuthForm } from "@/components/forms/auth";
 import { SongEntity } from "@/types/entities/song";
+import { useCallback } from "react";
 
 export const usePlay = ({ 
   song, 
@@ -16,19 +17,17 @@ export const usePlay = ({
 }) => {
   const { setActiveId } = usePlayer();
   const { openDialog } = useDialog();
-  const { data: user, error } = useUser();
+  const { user } = useUser();
 
-  const onPlay = () => {
+  const onPlay = useCallback(() => {
     if (!user) {
       openDialog({
         dialogChildren: <AuthForm />
       })
-    }
-
-    if (!error && user) {
+    } else {
       setActiveId(song, songs);
     }
-  }
+  }, [user, setActiveId, song, openDialog, songs])
 
   return {
     onPlay

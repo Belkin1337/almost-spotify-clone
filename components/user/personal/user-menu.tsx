@@ -12,11 +12,8 @@ import {
 } from "@/ui/dropdown-menu"
 import { AiOutlineUser } from "react-icons/ai";
 import { useRouter } from "next/navigation";
-import { AiOutlinePlus } from "react-icons/ai";
 import { MdOutlineSettings } from "react-icons/md";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
-import { UploadSongForm } from "@/components/forms/song/upload-song";
-import { AuthForm } from "@/components/forms/auth";
 import { UserAvatar } from "./child/user-avatar";
 import { Typography } from "@/ui/typography";
 import { UserGeneric } from "@/types/entities/user";
@@ -29,7 +26,6 @@ export const UserMenu = ({
   user: UserGeneric 
 }) => {
   const { push } = useRouter();
-  const { openDialog } = useDialog();
 
   const logoutMutation = useLogout();
 
@@ -39,24 +35,10 @@ export const UserMenu = ({
   const handleLogout = useCallback(() => {
     logoutMutation.mutate()
 
-    if (logoutMutation.isSuccess) {
-      push("/");
-    }
-  }, [logoutMutation, push])
-
-  const createSong = () => {
-    if (!user) {
-      return openDialog({
-        title: "Войдите в аккаунт",
-        dialogChildren: <AuthForm />
-      });
-    }
-
-    if (user) {
-      return openDialog({
-        dialogChildren: <UploadSongForm />
-      })
-    }
+  }, [logoutMutation])
+  
+  if (logoutMutation.isSuccess) {
+    push("/");
   }
 
   const userContextMenu = [

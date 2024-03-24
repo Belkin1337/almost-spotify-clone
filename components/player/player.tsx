@@ -7,10 +7,14 @@ import { PlayerSongInfo } from "./info/player-info";
 import { useVolume } from "@/lib/hooks/player/use-volume";
 import { useAudio } from "../../lib/hooks/player/use-audio";
 import { usePlayer } from "@/lib/hooks/player/use-player";
+import { UserGeneric } from "@/types/entities/user";
 
-export const Player = () => {
+export const Player = ({
+  user
+}: {
+  user: UserGeneric
+}) => {
   const { playerState } = usePlayer();
-  const { data: user } = useUser();
   const {
     volume,
     handleVolumeChange,
@@ -29,10 +33,10 @@ export const Player = () => {
     handleSliderChange
   } = useAudio();
 
-  if (!playerState.active || !user) return;
+  if (!user) return;
 
   return (
-    (howlInstance && playerState.active && user) && (
+    howlInstance && playerState.active) && (
       <div className="fixed bottom-0 bg-black w-full py-1 md:py-2 z-[40] h-[88px] px-4">
         <div className="flex justify-stretch items-center h-full w-full">
           <PlayerSongInfo
@@ -62,5 +66,4 @@ export const Player = () => {
         </div>
       </div>
     )
-  )
 }

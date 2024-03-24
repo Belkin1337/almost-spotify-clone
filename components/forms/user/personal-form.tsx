@@ -23,7 +23,7 @@ export const UpdateNameForm = () => {
   const { refresh } = useRouter()
   const { uploadUserName } = useUpdateName();
 
-  const { data: user } = useUser();
+  const { user } = useUser();
 
   const form = useForm<uploadSchema>({
     resolver: zodResolver(updateNameSchema),

@@ -8,8 +8,7 @@ import { durationConverter } from "@/lib/tools/duration-converter";
 export function useDuration(song: SongEntity) {
   const [duration, setDuration] = useState<number>(0);
 
-  const { data: url } = useLoadSongUrl(song!);
-  const songUrl = url?.song.publicUrl;
+  const songUrl = useLoadSongUrl(song!);
 
   useEffect(() => {
     const howl = new Howl({

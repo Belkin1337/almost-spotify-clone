@@ -29,7 +29,7 @@ export const UserCard = ({
   className,
   ...props
 }: UserCard) => {
-  const { data: user } = useUser();
+  const { user } = useUser();
 
   return (
     <div className={userCardVariants(({

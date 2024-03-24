@@ -1,5 +1,6 @@
 "use client"
 
+import { useAudioContext } from "@/lib/hooks/player/use-audio";
 import { Slider } from "@/ui/slider";
 
 interface SeekSliderProps {
@@ -17,6 +18,8 @@ export const SeekSlider = ({
   step, 
   onValueChange 
 }: SeekSliderProps) => {
+  const { isLoaded } = useAudioContext()
+  
   return (
     <Slider
       defaultValue={[defaultValue]}
@@ -24,6 +27,7 @@ export const SeekSlider = ({
       step={step}
       max={max}
       onValueChange={onValueChange}
+      className={`${!isLoaded && 'cursor-not-allowed'}`}
     />
   )
 }

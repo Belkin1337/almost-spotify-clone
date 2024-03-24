@@ -36,12 +36,12 @@ export const PlayerProvider = ({
     });
   };
 
-  console.log(
-    "\n\n=== Active Song State: \n\n", 
-    playerState.active, 
-    playerState.ids,
-    "\n\n=== \n\n"
-  )
+  // console.log(
+  //   "\n\n=== Active Song State: \n\n", 
+  //   playerState.active, 
+  //   playerState.ids,
+  //   "\n\n=== \n\n"
+  // )
 
   return (
     <PlayerContext.Provider value={{ 

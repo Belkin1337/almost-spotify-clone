@@ -22,6 +22,8 @@ import { song_route } from "@/lib/constants/routes"
 import { useDuration } from "@/lib/hooks/player/use-duration"
 import { SongToolsBar } from "./child/song-tools-bar"
 import { usePlayer } from "@/lib/hooks/player/use-player"
+import { AiFillSound } from "react-icons/ai";
+import { useAudioContext } from "@/lib/hooks/player/use-audio"
 
 const songItemVariants = cva("flex justify-between items-center rounded-md", {
   variants: {
@@ -60,11 +62,12 @@ export const SongItem = ({
   list,
   song,
 }: SongItemGeneric) => {
+  const { playing } = useAudioContext()
   const { playerState } = usePlayer()
   const { push } = useRouter();
   const { isSongWidgetVisible, toggleSongWidget } = useSongWidget();
 
-  const { formatted } = useDuration(song);
+  // const { formatted } = useDuration(song);
 
   const { onPlay } = usePlay({
     song: song,
@@ -111,6 +114,7 @@ export const SongItem = ({
         {!(library || player) && (
           <SongPlayingAttribute
             song={song}
+            handlePlay={handleClickFollowed}
             list_id={list.id as string}
           />
         )}
@@ -149,6 +153,7 @@ export const SongItem = ({
             variant={player ? "player" : "default"}
             player={player}
             song={song!}
+            className={`${(library && playing && playerState?.active?.id === song.id) && '!text-jade-500'}`}
           />
           <SongAuthor
             variant={player ? "player" : "default"}
@@ -156,6 +161,11 @@ export const SongItem = ({
             author={song?.author}
           />
         </div>
+        {(library && playing && playerState?.active?.id === song.id) && (
+          <div className="w-[24px] h-[24px] ml-4">
+            <AiFillSound size={18} className="text-jade-500" />
+          </div>
+        )}
       </div>
       {!(library || player) && (
         <div className={`flex items-center h-full ${(library || player) ? 'w-full' : 'w-2/3'} justify-between`}>
@@ -175,7 +185,7 @@ export const SongItem = ({
               <FollowButton songId={song.id} />
             </div>
             <div className="flex items-center justify-between gap-x-2 pr-4">
-              <SongDuration duration={formatted} />
+              <SongDuration duration='0:00' />
               <SongToolsBar />
             </div>
           </div>

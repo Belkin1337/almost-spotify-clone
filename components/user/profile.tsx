@@ -23,17 +23,17 @@ export const ProfileUserItem = ({
 }) => {
   const [currentUser, setCurrentUser] = useState(false);
 
-  const { data: user } = useQuery<UserGeneric>(getUserById(supabase, userId))
-  const { data: actualUser } = useUser();
+  const { data: userById } = useQuery<UserGeneric>(getUserById(supabase, userId))
+  const { user } = useUser();
   const { data: avatar } = useLoadUserAvatar(user?.id!)
 
   useEffect(() => {
-    if (actualUser?.id === user?.id) {
+    if (user?.id === userById?.id) {
       setCurrentUser(true)
     } else {
       setCurrentUser(false)
     }
-  }, [actualUser, user]);
+  }, [user, userById]);
 
   return (
     <Wrapper variant="page">
@@ -42,7 +42,7 @@ export const ProfileUserItem = ({
         <div className="flex items-center gap-4">
           <div className="flex items-center justify-center relative overflow-hidden group rounded-full h-[248px] w-[248px]">
             <UserAvatar
-              user={user!}
+              user={userById!}
               currentUser={currentUser}
             />
           </div>

@@ -9,7 +9,7 @@ const supabase = createClient();
 
 export const usePlayNext = () => {
   const { playerState, setActiveId } = usePlayer();
-  const { data: user } = useUser();
+  const { user } = useUser();
   const { data: followedSongs } = useQuery(getFollowedSongs(
     supabase, 
     user?.id!

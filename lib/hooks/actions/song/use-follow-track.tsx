@@ -18,7 +18,7 @@ export type FollowedSong = {
 }
 
 export function useFollowSong(songId: string) {
-  const { data: user } = useUser();
+  const { user } = useUser();
   const { toast } = useToast();
 
   const queryClient = useQueryClient();

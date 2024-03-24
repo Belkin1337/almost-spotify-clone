@@ -20,7 +20,7 @@ const buttonVariants = cva(`flex items-center
       action: "font-semibold p-4 bg-jade-300 text-md truncate",
       form: `rounded-full relative bg-neutral-700 text-white text-sm 
       hover:shadow-2xl hover:shadow-jade-400/[0.1] transition duration-200
-      hover:bg-neutral-800 transition border-transparent border hover:border-neutral-600`,
+      hover:bg-neutral-800 transition border-transparent w-full border hover:border-neutral-600`,
       album_playlist: ""
     },
     filter: {

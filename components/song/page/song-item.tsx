@@ -22,6 +22,7 @@ import { ColoredBackground } from "@/ui/colored-background";
 import { FollowButton } from "../child/song-follow-button";
 import { PlayButton } from "@/components/buttons/play-button";
 import { ShuffleButton } from "@/components/buttons/shuffle-button";
+import { FaCircle } from "react-icons/fa";
 import Image from "next/image";
 
 const supabase = createClient();
@@ -56,7 +57,7 @@ export const SongItemPage = ({
                 height={660}
                 loading="lazy"
                 alt={song?.title || "Song"}
-                className="min-w-[224px] max-w-[224px] max-h-[224px] rounded-md min-h-[224px] shadow-lg shadow-black cursor-pointer hover:scale-[1.06] hover:duration-100 duration-100"
+                className="min-w-[224px] object-cover max-w-[224px] max-h-[224px] rounded-md min-h-[224px] shadow-lg shadow-black cursor-pointer hover:scale-[1.06] hover:duration-100 duration-100"
               />
             </DialogTrigger>
             <DialogContent className="w-[660px] h-[660px] p-0 rounded-lg overflow-hidden">
@@ -81,8 +82,9 @@ export const SongItemPage = ({
               song={song}
             />
             <div className="flex items-center gap-x-2">
-              <SongAuthor author={song.author} />
-              <SongTimestamp date="2024" />
+              <SongAuthor author={song.author} className="text-white font-semibold"/>
+              <FaCircle size={4} className="fill-white" />
+              <SongTimestamp date="2024"/>
             </div>
           </div>
         </div>

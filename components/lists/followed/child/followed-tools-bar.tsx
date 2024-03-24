@@ -45,7 +45,10 @@ export const ToolsBar = ({
   ...props
 }: ToolsBarProps) => {
   return (
-    <div className="flex items-center justify-between p-6 w-full" {...props}>
+    <div
+      className="flex items-center justify-between p-6 w-full"
+      {...props}
+    >
       <div className="flex gap-x-8 items-center">
         <PlayButton
           song={song}
@@ -54,11 +57,12 @@ export const ToolsBar = ({
         />
         <div className="flex items-center gap-x-6">
           <ShuffleButton />
+          
           {variant === "artist" && (
             <>
               <Button
                 className="px-6 py-3 bg-transparent group border hover:scale-[1.06] rounded-full 
-          hover:border-white border-neutral-700 flex items-center justify-center"
+                hover:border-white border-neutral-700 flex items-center justify-center"
               >
                 <Typography
                   className="group-hover:scale-[1.02] text-sm"

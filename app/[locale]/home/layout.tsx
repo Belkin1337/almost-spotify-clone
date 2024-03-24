@@ -43,7 +43,7 @@ export default async function HomeLayout({
         <ResizableHandle />
         <SongWidget user={user as UserGeneric} />
       </ResizablePanelGroup>
-      <Player />
+      <Player user={user as UserGeneric}/>
     </>
   )
 }
