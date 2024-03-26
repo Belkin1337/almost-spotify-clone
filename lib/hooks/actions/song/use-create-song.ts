@@ -7,13 +7,22 @@ import { useToast } from "../../ui/use-toast";
 import { useScopedI18n } from "@/locales/client";
 import { useUser } from "../user/auth/use-user";
 import { useRouter } from "next/navigation";
-import { SongAttributes } from "@/types/song";
 import { song_route } from "@/lib/constants/routes";
+import { ArtistEntity } from "@/types/entities/artist";
+
+type SongAttributes = {
+  title: string;
+  album: number,
+  genre: string,
+  artists: Array<ArtistEntity>;
+  image: any;
+  song: any;
+};
 
 const supabase = createClient();
 const uniqueID = uniqid();
 
-export const useCreateSong = () => {
+export function useCreateSong() {
   const { toast } = useToast();
   const { refresh } = useRouter();
   const { push } = useRouter()
@@ -68,6 +77,7 @@ export const useCreateSong = () => {
       } catch (error) {
         toast({
           title: String(error),
+          variant: "red"
         });
       }
     },
@@ -90,7 +100,7 @@ export const useCreateSong = () => {
           .insert({
             user_id: user?.id,
             title: values.title,
-            author: values.author,
+            artists: [values.artists],
             // album: values.album,
             genre: values.genre,
             image_path: imageData?.path,
@@ -99,18 +109,21 @@ export const useCreateSong = () => {
 
         if (supabaseErr) {
           toast({
-            title: String(supabaseErr),
+            title: supabaseErr.message,
+            variant: "red"
           });
         } else {
           toast({
             title: uploadModalLocale("publishing.success"),
+            variant: "right"
           });
           
           refresh();
         }
       } catch (e) {
         toast({
-          title: String(e)
+          title: String(e),
+          variant: "red"
         });
       }
     },

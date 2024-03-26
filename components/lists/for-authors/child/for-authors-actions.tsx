@@ -6,7 +6,7 @@ import { Typography } from "@/ui/typography";
 import { useRouter } from "next/navigation"
 import { twMerge } from "tailwind-merge";
 
-interface AuthorsModule 
+interface AuthorsModule
   extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
 }
@@ -41,15 +41,22 @@ export const ForAuthorsActions = () => {
         </Typography>
         <div className="flex items-center gap-4">
           <ForAuthorsModule
+            onClick={() => push(`${profile_route}/${user.id}/artists`)}
+            className="h-[80px]">
+            <Typography className="text-3xl font-bold">
+              Артисты
+            </Typography>
+          </ForAuthorsModule>
+          <ForAuthorsModule
             onClick={() => push(`${profile_route}/${user?.id}/tracks`)}
             className="h-[80px]">
             <Typography className="text-3xl font-bold">
               Треки
             </Typography>
           </ForAuthorsModule>
-          <ForAuthorsModule 
-          onClick={() => push(`${profile_route}/${user.id}/albums`)}
-          className="h-[80px]">
+          <ForAuthorsModule
+            onClick={() => push(`${profile_route}/${user.id}/albums`)}
+            className="h-[80px]">
             <Typography className="text-3xl font-bold">
               Альбомы
             </Typography>
@@ -60,16 +67,23 @@ export const ForAuthorsActions = () => {
         <Typography className="text-md font-medium !text-neutral-400">
           Действия
         </Typography>
-        <ForAuthorsModule 
-        onClick={() => push(`${for_authors_route}/create-song`)}
-        className="h-[120px]">
+        <ForAuthorsModule
+          onClick={() => push(`${for_authors_route}/create-artist`)}
+          className="h-[120px]">
+          <Typography className="text-3xl font-bold">
+            Создать артиста
+          </Typography>
+        </ForAuthorsModule>
+        <ForAuthorsModule
+          onClick={() => push(`${for_authors_route}/create-song`)}
+          className="h-[120px]">
           <Typography className="text-3xl font-bold">
             Загрузить трек
           </Typography>
         </ForAuthorsModule>
-        <ForAuthorsModule 
-        onClick={() => push(`${for_authors_route}/create-album`)}
-        className="h-[120px]">
+        <ForAuthorsModule
+          onClick={() => push(`${for_authors_route}/create-album`)}
+          className="h-[120px]">
           <Typography className="text-3xl font-bold">
             Создать альбом
           </Typography>

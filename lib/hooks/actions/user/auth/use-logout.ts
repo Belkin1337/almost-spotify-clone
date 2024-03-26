@@ -29,6 +29,7 @@ export function useLogout() {
 
       toast({
         title: navbarLocale("toast.log-out"),
+        variant: "right"
       });
     },
   });

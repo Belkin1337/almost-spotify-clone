@@ -5,7 +5,7 @@ import { SidebarRoutes } from "./routes/sidebar-routes";
 import { usePlayer } from "@/lib/hooks/player/use-player";
 import { UserGeneric } from "@/types/entities/user";
 import { Wrapper } from "@/ui/wrapper";
-import { WidgetList } from "../lists/widget/widget-list";
+import { WidgetList } from "../static/widget/widget-list";
 
 export const Sidebar = ({
   user

@@ -16,11 +16,10 @@ export const SearchContent = ({
 }: {
   title: string
 }) => {
-
   const { data: searchedSongs } = useQuery<SongEntity[]>(getSongsByTitle(supabase, title), {
     enabled: !!title
   })
-  
+
   const { data: allSongs } = useQuery<SongEntity[]>(getSongsAll(supabase));
 
   return (
@@ -55,7 +54,7 @@ export const SearchContent = ({
                   />
                 </div>
               </div>
-            ))) : ( 
+            ))) : (
             <div className="flex flex-col gap-y-2 w-full px-4 text-neutral-400">
               <Typography>
                 Ничего не найдено.

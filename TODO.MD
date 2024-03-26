@@ -2,7 +2,7 @@ Progress:
 1. **[X]** - Create changing locale
 2. **[x]** - Create song/playlist/album page
 3. **[ ]** - Create personal artist account (details, songs)
-    - [ ] Implement artist entity
+    - **[x]** Implement artist entity
     - [ ] Finish artist profile component
 4. **[ ]** - Create playlist functions (add/delete/share)
     - [ ] Implement playlist entity

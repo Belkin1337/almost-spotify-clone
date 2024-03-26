@@ -23,7 +23,7 @@ export default async function ArtistPage({
   
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <ArtistProfileItem />
+      <ArtistProfileItem artistId={params.id} />
     </HydrationBoundary>
   )
 }

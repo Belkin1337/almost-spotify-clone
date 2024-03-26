@@ -1,6 +1,6 @@
 "use client"
 
-import { useAudioContext } from "@/lib/hooks/player/use-audio";
+import { useHowlerContext } from "@/lib/hooks/player/use-howler";
 import { Slider } from "@/ui/slider";
 
 interface SeekSliderProps {
@@ -18,7 +18,7 @@ export const SeekSlider = ({
   step, 
   onValueChange 
 }: SeekSliderProps) => {
-  const { isLoaded } = useAudioContext()
+  const { isLoaded } = useHowlerContext()
   
   return (
     <Slider

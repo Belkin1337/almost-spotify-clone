@@ -18,12 +18,12 @@ import { Typography } from "@/ui/typography";
 type uploadSchema = z.infer<typeof updateNameSchema>
 
 export const UpdateNameForm = () => {
+  const { user } = useUser();
+
   const { toast } = useToast()
   const { closeDialog } = useDialog()
   const { refresh } = useRouter()
   const { uploadUserName } = useUpdateName();
-
-  const { user } = useUser();
 
   const form = useForm<uploadSchema>({
     resolver: zodResolver(updateNameSchema),
@@ -41,11 +41,13 @@ export const UpdateNameForm = () => {
         userId: user?.id
       });
 
-      closeDialog();
-      refresh()
+      if (uploadUserName.isSuccess) {
+        closeDialog();
+        refresh();
+      }
     } catch (error) {
       toast({
-        title: "Не удалось обновить информацию",
+        title: "Не удалось обновить информацию.",
         variant: "red"
       })
       return;

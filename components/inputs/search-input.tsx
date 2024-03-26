@@ -7,8 +7,8 @@ import { Input } from "@/ui/input";
 import { useScopedI18n } from "@/locales/client";
 
 export const SearchInput = () => {
-  const { push } = useRouter();
   const [value, setValue] = useState<string>('');
+  const { push } = useRouter();
 
   useEffect(() => {
     if (value) {

@@ -1,19 +1,21 @@
 import { createClient } from "@/lib/utils/supabase/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/lib/hooks/ui/use-toast";
-import { UpdateGeneric } from "@/types/form/profile";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
 import { useRouter } from "next/navigation";
 import { useUser } from "../auth/use-user";
+import { UpdateGeneric } from "./use-update-name";
 
 const supabase = createClient();
 
 export const useUpdateAvatar = () => {
+  const { user } = useUser();
+  
   const queryClient = useQueryClient();
+
   const { toast } = useToast();
   const { refresh } = useRouter();
   const { closeDialog } = useDialog();
-  const { user } = useUser();
 
   const uploadFile = useMutation({
     mutationFn: async (values: UpdateGeneric) => {
@@ -30,10 +32,12 @@ export const useUpdateAvatar = () => {
         if (uploadError) {
           toast({
             title: uploadError.message,
+            variant: "red"
           });
         } else {
           toast({
             title: "Аватар обновлен!",
+            variant: "right"
           });
 
           return userAvatar;
@@ -41,6 +45,7 @@ export const useUpdateAvatar = () => {
       } catch (error) {
         toast({
           title: String(error),
+          variant: "red"
         });
       }
     },

@@ -1,7 +1,14 @@
 import { useToast } from "@/lib/hooks/ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { createClient } from "@/lib/utils/supabase/client";
-import { UpdateGeneric } from "@/types/form/profile";
+
+export type UpdateGeneric = {
+  firstName?: string,
+  lastName?: string,
+  description?: string,
+  userId?: string;
+  avatarUrl?: any;
+};
 
 const supabase = createClient();
 
@@ -23,19 +30,24 @@ export const useUpdateName = () => {
         
           if (userErr) {
             toast({
-              title: userErr.message
+              title: userErr.message,
+              variant: "red"
             })
           } else {
             toast({
-              title: "Имя обновлено"
+              title: "Имя обновлено",
+              variant: "right"
             })
 
             return userName;
           }
       } catch (error) {
         toast({
-          title: String(error)
+          title: String(error),
+          variant: "red"
         })
+
+        return;
       }
     }
   })

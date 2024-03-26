@@ -1,6 +1,6 @@
 "use client"
 
-import { useAudioContext } from "@/lib/hooks/player/use-audio";
+import { useHowlerContext } from "@/lib/hooks/player/use-howler";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
 
 export interface PlayerPlayPauseProps
@@ -15,7 +15,7 @@ export const PlayerPlayPause = ({
   onClick,
   state
 }: PlayerPlayPauseProps) => {
-  const { isLoaded } = useAudioContext();
+  const { isLoaded } = useHowlerContext();
   
   const Icon = state ? BsPauseFill : BsPlayFill;
 

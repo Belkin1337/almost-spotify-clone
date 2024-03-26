@@ -4,7 +4,7 @@ import { createContext, useContext } from 'react';
 
 interface SongWidgetContextType {
   isSongWidgetVisible: boolean;
-  toggleSongWidget: () => void;
+  handleToggleSongWidget: () => void;
 }
 
 export const SongWidgetContext = createContext<SongWidgetContextType | undefined>(undefined);

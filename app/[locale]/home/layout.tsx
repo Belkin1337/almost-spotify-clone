@@ -1,4 +1,4 @@
-import { Sidebar } from '@/components/sidebar'
+import { Sidebar } from '@/components/sidebar/sidebar'
 import { Player } from '@/components/player/player'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/ui/resizable';
 import { SongWidget } from '@/components/song/widget';

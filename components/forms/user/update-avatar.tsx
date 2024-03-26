@@ -9,6 +9,7 @@ import { Form, FormField } from "@/ui/form";
 import { FormFieldItem } from "@/ui/form-field";
 import { Typography } from "@/ui/typography";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -16,11 +17,12 @@ import { z } from "zod";
 type uploadSchema = z.infer<typeof updateAvatarSchema>
 
 export const UpdateAvatarForm = () => {
+  const avatarRef = useRef<HTMLInputElement | null>(null);
+
+  const { user } = useUser();
+  const { refresh } = useRouter();
   const { toast } = useToast()
   const { uploadAvatar } = useUpdateAvatar()
-  const { user } = useUser();
-
-  const avatarRef = useRef<HTMLInputElement | null>(null);
 
   const form = useForm<uploadSchema>({
     resolver: zodResolver(updateAvatarSchema),
@@ -48,11 +50,17 @@ export const UpdateAvatarForm = () => {
         avatarUrl: avatarFile,
         userId: user?.id
       });
+
+      if (uploadAvatar.isSuccess) {
+        refresh();
+      }
     } catch (error) {
       toast({
         title: String(error),
         variant: "red"
       })
+
+      return;
     }
   }
 

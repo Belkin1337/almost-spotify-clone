@@ -5,21 +5,30 @@ import { useForm } from "react-hook-form";
 import { useScopedI18n } from "@/locales/client";
 import { useToast } from "@/lib/hooks/ui/use-toast";
 import { Button } from "@/ui/button";
-import { createSongSchema } from "@/lib/schemas/song/create-song";
+import { createSongSchema } from "@/lib/schemas/media/create-song";
 import { Form, FormField } from "@/ui/form";
 import { useCreateSong } from "@/lib/hooks/actions/song/use-create-song";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FormFieldItem } from "@/ui/form-field";
 import { Typography } from "@/ui/typography";
 import { IoMdMusicalNote } from "react-icons/io";
+import { useUser } from "@/lib/hooks/actions/user/auth/use-user";
+import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
+import { ArtistEntity } from "@/types/entities/artist";
+import { createClient } from "@/lib/utils/supabase/client";
+import { getArtistsByUserId } from "@/lib/queries/get-artists-by-user";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/ui/select";
+import { Check } from "lucide-react";
 import Image from "next/image";
+
+const supabase = createClient();
 
 type uploadSchema = z.infer<typeof createSongSchema>
 
 type PreviewSongType = {
   title?: string,
-  author?: string,
+  artists?: Array<ArtistEntity>,
   album?: number,
   genre?: string,
   image?: string
@@ -28,17 +37,26 @@ type PreviewSongType = {
 export const CreateSongForm = () => {
   const [preview, setPreview] = useState<PreviewSongType>({
     title: '',
-    author: '',
-    album: 0,
+    artists: [],
     genre: '',
-    image: ''
+    image: '',
+    album: 0
   });
 
-  const { toast } = useToast()
+  const { user } = useUser();
+  const { toast } = useToast();
   const { uploadSong } = useCreateSong();
 
-  const imageRef = useRef<HTMLInputElement | null>(null);
-  const songRef = useRef<HTMLInputElement | null>(null);
+  const { data: artists, isError } = useQuery<ArtistEntity[]>(getArtistsByUserId(supabase, user?.id!), {
+    enabled: !!user?.id,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false
+  })
+
+  const [imageRef, songRef] = [
+    useRef<HTMLInputElement | null>(null),
+    useRef<HTMLInputElement | null>(null)
+  ];
 
   const uploadModalLocale = useScopedI18n('main-service.main-part.config')
 
@@ -46,7 +64,7 @@ export const CreateSongForm = () => {
     resolver: zodResolver(createSongSchema),
     defaultValues: {
       title: "",
-      author: "",
+      artists: [],
       album: 0,
       genre: "",
       image: null,
@@ -71,34 +89,54 @@ export const CreateSongForm = () => {
       }
     }, [])
 
+  const handleInputChangeArtist = useCallback(() =>
+    (value: string, artists: ArtistEntity[] | []) => {
+      setPreview(prevState => {
+        const id = String(value);
+        const artistItem = artists.find(item => item.id === id);
+
+        const isSelected = prevState.artists?.some(item => item.id === id);
+
+        let updatedArtists: ArtistEntity[];
+
+        if (isSelected) {
+          updatedArtists = (prevState.artists || []).filter(item => item.id !== id);
+        } else {
+          updatedArtists = [...(prevState.artists || []), artistItem!];
+        }
+
+        return {
+          ...prevState,
+          artists: updatedArtists
+        };
+      });
+    }, []);
+
   const handleInputChange = useCallback(
-    (fieldName: keyof uploadSchema) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    (fieldName: keyof uploadSchema, value: string) => {
       setPreview(prevState => ({
         ...prevState,
-        [fieldName]: e.target.value
+        [fieldName]: value
       }));
     }, []);
 
   const onSubmit = async (values: uploadSchema) => {
     try {
-      if (!values.song || !values.image) {
+      if (!values.song || !values.image || isError) {
         toast({
-          title: "Что-то не так"
+          title: "Выберите файлы",
+          variant: "red"
         })
-        return null;
-      }
 
-      if (!imageRef.current) {
-        toast({
-          title: "Выберите файл обложки"
-        });
         return;
       }
 
-      if (!songRef.current) {
+      if (!imageRef.current || !songRef.current) {
         toast({
-          title: "Выберите аудиофайл"
+          title: "Выберите файлы",
+          variant: "red"
         });
+
         return;
       }
 
@@ -108,7 +146,7 @@ export const CreateSongForm = () => {
       if (songFile && imageFile) {
         uploadSong.mutateAsync({
           title: values.title,
-          author: values.author,
+          artists: values.artists,
           song: songFile,
           image: imageFile,
           album: values.album,
@@ -121,11 +159,11 @@ export const CreateSongForm = () => {
       }
     } catch (error) {
       toast({
-        title: String(error)
+        title: String(error),
+        variant: "red"
       })
     }
   }
-
 
   return (
     <Form {...form}>
@@ -150,8 +188,8 @@ export const CreateSongForm = () => {
                     autoComplete: 'false',
                     autoCorrect: 'false',
                     onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                      handleInputChange('title')(e)
-                      onChange && onChange(e);
+                      handleInputChange('title', e.target.value)
+                      onChange && onChange(e.target.value);
                     }
                   }}
                   {...field}
@@ -160,25 +198,55 @@ export const CreateSongForm = () => {
             />
             <FormField
               control={form.control}
-              name="author"
+              name="artists"
               render={({ field: {
                 onChange,
                 ...field
               } }) => (
-                <FormFieldItem
-                  label={uploadModalLocale('song-attributes.song-author')}
-                  input={{
-                    placeholder: uploadModalLocale('placeholder.fields.example') + ' Sidewalks and Skeletons',
-                    name: "song_author",
-                    autoComplete: 'false',
-                    autoCorrect: 'false',
-                    onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                      handleInputChange('author')(e)
-                      onChange && onChange(e);
-                    }
+                <Select
+                  onValueChange={(value: string) => {
+                    handleInputChangeArtist()(value, artists || []);
+                    onChange && onChange(value);
                   }}
-                  {...field}
-                />
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger className="flex flex-col gap-y-2 items-start h-full min-w-[400px] w-[920px] max-w-[1000px]">
+                    <Typography className="font-bold text-lg mb-2">
+                      Выбранные артисты:
+                    </Typography>
+                    {preview.artists ? (
+                      preview.artists.map((artist, idx) => (
+                        <Typography key={idx}>
+                          {artist.name}
+                        </Typography>
+                      ))
+                    ) : (
+                      <SelectValue placeholder="Ничего не выбрано" />
+                    )}
+                  </SelectTrigger>
+                  <SelectContent className="min-w-[400px] w-[920px] max-w-[1000px]">
+                    {artists?.map((artist) => (
+                      <SelectItem
+                        key={artist.id}
+                        className="w-full cursor-pointer"
+                        value={artist.id}
+                      >
+                        {preview.artists ? (
+                          preview?.artists.map((artist, idx) => (
+                            <Typography key={idx}>
+                              {artist.name}
+                            </Typography>
+                          ))
+                        ) : (
+                          <SelectValue placeholder="Ничего не выбрано" />
+                        )}
+                        <Typography>
+                          {artist.name}
+                        </Typography>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               )}
             />
             <FormField
@@ -194,8 +262,8 @@ export const CreateSongForm = () => {
                     placeholder: "ex. Avatar Album",
                     name: "song_album",
                     onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                      handleInputChange('album')(e)
-                      onChange && onChange(e);
+                      handleInputChange('album', e.target.value)
+                      onChange && onChange(e.target.value);
                     }
                   }}
                   {...field}
@@ -215,8 +283,8 @@ export const CreateSongForm = () => {
                     placeholder: "ex. Phonk",
                     name: "song_genre",
                     onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                      handleInputChange('genre')(e);
-                      onChange && onChange(e);
+                      handleInputChange('genre', e.target.value)
+                      onChange && onChange(e.target.value);
                     }
                   }}
                   {...field}
@@ -296,7 +364,11 @@ export const CreateSongForm = () => {
                   {preview.title || 'Без названия'}
                 </Typography>
                 <Typography className="text-md !text-neutral-400 truncate">
-                  {preview.author || 'Неизвестен'}
+                  {preview.artists ? (
+                    preview?.artists.map(artist => artist.name).join(', ')
+                  ) : (
+                    'Неизвестен'
+                  )}
                 </Typography>
               </div>
             </div>

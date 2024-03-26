@@ -21,7 +21,8 @@ export const useGetSongById = (songId: string) => {
   
   if (error) {
     toast({
-      title: error.message
+      title: error.message,
+      variant: "red"
     })
   }
 

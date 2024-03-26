@@ -33,8 +33,6 @@ export const FollowTracksList = ({
     return [];
   }, [followedSongs])
 
-  // const allSongs = updateFollowedSongsList!.flatMap(item => item.songs);
-
   const allSongs = useMemo(() => {
     return updateFollowedSongsList.flatMap(item => item.songs);
   }, [updateFollowedSongsList]);

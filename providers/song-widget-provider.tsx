@@ -1,7 +1,7 @@
 "use client"
 
 import { SongWidgetContext } from "@/lib/hooks/actions/song/use-song-widget";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 export const SongWidgetProvider = ({
   children
@@ -10,14 +10,14 @@ export const SongWidgetProvider = ({
 }) => {
   const [isSongWidgetVisible, setIsSongWidgetVisible] = useState<boolean>(true);
 
-  const toggleSongWidget = () => {
+  const handleToggleSongWidget = useCallback(() => {
     setIsSongWidgetVisible((prev) => !prev);
-  };
+  }, [])
 
   return (
     <SongWidgetContext.Provider value={{
       isSongWidgetVisible,
-      toggleSongWidget
+      handleToggleSongWidget
     }}>
       {children}
     </SongWidgetContext.Provider>

@@ -5,11 +5,11 @@ import { X } from "lucide-react";
 import { useCallback } from "react";
 
 export const ToggleWidgetButton = () => {
-  const { toggleSongWidget } = useSongWidget()
+  const { handleToggleSongWidget } = useSongWidget()
 
   const toggleDisplay = useCallback(() => {
-    toggleSongWidget();
-  }, [toggleSongWidget]);
+    handleToggleSongWidget();
+  }, [handleToggleSongWidget]);
 
   return (
     <div

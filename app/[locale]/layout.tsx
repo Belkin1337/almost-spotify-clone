@@ -6,8 +6,8 @@ import { Toaster } from '@/ui/toaster'
 import { PlayerProvider } from '@/providers/player-provider';
 import { SongWidgetProvider } from '@/providers/song-widget-provider';
 import { TooltipProvider } from '@/ui/tooltip';
-import QueryProvider from '@/providers/query-provider';
 import { AudioProvider } from '@/providers/audio-state-provider';
+import QueryProvider from '@/providers/query-provider';
 
 export default function SubLayout({
   params: { locale },

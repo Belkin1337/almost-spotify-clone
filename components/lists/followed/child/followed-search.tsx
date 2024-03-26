@@ -24,7 +24,8 @@ export const FollowedSearch = () => {
     <div className="flex items-center gap-x-4 overflow-hidden">
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className={`hover:bg-neutral-700/60 cursor-pointer p-1 rounded-full flex items-center justify-center ${isOpen ? 'hidden' : 'transition'}`}
+        className={`hover:bg-neutral-700/60 cursor-pointer p-1 rounded-full flex items-center justify-center 
+        ${isOpen ? 'hidden' : 'transition'}`}
       >
         <BiSearch size={26} />
       </div>

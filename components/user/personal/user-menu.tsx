@@ -13,7 +13,6 @@ import {
 import { AiOutlineUser } from "react-icons/ai";
 import { useRouter } from "next/navigation";
 import { MdOutlineSettings } from "react-icons/md";
-import { useDialog } from "@/lib/hooks/ui/use-dialog";
 import { UserAvatar } from "./child/user-avatar";
 import { Typography } from "@/ui/typography";
 import { UserGeneric } from "@/types/entities/user";

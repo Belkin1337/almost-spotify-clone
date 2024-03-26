@@ -1,6 +1,6 @@
 "use client"
 
-import { useAudioContext } from "@/lib/hooks/player/use-audio"
+import { useHowlerContext } from "@/lib/hooks/player/use-howler"
 import { usePlay } from "@/lib/hooks/player/use-play"
 import { usePlayer } from "@/lib/hooks/player/use-player"
 import { SongEntity } from "@/types/entities/song"
@@ -30,7 +30,7 @@ export const PlayButton = ({
   song,
   list
 }: PlayButtonProps) => {
-  const { playing, handleTogglePlay } = useAudioContext()
+  const { playing, handleTogglePlay } = useHowlerContext()
   const { playerState } = usePlayer()
 
   const { onPlay } = usePlay({
@@ -39,12 +39,12 @@ export const PlayButton = ({
   })
 
   const playingHandler = useCallback(() => {    
-    if (song.id === playerState.active?.id) {
+    if (song?.id === playerState.active?.id) {
       handleTogglePlay()
     } else {
       onPlay()
     }
-  }, [onPlay, song.id, playerState.active?.id, handleTogglePlay])
+  }, [onPlay, song?.id, playerState.active?.id, handleTogglePlay])
 
   return (
     <Button
@@ -53,7 +53,7 @@ export const PlayButton = ({
       className="hover:scale-[1.06]"
       rounded="full"
     >
-      {song.id === playerState.active?.id && playing ? (
+      {song?.id === playerState.active?.id && playing ? (
         <FaPause className="text-black"/>
       ) : (
         <FaPlay className="text-black" />

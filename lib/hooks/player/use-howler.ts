@@ -11,7 +11,7 @@ import { useDuration } from "./use-duration";
 import { AudioContext } from "@/providers/audio-state-provider";
 import { useUser } from "../actions/user/auth/use-user";
 
-export const useAudioContext = () => {
+export const useHowlerContext = () => {
   const audioContext = useContext(AudioContext);
 
   if (!audioContext) {
@@ -21,7 +21,7 @@ export const useAudioContext = () => {
   return audioContext;
 };
 
-export const useAudio = () => {
+export const useHowler = () => {
   const [position, setPosition] = useState<number>(0);
 
   const { 
@@ -32,13 +32,13 @@ export const useAudio = () => {
     howlInstance,
     setHowlInstance,
     handleTogglePlay
-  } = useAudioContext();
+  } = useHowlerContext();
 
   const { playerState } = usePlayer();
+  const { user } = useUser()
   const { song } = useGetSongById(playerState.active?.id!);
   const { formatted, raw } = useDuration(song!);
   const { onPlayNext } = usePlayNext();
-  const { user } = useUser()
   const { onPlayPrev } = usePlayPrev();
 
   const songUrl = useLoadSongUrl(song!);

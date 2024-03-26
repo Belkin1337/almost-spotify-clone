@@ -1,9 +1,7 @@
 import { z } from "zod";
 
 export const createSongSchema = z.object({
-  author: z.string().min(1, {
-    message: "Поле обязательно",
-  }),
+  artists: z.any(),
   title: z.string().min(1, {
     message: "Поле обязательно",
   }),

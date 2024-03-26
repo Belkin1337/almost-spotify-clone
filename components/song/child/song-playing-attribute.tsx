@@ -1,7 +1,7 @@
 "use client"
 
 import { UserTips } from "@/components/tooltip/action";
-import { useAudioContext } from "@/lib/hooks/player/use-audio";
+import { useHowlerContext } from "@/lib/hooks/player/use-howler";
 import { usePlayer } from "@/lib/hooks/player/use-player";
 import { SongEntity } from "@/types/entities/song";
 import { Typography } from "@/ui/typography";
@@ -20,7 +20,7 @@ export const SongPlayingAttribute = ({
   song,
   handlePlay
 }: SongPlayingAttributeGeneric) => {
-  const { playing, handleTogglePlay } = useAudioContext();
+  const { playing, handleTogglePlay } = useHowlerContext();
   const { playerState } = usePlayer();
 
   const playingHandler = useCallback(() => {    
@@ -53,7 +53,7 @@ export const SongPlayingAttribute = ({
             {list_id}
           </Typography>
           <div onClick={playingHandler} className="group-hover:block hidden">
-            <UserTips action={`Play ${song.title} by ${song.author}`}>
+            <UserTips action={`Play ${song.title} by ${song.artists[0]}`}>
               <IoMdPlay size={20} />
             </UserTips>
           </div>

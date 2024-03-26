@@ -21,17 +21,18 @@ export const SongWidget = ({
     return null
   }
 
-  if (!isSongWidgetVisible) return;
+  if (!isSongWidgetVisible || !activeSong) return;
 
   return (
     <ResizablePanel
       defaultSize={462}
       className="hidden md:block md:max-w-[462px] md:w-[462px] md:min-w-[342px] p-1"
     >
-      <div className={`${activeSong ? 'h-[calc(100%-84px)]' : 'h-full'} bg-DARK_SECONDARY_BACKGROUND overflow-y-auto p-4 rounded-md`}>
+      <div className={`bg-DARK_SECONDARY_BACKGROUND overflow-y-auto p-4 rounded-md 
+      ${activeSong ? 'h-[calc(100%-84px)]' : 'h-full'}`}>
         <div className="flex flex-col gap-y-4 w-full">
-          <WidgetSongItem song={activeSong!} />
-          <ArtistWidgetCard song={activeSong!} />
+          <WidgetSongItem song={activeSong} />
+          <ArtistWidgetCard song={activeSong} />
         </div>
       </div>
     </ResizablePanel >

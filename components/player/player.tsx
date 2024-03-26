@@ -5,7 +5,7 @@ import { PlayerVolumeControls } from "./controls/volume";
 import { PlayerControls } from "./controls/player-controls";
 import { PlayerSongInfo } from "./info/player-info";
 import { useVolume } from "@/lib/hooks/player/use-volume";
-import { useAudio } from "../../lib/hooks/player/use-audio";
+import { useHowler } from "../../lib/hooks/player/use-howler";
 import { usePlayer } from "@/lib/hooks/player/use-player";
 import { UserGeneric } from "@/types/entities/user";
 
@@ -31,7 +31,7 @@ export const Player = ({
     raw,
     handleTogglePlay,
     handleSliderChange
-  } = useAudio();
+  } = useHowler();
 
   if (!user) return;
 
