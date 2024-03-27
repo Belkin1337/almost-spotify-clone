@@ -1,3 +1,5 @@
+"use client"
+
 import { useScopedI18n } from "@/locales/client"
 import {
   Select,

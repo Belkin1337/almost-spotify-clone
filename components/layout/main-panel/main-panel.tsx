@@ -22,12 +22,12 @@ export const MainPanel = ({
 
   return (
     <div className={`bg-DARK_SECONDARY_BACKGROUND overflow-y-auto relative rounded-md w-full 
-    ${playerState.active ? 'h-[calc(100%-84px)]' : 'h-full'}`}>
+    ${playerState.active?.id && user ? 'h-[calc(100%-84px)]' : 'h-full'}`}>
       <Navbar
         user={user}
         inView={inView}
       />
-      <div ref={inViewRef}>
+      <div ref={inViewRef} className="min-h-screen">
         {children}
       </div>
     </div>

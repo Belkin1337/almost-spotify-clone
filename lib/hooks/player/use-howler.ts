@@ -45,6 +45,7 @@ export const useHowler = () => {
 
   useEffect(() => {
     if (howlInstance) {
+      setIsLoaded(false);
       howlInstance.unload();
     }
 

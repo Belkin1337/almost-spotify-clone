@@ -23,7 +23,7 @@ export default async function HomeLayout({
     <>
       <ResizablePanelGroup
         direction="horizontal"
-        className="flex max-h-screen bg-black"
+        className="flex justify-stretch *:border max-h-screen bg-black"
       >
         <ResizablePanel
           defaultSize={270}

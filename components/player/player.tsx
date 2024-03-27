@@ -1,11 +1,10 @@
 "use client"
 
-import { useUser } from "@/lib/hooks/actions/user/auth/use-user";
 import { PlayerVolumeControls } from "./controls/volume";
 import { PlayerControls } from "./controls/player-controls";
 import { PlayerSongInfo } from "./info/player-info";
 import { useVolume } from "@/lib/hooks/player/use-volume";
-import { useHowler } from "../../lib/hooks/player/use-howler";
+import { useHowler } from "@/lib/hooks/player/use-howler";
 import { usePlayer } from "@/lib/hooks/player/use-player";
 import { UserGeneric } from "@/types/entities/user";
 
@@ -33,14 +32,14 @@ export const Player = ({
     handleSliderChange
   } = useHowler();
 
-  if (!user) return;
+  if (!user || !song) return;
 
   return (
-    howlInstance && playerState.active) && (
-      <div className="fixed bottom-0 bg-black w-full py-1 md:py-2 z-[40] h-[88px] px-4">
+    (howlInstance && playerState.active) && (
+      <div className="fixed bottom-0 bg-black w-full py-1 md:py-2 min-h-[88px] max-h-[88px] px-4">
         <div className="flex justify-stretch items-center h-full w-full">
           <PlayerSongInfo
-            song={song!}
+            song={song}
             list={playerState.ids}
           />
           <PlayerControls
@@ -66,4 +65,5 @@ export const Player = ({
         </div>
       </div>
     )
+  )
 }

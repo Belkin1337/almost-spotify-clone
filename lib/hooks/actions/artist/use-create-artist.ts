@@ -6,6 +6,7 @@ import { useUser } from "../user/auth/use-user";
 import { useMutation } from "@tanstack/react-query";
 import { useToast } from "../../ui/use-toast";
 import { createClient } from "@/lib/utils/supabase/client";
+import { ArtistEntity } from "@/types/entities/artist";
 
 const supabase = createClient();
 const uniqueID = uniqid();
@@ -44,7 +45,6 @@ export function useCreateArtist() {
 
         return imageCoverData;
       } catch (e) {
-        console.log(e)
         toast({
           title: String(e),
           variant: "red"
@@ -64,18 +64,10 @@ export function useCreateArtist() {
             contentType: "fileBody"
           })
 
-        if (error) {
-          toast({
-            title: error.message,
-            variant: "red"
-          })
-
-          return
-        }
+        if (error) return;
 
         return imageData;
       } catch (e) {
-        console.log(e)
         toast({
           title: String(e),
           variant: "red"
@@ -96,7 +88,7 @@ export function useCreateArtist() {
           throw new Error("Изображения нет")
         }
 
-        const { error } = await supabase
+        const { data: newArtist, error } = await supabase
           .from("artists")
           .insert({
             user_id: user?.id,
@@ -105,22 +97,14 @@ export function useCreateArtist() {
             avatar_url: imageData?.path,
             cover_image_url: imageCoverData?.path
           })
+          .select()
 
           if (error) {
-            toast({
-              title: error.message,
-              variant: "red"
-            })
-          } else {
-            toast({
-              title: "Артист создан",
-              variant: "right"
-            })
+            return;
+          } else if (newArtist && !error) {
+            return newArtist as ArtistEntity[];
           }
-
-          refresh();
       } catch (e) {
-        console.log(e);
         toast({
           title: String(e),
           variant: "red"
@@ -128,6 +112,7 @@ export function useCreateArtist() {
       }
     }
   })
+
   return {
     createArtist
   }

@@ -4,15 +4,14 @@ import { useUser } from "@/lib/hooks/actions/user/auth/use-user";
 import { useUpdateAvatar } from "@/lib/hooks/actions/user/preferences/use-update-avatar";
 import { useToast } from "@/lib/hooks/ui/use-toast";
 import { updateAvatarSchema } from "@/lib/schemas/user/update-avatar";
-import { Button } from "@/ui/button";
-import { Form, FormField } from "@/ui/form";
-import { FormFieldItem } from "@/ui/form-field";
-import { Typography } from "@/ui/typography";
+import { Form } from "@/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { UserUpdateAvatarFormFields } from "./fields";
+import { useDialog } from "@/lib/hooks/ui/use-dialog";
 
 type uploadSchema = z.infer<typeof updateAvatarSchema>
 
@@ -21,6 +20,7 @@ export const UpdateAvatarForm = () => {
 
   const { user } = useUser();
   const { refresh } = useRouter();
+  const { closeDialog } = useDialog();
   const { toast } = useToast()
   const { uploadAvatar } = useUpdateAvatar()
 
@@ -31,7 +31,7 @@ export const UpdateAvatarForm = () => {
     }
   })
 
-  const onSubmit = () => {
+  const onSubmit = useCallback(async () => {
     try {
       if (!avatarRef.current) {
         toast({
@@ -46,52 +46,40 @@ export const UpdateAvatarForm = () => {
         ? avatarRef.current.files[0]
         : null;
 
-      uploadAvatar.mutateAsync({
+      await uploadAvatar.mutateAsync({
         avatarUrl: avatarFile,
         userId: user?.id
       });
-
-      if (uploadAvatar.isSuccess) {
-        refresh();
-      }
     } catch (error) {
-      toast({
-        title: String(error),
-        variant: "red"
-      })
-
       return;
     }
-  }
+  }, [uploadAvatar, toast, user?.id])
+
+  useEffect(() => {
+    if (uploadAvatar.isSuccess) {
+      toast({
+        title: "Аватар обновлен!",
+        variant: "right"
+      })
+
+      closeDialog();
+      refresh();
+    }
+  }, [uploadAvatar.isSuccess, closeDialog, refresh, toast])
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col p-6 gap-y-8">
-        <FormField
-          control={form.control}
-          name="avatar"
-          render={({ field: { ref, ...field } }) => (
-            <FormFieldItem
-              label="Аватар"
-              input={{
-                name: "user_avatar",
-                accept: "image/*",
-                type: "file",
-                ref: avatarRef
-              }}
-              {...field}
-            />
-          )}
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col p-6 gap-y-8"
+      >
+        <UserUpdateAvatarFormFields
+          form={form}
+          isLoading={uploadAvatar.isPending}
+          refs={{
+            avatarRef: avatarRef
+          }}
         />
-        <Button
-          variant="form"
-          disabled={uploadAvatar.isPending}
-          type="submit"
-        >
-          <Typography>
-            Обновить
-          </Typography>
-        </Button>
       </form>
     </Form>
   )

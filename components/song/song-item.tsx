@@ -32,7 +32,13 @@ const songItemVariants = cva("flex justify-between items-center rounded-md", {
       player: "w-fit",
       library: "p-2 hover:bg-neutral-700/50 cursor-pointer group min-h-[66px] w-full overflow-hidden",
       select: "p-1 cursor-pointer group min-h-[16px] w-full",
-      artist_library: "p-2 w-[1200px] group cursor-pointer overflow-hidden hover:bg-neutral-700/50 focus-within:bg-neutral-700"
+      artist_library: "p-2 w-[1200px] group cursor-pointer overflow-hidden hover:bg-neutral-700/50 focus-within:bg-neutral-700",
+      compact: "p-1 w-full group cursor-pointer overflow-hidden hover:bg-neutral-700/50 focus-within:bg-neutral-700",
+    },
+    type: {
+      edit: "",
+      page: "",
+      follow: ""
     }
   },
   defaultVariants: {
@@ -50,25 +56,20 @@ export interface SongItemGeneric
     user_id?: string
   },
   song: SongEntity,
-  follow?: boolean,
-  player?: boolean,
-  select?: boolean,
   library?: boolean,
-  page?: boolean
+  children?: React.ReactNode
 }
 
 // const { formatted } = useDuration(song);
 
 export const SongItem = ({
   variant,
+  type,
   className,
-  follow,
   library,
-  player,
-  select,
-  page,
   list,
   song,
+  children
 }: SongItemGeneric) => {
   const { playing } = useHowlerContext()
   const { playerState } = usePlayer()
@@ -105,10 +106,10 @@ export const SongItem = ({
     }, [library, onPlay, push, song?.id])
 
   const handleClickFollowed = useCallback(() => {
-    if (follow || page) {
+    if (type === 'follow' || type === 'page') {
       onPlay();
     }
-  }, [follow, page, onPlay])
+  }, [type, onPlay])
 
   return (
     <div
@@ -119,71 +120,72 @@ export const SongItem = ({
         className
       }))}
     >
-      <div className={`flex items-center gap-x-2 overflow-hidden
-      ${(library || player || select) ? 'w-full' : 'w-1/2'}`}>
-        {!(library || player || select) && (
+      <div className={`flex items-center gap-x-2 overflow-hidden 
+        ${(library || variant === 'player' || variant === 'select') ? 'w-full' : 'w-1/2'}`}
+      >
+        {!(library || variant === 'player' || variant === 'select') && (
           <SongPlayingAttribute
             song={song}
             handlePlay={handleClickFollowed}
             list_id={String(list.id)}
           />
         )}
-        <SongImageItem
-          song={song}
-          variant={
-            follow ? "follow" :
-              player ? "player" :
-                library ? "library" :
-                  select ? "select" :
-                    undefined
-          }>
-          {player && (
-            isSongWidgetVisible ? (
-              <UserTips action="Cкрыть">
-                <IoMdArrowDropdown
-                  onClick={handleToggleSongWidget}
-                  className="z-50 absolute border-none group-hover:opacity-100 opacity-0 
+        {variant !== 'compact' && (
+          <SongImageItem
+            song={song}
+            variant={
+              type === 'follow' ? "follow" :
+                variant === 'player' ? "player" :
+                  library ? "library" :
+                    variant === 'select' ? "select" :
+                      undefined
+            }>
+            {variant === 'player' && (
+              isSongWidgetVisible ? (
+                <UserTips action="Cкрыть">
+                  <IoMdArrowDropdown
+                    onClick={handleToggleSongWidget}
+                    className="z-50 absolute border-none group-hover:opacity-100 opacity-0 
                   top-1 right-0 w-[24px] h-[24px] bg-black/60 backdrop-blur backdrop-filter 
                   rounded-full hover:scale-[1.16]"
-                />
-              </UserTips>
-            ) : (
-              <UserTips action="Показать">
-                <IoMdArrowDropup
-                  onClick={handleToggleSongWidget}
-                  className="z-50 absolute border-none group-hover:opacity-100 opacity-0 
+                  />
+                </UserTips>
+              ) : (
+                <UserTips action="Показать">
+                  <IoMdArrowDropup
+                    onClick={handleToggleSongWidget}
+                    className="z-50 absolute border-none group-hover:opacity-100 opacity-0 
                   top-1 right-0 w-[24px] h-[24px] bg-black/60 backdrop-blur backdrop-filter 
                   rounded-full hover:scale-[1.16]"
-                />
-              </UserTips>
-            )
-          )}
-        </SongImageItem>
+                  />
+                </UserTips>
+              )
+            )}
+          </SongImageItem>
+        )}
         <div className="flex flex-col overflow-hidden justify-self-start">
           <SongTitle
-            variant={player ? "player" : "default"}
-            player={player}
+            variant={variant === 'player' ? "player" : "default"}
+            player={variant === 'player'}
             song={song!}
-            className={`${(library
-              && playing
-              && playerState?.active?.id === song.id) && '!text-jade-500'}`}
+            className={`${(library && playing && playerState?.active?.id === song.id) && '!text-jade-500'}`}
           />
           {variant !== "artist_library" && (
             <SongArtist
-              variant={player ? "player" : "default"}
-              player={player}
+              variant={variant === 'player' ? "player" : "default"}
+              player={variant === 'player'}
               song={song}
             />
           )}
         </div>
-        {(library && playing && playerState?.active?.id === song.id) && (
+        {library && playing && playerState?.active?.id === song.id && (
           <div className="w-[24px] h-[24px] ml-4">
             <AiFillSound size={18} className="text-jade-500" />
           </div>
         )}
       </div>
-      {!(library || player || select) && (
-        <div className={`flex items-center h-full ${(library || player) ? 'w-full' : 'w-2/3'} justify-between`}>
+      {!(library || variant === 'player' || variant === 'select') && (
+        <div className={`flex items-center h-full ${(library) ? 'w-full' : 'w-2/3'} justify-between`}>
           {variant !== 'artist_library' && (
             <>
               <div className="flex justify-between items-center h-full">
@@ -192,22 +194,28 @@ export const SongItem = ({
                 </div>
               </div>
               <div className="w-[130px] overflow-hidden">
-                {(created_by_list && follow)
+                {created_by_list && type === 'follow'
                   ? <SongTimestamp date={created_by_main} />
                   : <SongTimestamp date={created_by_list} />
                 }
               </div>
             </>
           )}
-          <div className="overflow-hidden min-w-[100px] flex items-center justify-between w-[110px] gap-x-4">
-            <div className="group-hover:opacity-100 opacity-0">
-              <FollowButton songId={song.id} />
+          {type !== 'edit' ? (
+            <div className="overflow-hidden min-w-[100px] flex items-center justify-between w-[110px] gap-x-4">
+              <div className="group-hover:opacity-100 opacity-0">
+                <FollowButton songId={song.id} />
+              </div>
+              <div className="flex items-center justify-between gap-x-2 pr-4">
+                <SongDuration duration='0:00' />
+                <SongToolsBar />
+              </div>
             </div>
-            <div className="flex items-center justify-between gap-x-2 pr-4">
-              <SongDuration duration='0:00' />
-              <SongToolsBar />
-            </div>
-          </div>
+          ) : (
+            <>
+              {children}
+            </>
+          )}
         </div>
       )}
     </div>

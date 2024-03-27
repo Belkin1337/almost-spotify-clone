@@ -3,7 +3,7 @@ import { createClient } from "@/lib/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { HydrationBoundary } from "@tanstack/react-query";
 import { Wrapper } from "@/ui/wrapper";
-import { CreateSongForm } from "@/components/forms/media/song/create-song";
+import { CreateSongForm } from "@/components/forms/media/song/create/create-song";
 import { Typography } from "@/ui/typography";
 
 export default async function ForAuthorsCreateSongPage() {

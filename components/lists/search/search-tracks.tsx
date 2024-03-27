@@ -32,11 +32,11 @@ export const SearchContent = ({
               <div key={song.id} className="flex items-center gap-x-4 w-full">
                 <div className="flex-1">
                   <SongItem
+                    song={song}
                     list={{
                       id: String(idx + 1),
                       data: searchedSongs
                     }}
-                    song={song}
                   />
                 </div>
               </div>
@@ -46,11 +46,11 @@ export const SearchContent = ({
               <div key={song.id} className="flex items-center gap-x-4 w-full">
                 <div className="flex-1">
                   <SongItem
+                    song={song}
                     list={{
                       id: String(idx + 1),
                       data: searchedSongs!
                     }}
-                    song={song}
                   />
                 </div>
               </div>

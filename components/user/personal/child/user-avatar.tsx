@@ -6,9 +6,9 @@ import { VariantProps, cva } from "class-variance-authority"
 import { UserGeneric } from "@/types/entities/user"
 import { Skeleton } from "@/ui/skeleton"
 import { FaPen } from "react-icons/fa"
-import { UpdateAvatarForm } from "@/components/forms/user/update-avatar"
 import { useDialog } from "@/lib/hooks/ui/use-dialog"
 import Image from "next/image"
+import { UpdateAvatarForm } from "@/components/forms/user/personal/avatar/update-avatar"
 
 const userAvatarVariants = cva("rounded-full", {
   variants: {

@@ -31,7 +31,7 @@ export const FollowedList = ({
               <div key={idx} className="flex items-center w-full">
                 <div className="flex-1">
                   <SongItem
-                    follow
+                    type="follow"
                     song={song}
                     list={{
                       id: String(idx + 1),

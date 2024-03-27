@@ -18,7 +18,10 @@ export const Library = ({
 }: {
   user: User
 }) => {
-  const { data: songs } = useQuery<SongEntity[]>(getSongsByUserId(supabase, user?.id), {
+  const { data: songs } = useQuery<SongEntity[]>(getSongsByUserId({
+    client: supabase,
+    userId: user.id!
+  }), {
     enabled: !!user.id
   });
 
@@ -37,13 +40,13 @@ export const Library = ({
           </Typography>
         </div>
       </div>
-      <div className="flex flex-col gap-y-2 mt-4 overflow-x-hidden">
+      <div className="flex flex-col gap-y-2 mt-4 overflow-x-hidden h-full">
         <FollowTrackRouteButton />
         {songs?.map((song) => (
           <SongItem
             key={song.id}
             variant="library"
-            library
+            library // without song attributes and additional info
             song={song}
             list={{
               data: songs

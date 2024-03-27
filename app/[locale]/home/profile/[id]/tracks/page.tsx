@@ -1,5 +1,6 @@
 // impl logic sort trakcs by artist
 
+import { UserTracksList } from "@/components/user/content/user-tracks-list";
 import { Typography } from "@/ui/typography";
 import { Wrapper } from "@/ui/wrapper";
 
@@ -19,7 +20,7 @@ export default async function ProfileListTracksPage() {
             </li>
           </ul>
         </div>
-        {/* <UserTracksList /> */}
+        <UserTracksList />
       </div>
     </Wrapper>
   )

@@ -7,7 +7,8 @@ const artistImageVariants = cva("flex justify-center items-center bg-black overf
   variants: {
     variant: {
       default: "h-[420px]",
-      list: "w-full h-full"
+      list: "w-full h-full",
+      select: "w-[22px] h-[22px]"
     }
   },
   defaultVariants: {

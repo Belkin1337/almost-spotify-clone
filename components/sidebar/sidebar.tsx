@@ -15,8 +15,7 @@ export const Sidebar = ({
   const { playerState } = usePlayer()
 
   return (
-    <div className={`flex flex-col gap-y-4 
-    ${playerState.active ? 'h-[calc(100%-84px)]' : 'h-full'} rounded-md`}>
+    <div className={`flex flex-col gap-y-4 rounded-md ${playerState.active && user ? 'h-[calc(100%-84px)]' : 'h-full'}`}>
       <SidebarRoutes />
       <Wrapper variant="library">
         {!user ? <WidgetList /> : <Library user={user} />}

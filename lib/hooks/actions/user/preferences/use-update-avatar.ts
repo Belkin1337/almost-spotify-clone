@@ -1,8 +1,6 @@
 import { createClient } from "@/lib/utils/supabase/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/lib/hooks/ui/use-toast";
-import { useDialog } from "@/lib/hooks/ui/use-dialog";
-import { useRouter } from "next/navigation";
 import { useUser } from "../auth/use-user";
 import { UpdateGeneric } from "./use-update-name";
 
@@ -14,8 +12,6 @@ export const useUpdateAvatar = () => {
   const queryClient = useQueryClient();
 
   const { toast } = useToast();
-  const { refresh } = useRouter();
-  const { closeDialog } = useDialog();
 
   const uploadFile = useMutation({
     mutationFn: async (values: UpdateGeneric) => {
@@ -35,11 +31,6 @@ export const useUpdateAvatar = () => {
             variant: "red"
           });
         } else {
-          toast({
-            title: "Аватар обновлен!",
-            variant: "right"
-          });
-
           return userAvatar;
         }
       } catch (error) {
@@ -47,6 +38,8 @@ export const useUpdateAvatar = () => {
           title: String(error),
           variant: "red"
         });
+
+        return;
       }
     },
   });
@@ -59,7 +52,7 @@ export const useUpdateAvatar = () => {
 
       if (userData !== null) {
         try {
-          const { error: userError } = await supabase
+          const { data: newAvatar, error: userError } = await supabase
             .from("users")
             .update({
               avatar_url: userData?.path,
@@ -68,18 +61,19 @@ export const useUpdateAvatar = () => {
             .select();
 
           if (userError) return;
+          
+          return newAvatar;
         } catch (error) {
           toast({
             title: String(error),
             variant: "red",
           });
+
+          return;
         }
       }
     },
     onSuccess: () => {
-      closeDialog();
-      refresh();
-
       queryClient.invalidateQueries({
         queryKey: [`${user?.id}-avatar`],
       });

@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { HydrationBoundary } from "@tanstack/react-query";
 import { Wrapper } from "@/ui/wrapper";
 import { Typography } from "@/ui/typography";
-import { CreateArtistForm } from "@/components/forms/media/artist/create-artist";
+import { CreateArtistForm } from "@/components/forms/media/artist/create/create-artist";
 
 export default async function ForAuthorsCreateArtistPage() {
   const cookieStore = cookies()

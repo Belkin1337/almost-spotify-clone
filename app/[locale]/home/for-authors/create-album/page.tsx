@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { HydrationBoundary } from "@tanstack/react-query";
 import { Wrapper } from "@/ui/wrapper";
 import { Typography } from "@/ui/typography";
-import { CreateAlbumForm } from "@/components/forms/media/album/create-album";
+import { CreateAlbumForm } from "@/components/forms/media/album/create/create-album";
 
 export default async function ForAuthorsCreateAlbumPage() {
   const cookieStore = cookies()

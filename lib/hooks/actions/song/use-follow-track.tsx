@@ -73,7 +73,8 @@ export function useFollowSong(songId: string) {
         refetch();
       } catch (error) {
         toast({
-          title: String(error)
+          title: String(error),
+          variant: "red"
         })
       }
     },

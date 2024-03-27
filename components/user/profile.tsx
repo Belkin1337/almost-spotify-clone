@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 import { UserPlaylist } from "./personal/child/user-playlist";
 import { UserGeneric } from "@/types/entities/user";
 import { UserName } from "./personal/child/user-name";
-import { Wrapper } from "@/ui/wrapper";
 import { ColoredBackground } from "@/ui/colored-background";
 import { useLoadUserAvatar } from "@/lib/hooks/actions/user/preferences/use-load-user-avatar";
 import { Typography } from "@/ui/typography";
@@ -36,7 +35,7 @@ export const ProfileUserItem = ({
   }, [user, userById]);
 
   return (
-    <Wrapper variant="page">
+    <div className="w-full h-full">
       <ColoredBackground imageUrl={avatar || '/images/null-avatar.png'} />
       <div className="flex relative items-start p-6">
         <div className="flex items-center gap-4">
@@ -51,7 +50,7 @@ export const ProfileUserItem = ({
               Профиль
             </Typography>
             <UserName
-              user={user as UserGeneric}
+              user={userById as UserGeneric}
               variant="profile"
             />
           </div>
@@ -62,6 +61,6 @@ export const ProfileUserItem = ({
           <UserPlaylist />
         )}
       </div>
-    </Wrapper>
+    </div>
   )
 }

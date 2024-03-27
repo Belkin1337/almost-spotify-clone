@@ -1,10 +1,5 @@
 "use client"
 
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger
-} from "@/ui/dialog";
 import { useLoadImage } from "@/lib/hooks/image/use-load-image";
 import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
 import { createClient } from "@/lib/utils/supabase/client";
@@ -15,13 +10,11 @@ import { SongEntity } from "@/types/entities/song";
 import { Typography } from "@/ui/typography";
 import { ArtistPlaylistCard } from "@/components/artist/card/playlist/artist-playlist-card";
 import { ColoredBackground } from "@/ui/colored-background";
-import { FollowButton } from "../child/song-follow-button";
-import { PlayButton } from "@/components/buttons/play-button";
-import { ShuffleButton } from "@/components/buttons/shuffle-button";
-import Image from "next/image";
 import { SongItemPagePreview } from "./child/song-preview";
 import { SongItemPageActions } from "./child/song-actions";
 import { SongImageItem } from "../child/song-image";
+import { ArtistEntity } from "@/types/entities/artist";
+import { getArtistById } from "@/lib/queries/get-artist-by-id";
 
 const supabase = createClient();
 
@@ -34,6 +27,10 @@ export const SongItemPage = ({
     enabled: !!songId,
     refetchOnMount: false,
     refetchOnWindowFocus: false
+  })
+  
+  const { data: artist } = useQuery<ArtistEntity>(getArtistById(supabase, song?.artists[0]!), {
+    enabled: !!song
   })
 
   const imageUrl = useLoadImage(song?.image_path!);
@@ -72,7 +69,7 @@ export const SongItemPage = ({
           </div>
           <div className="flex flex-col p-6 w-full">
             <Typography className="text-2xl text-white !font-bold">
-              {/* More with {song?.artists.map(item => item.name).join(', ')} */}
+              More with {artist?.name}
             </Typography>
             <div className="flex items-center gap-x-4 overflow-hidden">
               <ArtistPlaylistCard />

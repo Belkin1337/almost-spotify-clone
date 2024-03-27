@@ -1,6 +1,7 @@
 import { useToast } from "@/lib/hooks/ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { createClient } from "@/lib/utils/supabase/client";
+import { UserGeneric } from "@/types/entities/user";
 
 export type UpdateGeneric = {
   firstName?: string,
@@ -27,19 +28,15 @@ export const useUpdateName = () => {
             last_name: values.lastName
           })
           .eq("id", values.userId)
+          .select()
         
           if (userErr) {
             toast({
               title: userErr.message,
               variant: "red"
             })
-          } else {
-            toast({
-              title: "Имя обновлено",
-              variant: "right"
-            })
-
-            return userName;
+          } else if (userName && !userErr) {
+            return userName as UserGeneric[];
           }
       } catch (error) {
         toast({

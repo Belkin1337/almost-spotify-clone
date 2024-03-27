@@ -9,12 +9,13 @@ import { useUser } from "../user/auth/use-user";
 import { useRouter } from "next/navigation";
 import { song_route } from "@/lib/constants/routes";
 import { ArtistEntity } from "@/types/entities/artist";
+import { SongEntity } from "@/types/entities/song";
 
 type SongAttributes = {
   title: string;
   album: number,
   genre: string,
-  artists: Array<ArtistEntity>;
+  artists: Array<string>;
   image: any;
   song: any;
 };
@@ -51,6 +52,7 @@ export function useCreateSong() {
       } catch (error) {
         toast({
           title: String(error),
+          variant: "red"
         });
       }
     },
@@ -79,6 +81,8 @@ export function useCreateSong() {
           title: String(error),
           variant: "red"
         });
+
+        return;
       }
     },
   });
@@ -95,7 +99,7 @@ export function useCreateSong() {
           throw new Error("Ошибка загрузки файла");
         }
 
-        const { error: supabaseErr } = await supabase
+        const { data: newSong, error: supabaseErr } = await supabase
           .from("songs")
           .insert({
             user_id: user?.id,
@@ -105,20 +109,13 @@ export function useCreateSong() {
             genre: values.genre,
             image_path: imageData?.path,
             song_path: songData?.path,
-          });
+          })
+          .select()
 
         if (supabaseErr) {
-          toast({
-            title: supabaseErr.message,
-            variant: "red"
-          });
-        } else {
-          toast({
-            title: uploadModalLocale("publishing.success"),
-            variant: "right"
-          });
-          
-          refresh();
+          return;
+        } else if (newSong && !supabaseErr) {
+          return newSong as SongEntity[]
         }
       } catch (e) {
         toast({

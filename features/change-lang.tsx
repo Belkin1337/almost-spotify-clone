@@ -5,28 +5,31 @@ import {
   useCurrentLocale,
   useScopedI18n
 } from '@/locales/client'
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger 
+import { Button } from '@/ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger
 } from "@/ui/select"
 import { Typography } from "@/ui/typography"
+import { Check } from 'lucide-react'
+import { useCallback } from 'react'
 
 export const ChangeLang = () => {
   const changeLocale = useChangeLocale()
   const locale = useCurrentLocale()
   const langLocale = useScopedI18n('language')
 
-  const currentLocale = () => {
+  const currentLocale = useCallback(() => {
     if (locale === 'ru') {
       return langLocale('ru');
-    }
-
-    if (locale === 'en') {
+    } else if (locale === 'en') {
       return langLocale('en')
     }
-  }
+
+    return langLocale('en')
+  }, [langLocale, locale])
 
   const languages = [
     {
@@ -50,15 +53,19 @@ export const ChangeLang = () => {
       </SelectTrigger>
       <SelectContent className="p-0">
         {languages.map((item) => (
-          <SelectItem
-            value={item.fullname}
+          <Button
             key={item.fullname}
             onClick={item.onClick}
+            rounded="medium"
+            className="flex items-center justify-between w-full p-2 hover:bg-neutral-800"
           >
             <Typography>
               {item.fullname}
             </Typography>
-          </SelectItem>
+            {item.name === currentLocale() && (
+              <Check size={16} className="text-jade-500" />
+            )}
+          </Button>
         ))}
       </SelectContent>
     </Select >

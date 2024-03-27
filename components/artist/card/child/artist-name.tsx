@@ -3,13 +3,14 @@ import { ArtistEntity } from "@/types/entities/artist";
 import { Typography } from "@/ui/typography";
 import { cva, VariantProps } from "class-variance-authority";
 import { useRouter } from "next/navigation"
-import React from "react";
+import React, { useCallback } from "react";
 
 const artistNameVariants = cva("", {
   variants: {
     variant: {
       default: "hover:underline text-md cursor-pointer text-white !font-bold truncate",
-      page: "text-white !font-extrabold text-[82px]"
+      page: "text-white !font-extrabold text-[82px]",
+      select: ""
     }
   },
   defaultVariants: {
@@ -31,9 +32,15 @@ export const ArtistName = ({
 }: ArtistNameProps) => {
   const { push } = useRouter();
 
+  const handleRouteToArtist = useCallback(() => {
+    if (variant !== 'select') {
+      push(`${artist_route}/${artist?.id}`)
+    }
+  }, [push, variant, artist?.id])
+
   return (
     <Typography
-      onClick={() => push(`${artist_route}/${artist?.id}`)}
+      onClick={handleRouteToArtist}
       className={artistNameVariants(({ variant, className }))}
       {...props}
     >

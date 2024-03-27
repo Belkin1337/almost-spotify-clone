@@ -9,27 +9,17 @@ import { SongEntity } from "@/types/entities/song";
 import { useCallback } from "react";
 import { PlayButton } from "@/components/buttons/play-button";
 import Image from "next/image";
-import { useQuery } from "@tanstack/react-query";
-import { getArtistsById } from "@/lib/queries/get-artists-by-id";
-import { createClient } from "@/lib/utils/supabase/client";
-
-const supabase = createClient();
 
 interface SongItemProps {
   song: SongEntity;
+  children?: React.ReactNode
 }
 
-export const SongItem = ({
-  song
+export const SongItemMain = ({
+  song,
+  children
 }: SongItemProps) => {
   const { playerState } = usePlayer();
-
-  const { data: artists } = useQuery({
-    queryKey: ['artists', song.artists],
-    queryFn: () => getArtistsById(supabase, song.artists),
-    enabled: !!song,
-    retry: song?.artists?.length || 2
-  })
 
   const { onPlay } = usePlay({
     song: song,
@@ -42,7 +32,7 @@ export const SongItem = ({
 
   return (
     <div onDoubleClick={handlePlay}
-      className="flex flex-col items-center justify-center relative group rounded-md overflow-hidden gap-x-4 bg-neutral-400/5 cursor-pointer 
+      className="flex flex-col justify-center relative group rounded-md overflow-hidden gap-x-4 bg-neutral-400/5 cursor-pointer 
     hover:bg-neutral-400/20 focus-within:bg-neutral-400/20 focus-within:ring-1 focus-within:ring-jade-400 transition p-2">
       <div className="relative aspect-square w-full h-full rounded-md overflow-hidden">
         <Image
@@ -64,6 +54,7 @@ export const SongItem = ({
           song={song}
         />
       </div>
+      {children}
     </div>
   );
 }

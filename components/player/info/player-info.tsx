@@ -17,7 +17,6 @@ export const PlayerSongInfo = ({
     <div className="flex items-center gap-x-4 w-[30%] overflow-hidden">
       <SongItem
         variant="player"
-        player
         song={song}
         list={{
           data: list

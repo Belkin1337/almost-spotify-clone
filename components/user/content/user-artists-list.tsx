@@ -3,12 +3,14 @@
 import { ArtistImage } from "@/components/artist/card/child/artist-image";
 import { artist_route, profile_route } from "@/lib/constants/routes";
 import { useUser } from "@/lib/hooks/actions/user/auth/use-user"
+import { useDialog } from "@/lib/hooks/ui/use-dialog";
 import { getArtistsByUserId } from "@/lib/queries/get-artists-by-user";
 import { getSongsAll } from "@/lib/queries/get-songs";
 import { createClient } from "@/lib/utils/supabase/client";
 import { ArtistEntity } from "@/types/entities/artist";
 import { SongEntity } from "@/types/entities/song";
 import { Button } from "@/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "@/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/ui/tooltip";
 import { Typography } from "@/ui/typography";
 import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
@@ -18,13 +20,15 @@ import { useCallback } from "react";
 const supabase = createClient();
 
 export const UserArtistsList = () => {
+  const { openDialog } = useDialog();
   const { user } = useUser();
   const { push } = useRouter();
 
-  const { data: artists, isError: artistsError } = useQuery<ArtistEntity[]>(getArtistsByUserId(supabase, user?.id!), {
-    enabled: !!user?.id,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false
+  const { data: artists, isError: artistsError } = useQuery<ArtistEntity[]>(
+    getArtistsByUserId(supabase, user?.id!), {
+      enabled: !!user?.id,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false
   })
 
   const { data: songs, isError: songsError } = useQuery<SongEntity[]>(getSongsAll(supabase))
@@ -38,7 +42,12 @@ export const UserArtistsList = () => {
   return (
     <div className="grid md:grid-cols-3 lg:grid-cols-4 auto-rows-auto w-full h-full gap-4">
       {artists?.map((artist) => (
-        <div key={artist.id} className="relative flex flex-col rounded-md hover:scale-[1.02] min-w-[260px] h-[310px] overflow-hidden bg-neutral-800 border border-neutral-700">
+        <div
+          key={artist.id}
+          className="relative flex flex-col 
+        rounded-md hover:scale-[1.02] min-w-[260px] h-[310px] overflow-hidden bg-neutral-800
+         border border-neutral-700"
+        >
           <ArtistImage
             variant="list"
             artist={artist}

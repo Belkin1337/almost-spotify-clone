@@ -33,7 +33,7 @@ export const ArtistTopSong = ({
               <SongItem
                 variant="artist_library"
                 key={song.id}
-                page
+                type="page"
                 song={song}
                 list={{
                   id: String(idx + 1),
