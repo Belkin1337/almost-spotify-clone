@@ -6,6 +6,7 @@ interface PlayerNextSongProps {
   onClick: () => void
 }
 
+// @ts-ignore
 export const PlayerNextSong = ({ onClick }: PlayerNextSongProps) => {
   return (
     <AiFillStepForward

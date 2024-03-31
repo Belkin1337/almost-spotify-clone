@@ -1,6 +1,6 @@
 "use client"
 
-import { useSongWidget } from "@/lib/hooks/actions/song/use-song-widget";
+import { useSongWidget } from "@/lib/hooks/actions/song/widget/use-song-widget";
 import { X } from "lucide-react";
 import { useCallback } from "react";
 

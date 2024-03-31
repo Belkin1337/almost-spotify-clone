@@ -2,7 +2,7 @@
 
 import { useScopedI18n } from "@/locales/client";
 import { SongItemMain } from "@/components/song/main/song-item";
-import { getSongsAll } from "@/lib/queries/get-songs";
+import { getSongsAll } from "@/lib/queries/song/get-songs-all";
 import { createClient } from "@/lib/utils/supabase/client";
 import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
 import { SongEntity } from "@/types/entities/song";

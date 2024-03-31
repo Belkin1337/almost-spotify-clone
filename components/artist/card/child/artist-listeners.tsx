@@ -7,7 +7,8 @@ const artistListenersVariants = cva("text-white", {
   variants: {
     variant: {
       default: "!font-semibold text-md",
-      page: "text-2xl !font-bold"
+      page: "text-lg !font-medium",
+      card: "!text-neutral-400 text-md !font-semibold"
     }
   },
   defaultVariants: {
@@ -30,7 +31,7 @@ export const ArtistListeners = ({
   return (
     <div className={`flex gap-1
       ${variant === 'default' ? 'flex-col' :
-        variant === 'page' && 'flex-row items-center'}`}
+        (variant === 'page' || variant === 'card') && 'flex-row items-center'}`}
       {...props}
     >
       <Typography className={artistListenersVariants(({
@@ -39,7 +40,11 @@ export const ArtistListeners = ({
       }))}>
         {artist?.listeners || 0}
       </Typography>
-      <Typography className="text-sm">
+      <Typography className={`
+      ${variant === 'card'
+          ? "!text-neutral-400 !font-semibold text-md"
+          : 'text-white text-sm'}`
+      }>
         monthly listeners
       </Typography>
     </div>

@@ -1,6 +1,7 @@
 "use client"
 
 import { I18nProviderClient } from '../locales/client';
+import React from "react";
 
 export const LocaleProvider = ({ 
   locale, 

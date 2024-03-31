@@ -3,7 +3,7 @@
 import { useLoadImage } from "@/lib/hooks/image/use-load-image";
 import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
 import { createClient } from "@/lib/utils/supabase/client";
-import { getSongById } from "@/lib/queries/get-song-by-id";
+import { getSongById } from "@/lib/queries/song/get-song-by-id";
 import { SongItem } from "../song-item";
 import { SongListTableHead } from "@/ui/song-list-table-head";
 import { SongEntity } from "@/types/entities/song";
@@ -14,7 +14,8 @@ import { SongItemPagePreview } from "./child/song-preview";
 import { SongItemPageActions } from "./child/song-actions";
 import { SongImageItem } from "../child/song-image";
 import { ArtistEntity } from "@/types/entities/artist";
-import { getArtistById } from "@/lib/queries/get-artist-by-id";
+import { getArtistById } from "@/lib/queries/artist/get-artist-by-id";
+import { Wrapper } from "@/ui/wrapper";
 
 const supabase = createClient();
 
@@ -38,7 +39,7 @@ export const SongItemPage = ({
   if (!song || isError) return null;
 
   return (
-    <div className="w-full">
+    <Wrapper variant="page">
       <ColoredBackground imageUrl={imageUrl!} />
       <div className="flex flex-col relative">
         <div className="z-20 p-6 flex gap-x-6 justify-start h-full items-end">
@@ -46,7 +47,7 @@ export const SongItemPage = ({
             variant="page"
             song={song}
           />
-          <SongItemPagePreview song={song} />
+          <SongItemPagePreview type="single" song={song} />
         </div>
         <SongItemPageActions song={song} />
         <div className="flex flex-col bg-black/20 backdrop-filter backdrop-blur-md">
@@ -77,6 +78,6 @@ export const SongItemPage = ({
           </div>
         </div>
       </div>
-    </div>
+    </Wrapper>
   )
 }

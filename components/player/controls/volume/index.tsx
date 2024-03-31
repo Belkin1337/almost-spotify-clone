@@ -11,6 +11,7 @@ interface PlayerVolumeControlsGeneric {
   onValueChange: (value: number[]) => void
 }
 
+// @ts-ignore
 export const PlayerVolumeControls = ({
   mute,
   unmute,

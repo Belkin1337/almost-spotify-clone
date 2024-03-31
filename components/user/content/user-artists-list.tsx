@@ -1,11 +1,12 @@
 "use client"
 
 import { ArtistImage } from "@/components/artist/card/child/artist-image";
+import { EditArtistForm } from "@/components/forms/media/artist/edit/edit-artist";
 import { artist_route, profile_route } from "@/lib/constants/routes";
 import { useUser } from "@/lib/hooks/actions/user/auth/use-user"
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
-import { getArtistsByUserId } from "@/lib/queries/get-artists-by-user";
-import { getSongsAll } from "@/lib/queries/get-songs";
+import { getArtistsByUserId } from "@/lib/queries/artist/get-artists-by-user";
+import { getSongsAll } from "@/lib/queries/song/get-songs-all";
 import { createClient } from "@/lib/utils/supabase/client";
 import { ArtistEntity } from "@/types/entities/artist";
 import { SongEntity } from "@/types/entities/song";
@@ -73,7 +74,9 @@ export const UserArtistsList = () => {
           <div className="flex items-start gap-2 justify-between">
             <Button
               variant="form"
-              onClick={() => push(`${profile_route}/${user?.id}/artists/${artist.id}`)}
+              onClick={() => openDialog({
+                dialogChildren: <EditArtistForm artistId={artist.id} />
+              })}
             >
               Редактировать
             </Button>

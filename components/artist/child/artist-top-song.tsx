@@ -1,5 +1,5 @@
 import { SongItem } from "@/components/song/song-item";
-import { getSongsAll } from "@/lib/queries/get-songs";
+import { getSongsAll } from "@/lib/queries/song/get-songs-all";
 import { createClient } from "@/lib/utils/supabase/client"
 import { SongEntity } from "@/types/entities/song";
 import { Typography } from "@/ui/typography"

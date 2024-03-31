@@ -2,12 +2,12 @@
 
 import { useGetSongById } from "@/lib/hooks/actions/song/use-get-song-by-id";
 import { useLoadSongUrl } from "@/lib/hooks/actions/song/use-load-song-url";
-import { usePlayNext } from "@/lib/hooks/player/use-play-next";
+import { usePlayNext } from "@/lib/hooks/player/controls/use-play-next";
 import { usePlayer } from "@/lib/hooks/player/use-player";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { Howl } from "howler";
-import { usePlayPrev } from "./use-play-prev";
-import { useDuration } from "./use-duration";
+import { usePlayPrev } from "./controls/use-play-prev";
+import { useDuration } from "./controls/use-duration";
 import { AudioContext } from "@/providers/audio-state-provider";
 import { useUser } from "../actions/user/auth/use-user";
 

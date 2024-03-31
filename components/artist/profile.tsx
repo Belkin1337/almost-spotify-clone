@@ -9,7 +9,7 @@ import { useQuery } from "@supabase-cache-helpers/postgrest-react-query"
 import { createClient } from "@/lib/utils/supabase/client"
 import { ArtistEntity } from "@/types/entities/artist"
 import { useLoadImage } from "@/lib/hooks/image/use-load-image"
-import { getArtistById } from "@/lib/queries/get-artist-by-id"
+import { getArtistById } from "@/lib/queries/artist/get-artist-by-id"
 import { ArtistListeners } from "./card/child/artist-listeners"
 import { ArtistName } from "./card/child/artist-name"
 

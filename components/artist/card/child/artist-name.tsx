@@ -10,7 +10,8 @@ const artistNameVariants = cva("", {
     variant: {
       default: "hover:underline text-md cursor-pointer text-white !font-bold truncate",
       page: "text-white !font-extrabold text-[82px]",
-      select: ""
+      select: "",
+      search: "!font-bold truncate text-md"
     }
   },
   defaultVariants: {

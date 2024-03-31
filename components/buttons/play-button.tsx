@@ -1,7 +1,7 @@
 "use client"
 
 import { useHowlerContext } from "@/lib/hooks/player/use-howler"
-import { usePlay } from "@/lib/hooks/player/use-play"
+import { usePlay } from "@/lib/hooks/player/controls/use-play"
 import { usePlayer } from "@/lib/hooks/player/use-player"
 import { SongEntity } from "@/types/entities/song"
 import { Button } from "@/ui/button"

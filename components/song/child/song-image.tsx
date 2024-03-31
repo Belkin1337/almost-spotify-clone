@@ -15,7 +15,8 @@ const songImageVariants = cva("relative group justify-self-start", {
       player: "min-h-[48px] min-w-[48px] cursor-pointer md:min-h-[64px] md:min-w-[64px] rounded-md",
       widget: "aspect-square w-full h-full rounded-lg cursor-pointer",
       select: "min-h-[34px] min-w-[34px] rounded-md",
-      page: ""
+      page: "",
+      card: "rounded-full w-[100px] h-[100px]"
     },
   },
   defaultVariants: {

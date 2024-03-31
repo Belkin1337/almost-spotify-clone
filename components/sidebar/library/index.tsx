@@ -2,7 +2,7 @@
 
 import { useScopedI18n } from "@/locales/client";
 import { TbPlaylist } from "react-icons/tb";
-import { getSongsByUserId } from "@/lib/queries/get-songs-by-userId";
+import { getSongsByUserId } from "@/lib/queries/song/get-songs-by-userId";
 import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
 import { createClient } from "@/lib/utils/supabase/client";
 import { SongItem } from "../../song/song-item";

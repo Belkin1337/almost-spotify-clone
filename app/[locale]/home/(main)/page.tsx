@@ -2,11 +2,11 @@ import { setStaticParamsLocale } from 'next-international/server';
 import { FollowedTracksButton } from '@/components/static/button/redirect-follow-list-button'
 import { MainTracksList } from '@/components/lists/main/main-tracks';
 import { getScopedI18n } from '@/locales/server';
-import { getSongsAll } from '@/lib/queries/get-songs';
+import { getSongsAll } from '@/lib/queries/song/get-songs-all';
 import { cookies } from 'next/headers';
-import { prefetchQuery } from '@supabase-cache-helpers/postgrest-react-query'
 import { createClient } from '@/lib/utils/supabase/server';
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
+import {prefetchQuery} from "@supabase-cache-helpers/postgrest-react-query";
 
 export default async function HomeMainPage({ 
   params: { locale } 

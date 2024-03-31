@@ -3,11 +3,11 @@
 import { createClient } from "@/lib/utils/supabase/client";
 import { useUser } from "../user/auth/use-user";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getFollowSong } from "@/lib/queries/get-follow-song";
 import { useToast } from "../../ui/use-toast";
 import { useScopedI18n } from "@/locales/client";
 import { ToastAction } from "@/ui/toast";
 import Image from "next/image";
+import { getFollowSong } from "@/lib/queries/song/followed/get-follow-song";
 
 const supabase = createClient();
 
@@ -70,7 +70,7 @@ export function useFollowSong(songId: string) {
             });
         }
 
-        refetch();
+        await refetch();
       } catch (error) {
         toast({
           title: String(error),

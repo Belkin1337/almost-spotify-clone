@@ -5,7 +5,7 @@ export interface PlaylistEntity {
   user_id: string,
   author: string,
   title: string,
-  songs: SongEntity[],
+  songs: Array<string> // [song id],
   image_path: string
 }
 

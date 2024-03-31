@@ -1,10 +1,8 @@
 "use client"
 
-import { getUserById } from "@/lib/queries/get-user-by-id";
+import { getUserById } from "@/lib/queries/user/get-user-by-id";
 import { createClient } from "@/lib/utils/supabase/client";
-import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
 import { UserAvatar } from "./personal/child/user-avatar";
-import { useUser } from "@/lib/hooks/actions/user/auth/use-user";
 import { useEffect, useState } from "react";
 import { UserPlaylist } from "./personal/child/user-playlist";
 import { UserGeneric } from "@/types/entities/user";
@@ -12,36 +10,45 @@ import { UserName } from "./personal/child/user-name";
 import { ColoredBackground } from "@/ui/colored-background";
 import { useLoadUserAvatar } from "@/lib/hooks/actions/user/preferences/use-load-user-avatar";
 import { Typography } from "@/ui/typography";
+import { Wrapper } from "@/ui/wrapper";
+import { useQuery } from "@tanstack/react-query";
 
 const supabase = createClient();
 
 export const ProfileUserItem = ({
-  userId
+  userId,
+  user
 }: {
-  userId: string
+  userId: string,
+  user: UserGeneric
 }) => {
   const [currentUser, setCurrentUser] = useState(false);
 
-  const { data: userById } = useQuery<UserGeneric>(getUserById(supabase, userId))
-  const { user } = useUser();
+  const { data: userById } = useQuery({
+    queryKey: [userId],
+    queryFn: async () => await getUserById(supabase, userId)
+  })
+
   const { data: avatar } = useLoadUserAvatar(user?.id!)
 
   useEffect(() => {
-    if (user?.id === userById?.id) {
+    if (user?.id === userById?.data?.id) {
       setCurrentUser(true)
     } else {
       setCurrentUser(false)
     }
   }, [user, userById]);
 
+  if (!userById?.data) return null;
+
   return (
-    <div className="w-full h-full">
+    <Wrapper variant="page">
       <ColoredBackground imageUrl={avatar || '/images/null-avatar.png'} />
       <div className="flex relative items-start p-6">
         <div className="flex items-center gap-4">
           <div className="flex items-center justify-center relative overflow-hidden group rounded-full h-[248px] w-[248px]">
             <UserAvatar
-              user={userById!}
+              user={userById?.data}
               currentUser={currentUser}
             />
           </div>
@@ -50,7 +57,7 @@ export const ProfileUserItem = ({
               Профиль
             </Typography>
             <UserName
-              user={userById as UserGeneric}
+              user={userById?.data}
               variant="profile"
             />
           </div>
@@ -61,6 +68,6 @@ export const ProfileUserItem = ({
           <UserPlaylist />
         )}
       </div>
-    </div>
+    </Wrapper>
   )
 }

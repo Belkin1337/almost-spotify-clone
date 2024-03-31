@@ -1,4 +1,4 @@
-import { ArtistEntity } from "./artist";
+import { SONG_TYPE_ALBUM, SONG_TYPE_SINGLE } from "@/lib/constants/preview";
 
 export interface SongEntity {
   id: string,
@@ -11,5 +11,6 @@ export interface SongEntity {
   image_path: string,
   album: string,
   genre: string,
+  type: typeof SONG_TYPE_ALBUM | typeof SONG_TYPE_SINGLE,
   duration?: number
 }

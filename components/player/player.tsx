@@ -3,7 +3,7 @@
 import { PlayerVolumeControls } from "./controls/volume";
 import { PlayerControls } from "./controls/player-controls";
 import { PlayerSongInfo } from "./info/player-info";
-import { useVolume } from "@/lib/hooks/player/use-volume";
+import { useVolume } from "@/lib/hooks/player/controls/use-volume";
 import { useHowler } from "@/lib/hooks/player/use-howler";
 import { usePlayer } from "@/lib/hooks/player/use-player";
 import { UserGeneric } from "@/types/entities/user";

@@ -26,6 +26,7 @@ export const SearchInput = () => {
     <Input
       placeholder={searchLocale('navbar.input-message')}
       value={value}
+      className="w-[280px] rounded-full"
       onChange={(e) => {
         setValue(e.target.value)
       }}

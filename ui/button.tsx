@@ -18,7 +18,7 @@ const buttonVariants = cva(`flex items-center
       translate translate-y-1/3 group-hover:opacity-100 group-hover:translate-y-0 hover:scale:105`,
       single_page: "bg-jade-500 p-4 translate hover:scale:105 h-[56px] w-[56px]",
       action: "font-semibold p-4 bg-jade-300 text-md truncate",
-      form: `rounded-full relative bg-neutral-700 text-white text-sm 
+      form: `!rounded-full relative bg-neutral-700 text-white text-sm 
       hover:shadow-2xl hover:shadow-jade-400/[0.1] transition duration-200
       hover:bg-neutral-800 transition border-transparent w-full border hover:border-neutral-600`,
       album_playlist: ""

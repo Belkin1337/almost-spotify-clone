@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 import { createClient } from "@/lib/utils/supabase/client";
 import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
-import { getSongById } from "@/lib/queries/get-song-by-id";
+import { getSongById } from "@/lib/queries/song/get-song-by-id";
 import { SongEntity } from "@/types/entities/song";
 import { useToast } from "@/lib/hooks/ui/use-toast";
 

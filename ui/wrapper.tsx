@@ -1,10 +1,12 @@
 import { VariantProps, cva } from "class-variance-authority";
 
-const wrapperVariants = cva("flex flex-col rounded-md bg-DARK_SECONDARY_BACKGROUND", {
+const wrapperVariants = cva("flex flex-col rounded-lg bg-DARK_SECONDARY_BACKGROUND", {
   variants: {
     variant: {
-      page: "relative h-full overflow-y-auto w-full",
-      library: "h-full px-2 py-4 overflow-y-auto"
+      page: "relative w-full",
+      library: "px-2 py-4 h-full overflow-y-auto",
+      main_panel: "w-full overflow-y-auto h-full",
+      widget: "h-full overflow-y-auto"
     }
   },
   defaultVariants: {

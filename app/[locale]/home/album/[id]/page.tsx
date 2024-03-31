@@ -1,8 +1,8 @@
-import { getSongById } from "@/lib/queries/get-song-by-id";
+import { AlbumPageItem } from "@/components/album/album-item";
 import { createClient } from "@/lib/utils/supabase/server";
-import { prefetchQuery } from "@supabase-cache-helpers/postgrest-react-query";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default async function AlbumPage({ 
   params 
@@ -13,10 +13,17 @@ export default async function AlbumPage({
   const cookieStore = cookies();
   const supabase = createClient(cookieStore)
 
+  const { data: {
+    user
+  } } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect('/home')
+  }
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      {/* impl album page logic */}
-      <p>Album ...</p>
+      <AlbumPageItem albumId={params.id} />
     </HydrationBoundary>
   )
 }

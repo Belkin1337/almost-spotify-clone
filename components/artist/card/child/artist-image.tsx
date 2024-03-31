@@ -8,7 +8,8 @@ const artistImageVariants = cva("flex justify-center items-center bg-black overf
     variant: {
       default: "h-[420px]",
       list: "w-full h-full",
-      select: "w-[22px] h-[22px]"
+      select: "w-[22px] h-[22px]",
+      search: "w-[160px] h-[160px] rounded-full"
     }
   },
   defaultVariants: {
@@ -30,6 +31,8 @@ export const ArtistImage = ({
 }: ArtistImageProps) => {
   const avatarUrl = useLoadImage(artist?.avatar_url!)
 
+  if (!artist) return;
+  
   return (
     <div className={artistImageVariants(({
       variant,
@@ -39,8 +42,8 @@ export const ArtistImage = ({
     >
       <Image
         src={avatarUrl || '/images/liked.png'}
-        alt={artist.name}
-        title={artist.name}
+        alt={artist?.name}
+        title={artist?.name}
         width={400}
         height={400}
         loading="lazy"

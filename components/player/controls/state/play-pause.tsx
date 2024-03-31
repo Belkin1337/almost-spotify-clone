@@ -10,6 +10,7 @@ export interface PlayerPlayPauseProps
     onClick: () => void;
 }
 
+// @ts-ignore
 export const PlayerPlayPause = ({
   variant,
   onClick,

@@ -6,11 +6,12 @@ import { VariantProps, cva } from "class-variance-authority"
 import { useRouter } from "next/navigation"
 import React, { useCallback } from "react"
 
-const songTitleVariants = cva("text-white !truncate", {
+const songTitleVariants = cva("text-white truncate", {
   variants: {
     variant: {
       default: "",
       library: "text-md font-medium",
+      card: "font-bold text-lg",
       page: "font-bold text-6xl",
       player: "hover:underline hover:cursor-pointer text-sm font-medium",
       widget: "hover:underline text-xl cursor-pointer font-bold"
@@ -28,7 +29,7 @@ interface SongTitleProps
   player?: boolean
 }
 
-export const SongTitle = ({
+export const SongItemTitle = ({
   song,
   variant,
   className,

@@ -1,4 +1,4 @@
-import { getSongUrl } from "@/lib/queries/get-song-url";
+import { getSongUrl } from "@/lib/queries/song/get-song-url";
 import { createClient } from "@/lib/utils/supabase/client";
 import { SongEntity } from "@/types/entities/song";
 import { useQuery } from "@tanstack/react-query";

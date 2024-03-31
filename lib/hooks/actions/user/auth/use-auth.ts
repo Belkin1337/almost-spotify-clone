@@ -21,16 +21,21 @@ async function signUp(values: z.infer<any>) {
     password: values.password,
     options: {
       data: {
-        first_name: "asdasd",
-        last_name: "asdsdsdsd",
+        first_name: values.first_name,
+        last_name: values.last_name,
       },
     },
   });
+}
+
+async function logOut() {
+  return await supabase.auth.signOut()
 }
 
 export const useSignIn = () => {
   return {
     signIn,
     signUp,
+    logOut
   };
 };

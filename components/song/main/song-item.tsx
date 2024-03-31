@@ -1,10 +1,10 @@
 "use client"
 
 import { useLoadImage } from "@/lib/hooks/image/use-load-image";
-import { usePlay } from "@/lib/hooks/player/use-play";
+import { usePlay } from "@/lib/hooks/player/controls/use-play";
 import { usePlayer } from "@/lib/hooks/player/use-player";
 import { SongArtist } from "../child/song-artist";
-import { SongTitle } from "../child/song-title";
+import { SongItemTitle } from "../child/song-title";
 import { SongEntity } from "@/types/entities/song";
 import { useCallback } from "react";
 import { PlayButton } from "@/components/buttons/play-button";
@@ -43,7 +43,7 @@ export const SongItemMain = ({
         />
       </div>
       <div className="flex flex-col items-start w-full gap-y-1 py-2">
-        <SongTitle song={song} />
+        <SongItemTitle song={song} />
         <SongArtist 
           song={song} 
         />

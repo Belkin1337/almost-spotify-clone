@@ -2,97 +2,38 @@
 
 import { SongItemMain } from "@/components/song/main/song-item";
 import { SongItem } from "@/components/song/song-item";
-import { artist_route, profile_route } from "@/lib/constants/routes";
 import { useUser } from "@/lib/hooks/actions/user/auth/use-user"
-import { getSongsByUserId } from "@/lib/queries/get-songs-by-userId";
+import { getSongsByUserId } from "@/lib/queries/song/get-songs-by-userId";
 import { createClient } from "@/lib/utils/supabase/client";
 import { SongEntity } from "@/types/entities/song";
-import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
 import { Typography } from "@/ui/typography";
 import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
-import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BiSearch } from "react-icons/bi";
-import { FaList } from "react-icons/fa";
-import { FiGrid } from "react-icons/fi";
-import { HiOutlineViewList } from "react-icons/hi";
 import { Check } from "lucide-react";
 import { ArtistEntity } from "@/types/entities/artist";
-import { getArtistsByUserId } from "@/lib/queries/get-artists-by-user";
+import { getArtistsByUserId } from "@/lib/queries/artist/get-artists-by-user";
 import { ArtistImage } from "@/components/artist/card/child/artist-image";
 import { ArtistName } from "@/components/artist/card/child/artist-name";
+import { SongEdit } from "@/components/song/edit/song-edit";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/ui/dropdown-menu";
-import {
-  VIEW_TYPE_COMPACT,
-  VIEW_TYPE_LIST,
-  VIEW_TYPE_GRID,
-  ORDER_TYPE_AT_FIRST,
-  ORDER_TYPE_FROM_THE_END,
-  SONGS_TYPE_ALL,
-  SONGS_TYPE_BY_ARTIST
-} from '@/lib/constants/ui';
+import { 
+  OrderType, 
+  orderTypeList, 
+  SongsType, 
+  songsTypeList, 
+  ViewType, 
+  viewTypeList 
+} from "@/lib/constants/sort-songs";
+import { Wrapper } from "@/ui/wrapper";
 
 const supabase = createClient();
-
-type ViewType = typeof VIEW_TYPE_COMPACT | typeof VIEW_TYPE_LIST | typeof VIEW_TYPE_GRID;
-type OrderType = typeof ORDER_TYPE_AT_FIRST | typeof ORDER_TYPE_FROM_THE_END;
-type SongsType = typeof SONGS_TYPE_ALL | typeof SONGS_TYPE_BY_ARTIST;
-
-interface TypeList {
-  name: string,
-  type: string,
-  icon: () => React.ReactNode;
-}
-
-type OrderTypeList = Omit<TypeList, 'icon'>;
-type ViewTypeList = TypeList;
-type SongsTypeList = Omit<TypeList, 'icon'>;
-
-const songsTypeList: SongsTypeList[] = [
-  {
-    name: "Все треки",
-    type: SONGS_TYPE_ALL
-  },
-  {
-    name: "По артисту",
-    type: SONGS_TYPE_BY_ARTIST
-  }
-]
-
-const orderTypeList: OrderTypeList[] = [
-  {
-    name: "С новых",
-    type: ORDER_TYPE_FROM_THE_END,
-  },
-  {
-    name: "Со старых",
-    type: ORDER_TYPE_AT_FIRST,
-  }
-]
-
-const viewTypeList: ViewTypeList[] = [
-  {
-    name: "Компактный",
-    type: VIEW_TYPE_COMPACT,
-    icon: () => <HiOutlineViewList size={16} />
-  },
-  {
-    name: "Список",
-    type: VIEW_TYPE_LIST,
-    icon: () => <FaList size={16} />
-  },
-  {
-    name: "Сетка",
-    type: VIEW_TYPE_GRID,
-    icon: () => <FiGrid size={16} />
-  },
-]
 
 export const UserTracksList = () => {
   const [isOpenInput, setIsOpenInput] = useState(false);
@@ -104,7 +45,6 @@ export const UserTracksList = () => {
   const searchRef = useRef<HTMLDivElement>(null);
 
   const { user } = useUser();
-  const { push } = useRouter();
 
   const { data: userSongs } = useQuery<SongEntity[]>(getSongsByUserId({
     client: supabase,
@@ -154,7 +94,7 @@ export const UserTracksList = () => {
   if (!user) return;
 
   return (
-    <div className="flex flex-col w-full gap-y-8 h-full">
+    <Wrapper variant="page" className="gap-y-8">
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-x-4 overflow-hidden">
           <div
@@ -294,21 +234,7 @@ export const UserTracksList = () => {
                     key={song.id}
                     song={song}
                   >
-                    <div className="flex items-start gap-2 justify-between">
-                      <Button
-                        variant="form"
-                        onClick={() => push(`${profile_route}/${user?.id}/tracks/${song.id}`)}
-                      >
-                        Редактировать
-                      </Button>
-                      <Button
-                        variant="form"
-                        className="text-red-500"
-                        onClick={() => push(`${artist_route}/${song.id}`)}
-                      >
-                        Удалить
-                      </Button>
-                    </div>
+                    <SongEdit song={song} />
                   </SongItemMain>
                 )}
                 {viewType === 'list' && (
@@ -321,21 +247,7 @@ export const UserTracksList = () => {
                       data: userSongs
                     }}
                   >
-                    <div className="flex items-start gap-2 justify-between">
-                      <Button
-                        variant="form"
-                        onClick={() => push(`${profile_route}/${user?.id}/tracks/${song.id}`)}
-                      >
-                        Редактировать
-                      </Button>
-                      <Button
-                        variant="form"
-                        className="text-red-500"
-                        onClick={() => push(`${artist_route}/${song.id}`)}
-                      >
-                        Удалить
-                      </Button>
-                    </div>
+                    <SongEdit song={song} />
                   </SongItem>
                 )}
                 {viewType === 'compact' && (
@@ -349,21 +261,7 @@ export const UserTracksList = () => {
                       data: userSongs
                     }}
                   >
-                    <div className="flex items-start gap-2 justify-between">
-                      <Button
-                        variant="form"
-                        onClick={() => push(`${profile_route}/${user?.id}/tracks/${song.id}`)}
-                      >
-                        Редактировать
-                      </Button>
-                      <Button
-                        variant="form"
-                        className="text-red-500"
-                        onClick={() => push(`${artist_route}/${song.id}`)}
-                      >
-                        Удалить
-                      </Button>
-                    </div>
+                    <SongEdit song={song} />
                   </SongItem>
                 )}
               </>
@@ -379,6 +277,6 @@ export const UserTracksList = () => {
           </Typography>
         )}
       </div>
-    </div>
+    </Wrapper>
   )
 }

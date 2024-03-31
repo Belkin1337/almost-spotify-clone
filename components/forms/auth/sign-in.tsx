@@ -90,6 +90,7 @@ export const SignInForm = () => {
             <FormFieldItem
               label="Пароль"
               input={{
+                type: "password",
                 placeholder: "Password",
                 name: "password"
               }}

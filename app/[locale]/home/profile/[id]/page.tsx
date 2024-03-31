@@ -1,10 +1,9 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { createClient } from "@/lib/utils/supabase/server";
-import { prefetchQuery } from '@supabase-cache-helpers/postgrest-react-query';
-import { getUserById } from '@/lib/queries/get-user-by-id';
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
 import { ProfileUserItem } from '@/components/user/profile';
+import { UserGeneric } from '@/types/entities/user';
 
 export default async function ProfilePage({ 
   params 
@@ -15,8 +14,6 @@ export default async function ProfilePage({
   const queryClient = new QueryClient()
   const supabase = createClient(cookieStore)
 
-  await prefetchQuery(queryClient, getUserById(supabase, params.id))
-
   const { data: { user }, error } = await supabase.auth.getUser()
   
   if (error || !user) {
@@ -25,7 +22,7 @@ export default async function ProfilePage({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <ProfileUserItem userId={params.id} />
+      <ProfileUserItem userId={params.id} user={user as UserGeneric} />
     </HydrationBoundary>
   )
 }

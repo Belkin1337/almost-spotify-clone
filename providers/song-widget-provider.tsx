@@ -1,6 +1,6 @@
 "use client"
 
-import { SongWidgetContext } from "@/lib/hooks/actions/song/use-song-widget";
+import { SongWidgetContext } from "@/lib/hooks/actions/song/widget/use-song-widget";
 import { useCallback, useState } from "react";
 
 export const SongWidgetProvider = ({

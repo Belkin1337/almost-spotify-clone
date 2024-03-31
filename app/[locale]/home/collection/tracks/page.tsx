@@ -4,7 +4,7 @@ import { createClient } from "@/lib/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 import { prefetchQuery } from "@supabase-cache-helpers/postgrest-react-query";
-import { getFollowedSongs } from "@/lib/queries/get-followed-songs";
+import { getFollowedSongs } from "@/lib/queries/song/followed/get-followed-songs";
 
 export default async function FollowedSongsPage() {
   const cookieStore = cookies()

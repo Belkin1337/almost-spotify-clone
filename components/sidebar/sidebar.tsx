@@ -1,21 +1,23 @@
 "use client";
 
-import { Library } from "@/components/sidebar/library";
 import { SidebarRoutes } from "./routes/sidebar-routes";
-import { usePlayer } from "@/lib/hooks/player/use-player";
 import { UserGeneric } from "@/types/entities/user";
 import { Wrapper } from "@/ui/wrapper";
 import { WidgetList } from "../static/widget/widget-list";
+import { HeightPlayerState } from "@/lib/constants/ui";
+import dynamic from "next/dynamic";
+
+const Library = dynamic(() => import("@/components/sidebar/library").then(mod => mod.Library))
 
 export const Sidebar = ({
   user
 }: {
   user: UserGeneric
 }) => {
-  const { playerState } = usePlayer()
+  const activePlayer = HeightPlayerState();
 
   return (
-    <div className={`flex flex-col gap-y-4 rounded-md ${playerState.active && user ? 'h-[calc(100%-84px)]' : 'h-full'}`}>
+    <div className={`flex flex-col h-full overflow-y-auto gap-y-2 rounded-lg ${activePlayer}`}>
       <SidebarRoutes />
       <Wrapper variant="library">
         {!user ? <WidgetList /> : <Library user={user} />}

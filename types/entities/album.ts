@@ -1,6 +1,6 @@
 export interface AlbumEntity {
   id: string,
-  artist: string,
+  artists: Array<string>,
   title: string
   created_at?: string,
   user_id: string,

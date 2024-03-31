@@ -1,3 +1,6 @@
+import { useUser } from "../hooks/actions/user/auth/use-user";
+import { usePlayer } from "../hooks/player/use-player";
+
 // view types
 export const VIEW_TYPE_COMPACT: 'compact' = 'compact';
 export const VIEW_TYPE_LIST: 'list' = 'list';
@@ -10,3 +13,15 @@ export const ORDER_TYPE_FROM_THE_END: 'from_the_end' = 'from_the_end'
 // songs types
 export const SONGS_TYPE_ALL: 'all' = 'all';
 export const SONGS_TYPE_BY_ARTIST: 'by_artist' = 'by_artist';
+
+// height with active player
+export const HeightPlayerState = () => {
+  const { playerState } = usePlayer();
+  const { user } = useUser();
+  
+  if (playerState.active?.id && user) {
+    return '!h-[calc(100%-84px)]'
+  } else {
+    return 'h-full';
+  }
+}

@@ -1,5 +1,5 @@
 import { useToast } from "@/lib/hooks/ui/use-toast"
-import { getArtistById } from "@/lib/queries/get-artist-by-id"
+import { getArtistById } from "@/lib/queries/artist/get-artist-by-id"
 import { createArtistSchema } from "@/lib/schemas/media/create-artist"
 import { createClient } from "@/lib/utils/supabase/client"
 import { ArtistEntity } from "@/types/entities/artist"
@@ -9,12 +9,18 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useQuery } from "@supabase-cache-helpers/postgrest-react-query"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { ArtistFormFields } from "../fields"
+import { useCallback } from "react"
 
 const supabase = createClient();
 
 type editSchema = z.infer<typeof createArtistSchema>
 
-export const EditArtistForm = (artistId: string) => {
+export const EditArtistForm = ({
+  artistId
+}: {
+  artistId: string
+}) => {
   const { toast } = useToast();
 
   const { data: artist } = useQuery<ArtistEntity>(getArtistById(supabase, artistId), {
@@ -31,7 +37,7 @@ export const EditArtistForm = (artistId: string) => {
     }
   })
 
-  const onSubmit = async (values: editSchema) => {
+  const onSubmit = useCallback(async (values: editSchema) => {
     try {
       if (!values) return;
 
@@ -42,7 +48,7 @@ export const EditArtistForm = (artistId: string) => {
         variant: "red"
       })
     }
-  }
+  }, [toast])
 
   return (
     <Form {...form}>
@@ -50,24 +56,9 @@ export const EditArtistForm = (artistId: string) => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-y-6"
       >
-        <div className="flex lg:flex-row flex-col gap-x-4 gap-y-6 items-center justify-stretch">
-          <div className="flex flex-col gap-y-8 w-full">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormFieldItem 
-                label="Имя артиста"
-                input={{
-                  placeholder: 'Имя',
-                  name: "artist_name",
-                  autoCorrect: 'false',
-                }}
-              />
-              )}
-            />
-          </div>
-        </div>
+        {/* <ArtistFormFields 
+          form={form}
+        /> */}
       </form>
     </Form>
   )

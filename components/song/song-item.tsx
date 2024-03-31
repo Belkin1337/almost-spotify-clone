@@ -2,13 +2,13 @@
 
 import React, { useCallback } from "react"
 import { VariantProps, cva } from "class-variance-authority"
-import { SongTitle } from "./child/song-title"
+import { SongItemTitle } from "./child/song-title"
 import { SongArtist } from "./child/song-artist"
 import { useRouter } from "next/navigation"
 import { FollowButton } from "./child/song-follow-button"
 import { SongPlayingAttribute } from "./child/song-playing-attribute"
-import { usePlay } from "@/lib/hooks/player/use-play"
-import { useSongWidget } from "@/lib/hooks/actions/song/use-song-widget"
+import { usePlay } from "@/lib/hooks/player/controls/use-play"
+import { useSongWidget } from "@/lib/hooks/actions/song/widget/use-song-widget"
 import { IoMdArrowDropdown } from "react-icons/io";
 import { IoMdArrowDropup } from "react-icons/io";
 import { UserTips } from "../tooltip/action"
@@ -164,7 +164,7 @@ export const SongItem = ({
           </SongImageItem>
         )}
         <div className="flex flex-col overflow-hidden justify-self-start">
-          <SongTitle
+          <SongItemTitle
             variant={variant === 'player' ? "player" : "default"}
             player={variant === 'player'}
             song={song!}
@@ -173,7 +173,6 @@ export const SongItem = ({
           {variant !== "artist_library" && (
             <SongArtist
               variant={variant === 'player' ? "player" : "default"}
-              player={variant === 'player'}
               song={song}
             />
           )}

@@ -7,7 +7,7 @@ export const ArtistDescription = ({
   artist: ArtistEntity
 }) => {
   return (
-    <Typography className="text-left text-sm text-neutral-400 !font-medium whitespace-pre-wrap">
+    <Typography className="text-left text-sm !text-neutral-400 !font-medium">
       {artist?.description}
     </Typography>
   )

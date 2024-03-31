@@ -1,35 +1,25 @@
 "use client"
 
-import { usePlayer } from "@/lib/hooks/player/use-player";
 import { UserGeneric } from "@/types/entities/user";
-import { useInView } from 'react-intersection-observer'
-import { Navbar } from "./navbar/navbar";
+import { HeightPlayerState } from "@/lib/constants/ui";
+import { Wrapper } from "@/ui/wrapper";
+import dynamic from "next/dynamic";
 
-interface MainPanelProps {
-  children: React.ReactNode,
-  user: UserGeneric
-}
+const Navbar = dynamic(() => import("@/components/layout/main-panel/navbar/navbar").then(mod => mod.Navbar))
 
 export const MainPanel = ({
   user,
   children
-}: MainPanelProps) => {
-  const { playerState } = usePlayer();
-
-  const { ref: inViewRef, inView } = useInView({
-    threshold: 0,
-  });
+}: {
+  user: UserGeneric,
+  children: React.ReactNode
+}) => {
+  const activePlayer = HeightPlayerState();
 
   return (
-    <div className={`bg-DARK_SECONDARY_BACKGROUND overflow-y-auto relative rounded-md w-full 
-    ${playerState.active?.id && user ? 'h-[calc(100%-84px)]' : 'h-full'}`}>
-      <Navbar
-        user={user}
-        inView={inView}
-      />
-      <div ref={inViewRef} className="min-h-screen">
-        {children}
-      </div>
-    </div>
+    <Wrapper variant="main_panel" className={activePlayer}>
+      <Navbar user={user} />
+      {children}
+    </Wrapper>
   );
 }

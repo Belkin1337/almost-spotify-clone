@@ -9,19 +9,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useCreateArtist } from "@/lib/hooks/actions/artist/use-create-artist";
 import { createArtistSchema } from "@/lib/schemas/media/create-artist";
-import { ArtistFormFields } from "./fields";
+import { ArtistFormFields } from "../fields";
 import { Typography } from "@/ui/typography";
 import Link from "next/link";
 import { artist_route } from "@/lib/constants/routes";
 
 type uploadSchema = z.infer<typeof createArtistSchema>
-
-export type PreviewSongType = {
-  name?: string,
-  description?: string,
-  image?: string,
-  cover_image?: string
-}
 
 export const CreateArtistForm = () => {
   const { toast } = useToast()
