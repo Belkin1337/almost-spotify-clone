@@ -1,2 +1,11 @@
-// impl getUserAvatar with using postgrest-cache-helpers
+import { SupabaseClient } from "@supabase/supabase-js";
 
+export async function getUserAvatar(
+	client: SupabaseClient,
+	userId: string
+) {
+	return client
+		.storage
+		.from('users')
+		.download(userId + '-avatar')
+}

@@ -2,8 +2,8 @@ import Image from "next/image";
 import { getScopedI18n } from "@/locales/server";
 import { setStaticParamsLocale } from "next-international/server";
 import { about, widgets } from "@/content/lang/pages";
-import { IntroBrand } from "@/components/preview/intro-brand";
-import { WidgetCard } from "@/components/layout/card";
+import { IntroBrand } from "@/components/static/widget/components/intro-brand";
+import { WidgetCard } from "@/ui/widget-card";
 
 export default async function BrandPage({ 
   params: { locale } 

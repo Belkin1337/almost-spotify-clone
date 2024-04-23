@@ -1,8 +1,8 @@
-import { SONG_TYPE_ALBUM, SONG_TYPE_SINGLE } from "@/lib/constants/preview";
+import { SONG_TYPE_ALBUM, SONG_TYPE_DEFAULT, SONG_TYPE_SINGLE } from "@/types/preview";
 import { cva, VariantProps } from "class-variance-authority";
-import { useCallback } from "react";
+import { HTMLAttributes, useCallback } from "react";
 
-const entityTypeVariants = cva("text-white font-medium truncate text-sm", {
+const entityTypeVariants = cva("text-white font-medium capitalize truncate text-small", {
   variants: {
     variant: {
       page: ""
@@ -10,10 +10,10 @@ const entityTypeVariants = cva("text-white font-medium truncate text-sm", {
   }
 })
 
-interface EntityTypeProps
-  extends React.HTMLAttributes<HTMLParagraphElement>,
+interface IEntityType
+  extends HTMLAttributes<HTMLParagraphElement>,
   VariantProps<typeof entityTypeVariants> {
-    type: typeof SONG_TYPE_SINGLE | typeof SONG_TYPE_ALBUM
+    type: typeof SONG_TYPE_SINGLE | typeof SONG_TYPE_ALBUM | typeof SONG_TYPE_DEFAULT
   }
 
 export const EntityType = ({ 
@@ -21,18 +21,10 @@ export const EntityType = ({
   className, 
   type, 
   ...props 
-}: EntityTypeProps) => {
-  const entityTypeFormatted = useCallback(() => {
-    if (type === 'album') {
-      return "Album"
-    } else if (type === 'single') {
-      return 'Single'
-    }
-  }, [type])
-
+}: IEntityType) => {
   return (
     <p className={entityTypeVariants(({ variant, className }))} {...props}>
-      {entityTypeFormatted()}
+      {type}
     </p>
   )
 }

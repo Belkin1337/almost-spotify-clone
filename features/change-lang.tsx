@@ -13,8 +13,8 @@ import {
   SelectTrigger
 } from "@/ui/select"
 import { Typography } from "@/ui/typography"
-import { Check } from 'lucide-react'
 import { useCallback } from 'react'
+import { CheckedIcon } from "@/ui/icons/checked";
 
 export const ChangeLang = () => {
   const changeLocale = useChangeLocale()
@@ -63,7 +63,7 @@ export const ChangeLang = () => {
               {item.fullname}
             </Typography>
             {item.name === currentLocale() && (
-              <Check size={16} className="text-jade-500" />
+              <CheckedIcon/>
             )}
           </Button>
         ))}

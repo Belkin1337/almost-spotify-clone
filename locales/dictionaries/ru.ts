@@ -132,7 +132,7 @@ export default {
         "main-route": "Главная",
         "search-route": "Поиск",
         "settings-route": "Настройки",
-        "media-library": "Моя медиатека",
+        "media-library": "Ваша медиатека",
         "hover-add-song": "Добавить аудиозапись",
       },
     },

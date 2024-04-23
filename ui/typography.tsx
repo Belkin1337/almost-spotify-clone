@@ -1,20 +1,34 @@
 "use client"
 
 import { VariantProps, cva } from "class-variance-authority"
+import { HTMLAttributes } from "react";
 
 const typographyVariants = cva("", {
   variants: {
     variant: {
-      default: "text-white font-medium",
-      secondary: "text-neutral-400",
-      link: "text-neutral-400 hover:underline cursor-pointer"
+      link: "hover:underline cursor-pointer",
+      page_title: "text-4xl",
+      subtitle: "text-neutral-400 text-medium font-medium",
+      song_table_list_attribute: "text-neutral-400 text-[0.9rem] font-medium"
+    },
+    text_color: {
+      white: "text-white",
+      gray: "text-neutral-400",
+      black: "text-black",
+      jade: "text-jade-500"
+    },
+    align: {
+      left: "text-left",
+      right: "text-right",
+      centered: "text-center"
     },
     size: {
-      default: "text-md",
-      sm: "text-sm",
-      md: "text-sm md:text-md",
+      default: "text-medium",
+      small: "text-small",
+      medium: "text-small md:text-medium",
       large: "text-base md:text-lg",
-      xl: "text-lg md:text-xl"
+      xl: "text-lg md:text-xl",
+      attributes: "text-[0.9rem]"
     },
     font: {
       normal: "font-normal",
@@ -23,24 +37,26 @@ const typographyVariants = cva("", {
       bold: "font-bold"
     }
   },
-  defaultVariants: {
-    variant: "default",
-    size: "default"
-  }
 })
 
-interface TypographyVariantsProps
-  extends React.HTMLAttributes<HTMLParagraphElement>,
+interface ITypographyVariants
+  extends HTMLAttributes<HTMLParagraphElement>,
   VariantProps<typeof typographyVariants> { }
 
 export const Typography = ({
   variant,
+  text_color,
+  align,
+  font,
   className,
   ...props
-}: TypographyVariantsProps) => {
+}: ITypographyVariants) => {
   return (
     <p className={typographyVariants(({
       variant,
+      align,
+      text_color,
+      font,
       className
     }))}
       {...props}

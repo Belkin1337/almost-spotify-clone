@@ -1,23 +1,35 @@
 import { cookies } from 'next/headers';
-import { createClient } from '@/lib/utils/supabase/server';
-import { MainLayout } from '@/components/layout/main-layout';
-import { UserGeneric } from '@/types/entities/user';
+import { createClient } from '@/lib/utils/supabase/server/supabase-server';
+import { UserEntity } from '@/types/user';
+import { ResizableHandle, ResizablePanelGroup } from "@/ui/resizable";
+import { Sidebar } from "@/components/sidebar/sidebar";
+import { MainPanel } from "@/components/layout/main-panel/main-panel";
+import { SongWidget } from "@/components/layout/widget/song-widget";
+import { PlayerItem } from "@/components/layout/player/player-item";
+import { ReactNode } from "react";
 
 export default async function HomeLayout({
-  children
+	children
 }: {
-  children: React.ReactNode
+	children: ReactNode
 }) {
-  const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
+	const supabase = createClient(cookies())
 
-  const { data: {
-    user
-  } } = await supabase.auth.getUser()
-  
-  return (
-    <MainLayout user={user as UserGeneric} >
-      {children}
-    </MainLayout>
-  )
+	const { data: { user } } = await supabase.auth.getUser()
+
+	return (
+		<>
+			{/*<Debug/>*/}
+			<ResizablePanelGroup direction="horizontal" className="flex gap-1 p-1 bg-black">
+				<Sidebar user={user as UserEntity}/>
+				<ResizableHandle/>
+				<MainPanel user={user as UserEntity}>
+					{children}
+				</MainPanel>
+				<ResizableHandle/>
+				<SongWidget user={user as UserEntity}/>
+			</ResizablePanelGroup>
+			<PlayerItem user={user as UserEntity}/>
+		</>
+	)
 }

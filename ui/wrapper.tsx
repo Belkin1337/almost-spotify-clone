@@ -1,12 +1,13 @@
 import { VariantProps, cva } from "class-variance-authority";
+import React, { HTMLAttributes } from "react";
 
-const wrapperVariants = cva("flex flex-col rounded-lg bg-DARK_SECONDARY_BACKGROUND", {
+const wrapperVariants = cva("flex flex-col overflow-y-auto rounded-lg bg-DARK_SECONDARY_BACKGROUND", {
   variants: {
     variant: {
-      page: "relative w-full",
-      library: "px-2 py-4 h-full overflow-y-auto",
-      main_panel: "w-full overflow-y-auto h-full",
-      widget: "h-full overflow-y-auto"
+      page: "relative pt-[64px] w-full",
+      library: "pl-2 py-4 h-full",
+      main_panel: "w-full",
+      widget: "",
     }
   },
   defaultVariants: {
@@ -14,26 +15,21 @@ const wrapperVariants = cva("flex flex-col rounded-lg bg-DARK_SECONDARY_BACKGROU
   }
 })
 
-interface WrapperProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-  VariantProps<typeof wrapperVariants> {
-  children: React.ReactNode
-}
+interface IWrapper
+  extends HTMLAttributes<HTMLDivElement>,
+  VariantProps<typeof wrapperVariants> {}
 
 export const Wrapper = ({
   variant,
   className,
-  children,
   ...props
-}: WrapperProps) => {
+}: IWrapper) => {
   return (
     <div className={wrapperVariants(({
       variant,
       className
     }))}
       {...props}
-    >
-      {children}
-    </div>
+    />
   )
 }

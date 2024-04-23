@@ -1,6 +1,7 @@
 "use client"
 
 import { cva, VariantProps } from "class-variance-authority"
+import { HTMLAttributes } from "react";
 
 // impl formate the data logic
 
@@ -12,8 +13,8 @@ const timeStampVariants = cva(" ", {
   }
 })
 
-interface TimeStampProps 
-  extends React.HTMLAttributes<HTMLParagraphElement>,
+interface ITimeStamp
+  extends HTMLAttributes<HTMLParagraphElement>,
   VariantProps<typeof timeStampVariants> {
     date: string | number
   }
@@ -23,7 +24,7 @@ export const Timestamp = ({
   className,
   date,
   ...props
-}: TimeStampProps) => {
+}: ITimeStamp) => {
   return (
     <p className={timeStampVariants(({ variant, className }))} {...props}>
       {date || 'null'}

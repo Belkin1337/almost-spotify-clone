@@ -133,7 +133,7 @@ export default {
         "main-route": "Main",
         "search-route": "Search",
         "settings-route": "Settings",
-        "media-library": "My songs",
+        "media-library": "Your Library",
         "hover-add-song": "Add audio",
       },
     },

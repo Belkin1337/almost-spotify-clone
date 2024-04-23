@@ -1,10 +1,10 @@
 import { getScopedI18n } from "@/locales/server";
 import { setStaticParamsLocale } from "next-international/server";
 import { cookies } from "next/headers";
-import { createClient } from "@/lib/utils/supabase/server";
+import { createClient } from "@/lib/utils/supabase/server/supabase-server";
 import { redirect } from "next/navigation";
 import { Wrapper } from "@/ui/wrapper";
-import { PreferencesList } from "@/components/lists/preferences/preferences";
+import { PreferencesList } from "@/components/lists/preferences/preferences-list";
 
 export default async function PreferencesPage({ 
   params: { locale } 

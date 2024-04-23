@@ -1,14 +1,16 @@
 import { cva, VariantProps } from "class-variance-authority";
+import { HTMLAttributes } from "react";
 
 export const songTitleVariants = cva("", {
   variants: {
     variant: {
       default: "",
-      library: "text-md font-medium",
+      library: "text-medium font-medium",
       card: "font-bold text-lg",
       page: "font-bold text-6xl",
       player: "hover:underline hover:cursor-pointer text-sm font-medium",
-      widget: "hover:underline text-xl cursor-pointer font-bold"
+      widget: "hover:underline text-xl cursor-pointer font-bold",
+      select: "truncate font-medium text-sm"
     }
   },
   defaultVariants: {
@@ -16,8 +18,8 @@ export const songTitleVariants = cva("", {
   }
 })
 
-interface SongTitleProps
-  extends React.HTMLAttributes<HTMLParagraphElement>,
+interface ISongTitle
+  extends HTMLAttributes<HTMLParagraphElement>,
   VariantProps<typeof songTitleVariants> {
     title: string
   }
@@ -27,7 +29,7 @@ export const SongTitle = ({
   className, 
   title,
   ...props 
-}: SongTitleProps) => {
+}: ISongTitle) => {
   return (
     <p className={songTitleVariants(({ variant, className }))} {...props}>
       {title}

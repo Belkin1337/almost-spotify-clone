@@ -1,5 +1,3 @@
-"use client"
-
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { listComponents } from "@/content/lang/pages"
@@ -12,7 +10,7 @@ import Link from "next/link"
 
 export const Header = () => {
   const [sheetOpen, setSheetOpen] = useState<boolean>(false);
-  const router = useRouter();
+  const { push } = useRouter();
   const header_locale = useScopedI18n('brand.main.const-components.header')
   const headers_list = listComponents(header_locale);
 
@@ -20,7 +18,7 @@ export const Header = () => {
     <>
       <div className="fixed top-0 right-0 left-0 z-20 w-full backdrop-blur backdrop-filter bg-black/10 rounded-md">
         <div className="w-[95%] flex items-center justify-between h-[84px] mx-auto">
-          <div onClick={() => router.push('/')} className="flex flex-row items-center gap-x-2 cursor-pointer">
+          <div onClick={() => push('/')} className="flex flex-row items-center gap-x-2 cursor-pointer">
             <Image
               width={46}
               height={46}
@@ -35,12 +33,19 @@ export const Header = () => {
           </div>
           <div className="hidden md:flex flex-row items-center justify-center w-1/3 gap-x-6">
             {headers_list.map((item, idx) => (
-              <button onClick={() => router.push(item.route)} key={idx} className="font-bold text-[1rem] text-WHITE uppercase">
+              <button
+                key={idx}
+                onClick={() => push(item.route)}
+                className="font-bold text-[1rem] text-WHITE uppercase"
+              >
                 {item.name}
               </button>
             ))}
           </div>
-          <Button onClick={() => setSheetOpen(!sheetOpen)} className="md:hidden block">
+          <Button
+						onClick={() => setSheetOpen(!sheetOpen)}
+						className="md:hidden block"
+					>
             Navigation
           </Button>
           <div className="hidden md:flex items-center justify-start gap-x-4">
@@ -60,7 +65,10 @@ export const Header = () => {
       <Sheet modal onOpenChange={setSheetOpen} open={sheetOpen}>
         <SheetContent className="h-screen w-[296px]">
           <SheetHeader>
-            <div onClick={() => router.push('/')} className="flex flex-row items-center gap-x-2 cursor-pointer">
+            <div
+							onClick={() => push('/')}
+							className="flex flex-row items-center gap-x-2 cursor-pointer"
+						>
               <Image
                 width={46}
                 height={46}
@@ -76,7 +84,11 @@ export const Header = () => {
           </SheetHeader>
           <div className="flex flex-col items-start">
             {headers_list.map((item, idx) => (
-              <Link href={`${item.route}`} key={idx} className="font-bold text-[1rem] text-WHITE uppercase">
+              <Link
+								href={`${item.route}`}
+								key={idx}
+								className="font-bold text-[1rem] text-WHITE uppercase"
+							>
                 {item.name}
               </Link>
             ))}

@@ -1,10 +1,11 @@
-import { SongItemPage } from "@/components/song/page/song-item";
-import { getSongById } from "@/lib/queries/song/get-song-by-id";
-import { createClient } from "@/lib/utils/supabase/server";
-import { prefetchQuery } from "@supabase-cache-helpers/postgrest-react-query";
-import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
+import { SongItemPage } from "@/components/song/components/page/page-song-item";
+import { getSongById } from "@/lib/queries/song/single/get-song-by-id";
+import { createClient } from "@/lib/utils/supabase/server/supabase-server";
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { songByParamIdQueryKey } from "@/lib/querykeys/song";
+import { Wrapper } from "@/ui/wrapper";
 
 export default async function SongPage({
   params
@@ -12,24 +13,26 @@ export default async function SongPage({
   params: { id: string }
 }) {
   const queryClient = new QueryClient();
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore)
+  const supabase = createClient(cookies())
 
-  const { data: {
-    user
-  } } = await supabase.auth.getUser()
+  const { data: { user }, error } = await supabase.auth.getUser()
 
-  await prefetchQuery(queryClient, getSongById(supabase, params.id), {
-    retry: false,
+  await queryClient.prefetchQuery({
+    queryKey: songByParamIdQueryKey(params.id),
+    queryFn: async () => {
+      const supabase = createClient(cookies())
+
+      return await getSongById(supabase, params.id)
+    }
   })
 
-  if (!user) {
-    redirect('/home')
-  }
+  if (!user || error) redirect('/home')
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <SongItemPage songId={params.id} />
+      <Wrapper variant="page">
+        <SongItemPage songId={params.id} />
+      </Wrapper>
     </HydrationBoundary>
   )
 }

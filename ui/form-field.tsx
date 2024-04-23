@@ -5,50 +5,40 @@ import {
   FormMessage
 } from "./form"
 import { Input } from "./input"
+import { HTMLAttributes, ReactNode } from "react";
 
-interface InputProps 
-  extends React.HTMLAttributes<HTMLInputElement> {
+interface IInput extends HTMLAttributes<HTMLInputElement> {
     name: string,
     optional?: boolean,
     placeholder?: string,
-    autoCorrect?: 'true' | 'false' | undefined; 
-    autoComplete?: 'true' | 'false' | undefined;
+    autoCorrect?: 'true' | 'false';
+    autoComplete?: 'true' | 'false';
     accept?: string,
     type?: string,
     ref?: any,
 }
 
-interface FormFieldItemProps {
+interface IFormFieldItem {
   label: string,
-  input: InputProps,
+  optional?: boolean,
+  children: ReactNode
 }
 
 export const FormFieldItem = ({
   label,
-  input,
+  children,
+  optional,
   ...props
-}: FormFieldItemProps) => {
+}: IFormFieldItem) => {
   return (
-    <FormItem>
+    <FormItem {...props}>
       <FormLabel>
-        {label} {input.optional && "(опционально)"}
+        {label} {optional && "(опционально)"}
       </FormLabel>
       <FormControl>
-        <Input
-          name={input.name}
-          placeholder={input.placeholder}
-          autoCorrect={`${input.autoCorrect}`}
-          autoComplete={`${input.autoComplete}`}
-          spellCheck="false"
-          onChange={input.onChange}
-          accept={input.accept}
-          ref={input.ref}
-          type={input.type}
-          {...props}
-        />
+        {children}
       </FormControl>
       <FormMessage />
-      { }
     </FormItem>
   )
 }
