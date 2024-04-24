@@ -26,7 +26,5 @@ export const usePlayer = () => {
 		}
 	})
 
-	return {
-		setPlayerAttributes
-	}
+	return { setPlayerAttributes }
 }

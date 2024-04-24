@@ -14,18 +14,18 @@ export const SidebarLibraryList = () => {
 	const { data: createdPlaylists } = usePlaylistsListByUser(user?.id, true)
 	const { data: resizeState } = useResizePanelsQuery()
 
-	const isCollapsed = resizeState.sidebarPanel.size > 17;
+	const isExpanded = resizeState.sidebarPanel.isExpanded;
 
 	if (!user) return;
 
 	return (
 		<div className="flex flex-col gap-y-2 mt-4 overflow-x-hidden h-full pr-2">
-			<FollowTrackRouteButton isCollapsed={isCollapsed}/>
+			<FollowTrackRouteButton isCollapsed={isExpanded}/>
 			{createdPlaylists?.map(playlist => (
-				<PlaylistLibraryCard key={playlist.id} playlist={playlist} isCollapsed={isCollapsed}/>
+				<PlaylistLibraryCard key={playlist.id} playlist={playlist} isCollapsed={isExpanded}/>
 			))}
 			{followedArtist?.map(artist => (
-				<ArtistLibraryCard key={artist.id} artist={artist} isCollapsed={isCollapsed}/>
+				<ArtistLibraryCard key={artist.id} artist={artist} isCollapsed={isExpanded}/>
 			))}
 		</div>
 	)

@@ -4,8 +4,9 @@ export const resizeStateQueryKey: QueryKey = ["resize_state"];
 
 export interface IPanelState {
 	sidebarPanel: {
-		id: string | null,
-		size: number
+		controlled?: boolean,
+		isCollapsed?: boolean,
+		isExpanded?: boolean
 	}
 }
 
@@ -17,15 +18,15 @@ export const useControlResizablePanels = () => {
 			newValues: IPanelState
 		) => {
 			queryClient.setQueryData<IPanelState>(
-				resizeStateQueryKey, (prevState) => {
-					return { ...prevState, ...newValues }
-				})
+				resizeStateQueryKey,
+				(prev) => {
+					return {
+						...prev,
+						...newValues
+					}
+				}
+			)
 		},
-		onSuccess: async () => {
-			await queryClient.invalidateQueries({
-				queryKey: resizeStateQueryKey
-			})
-		}
 	})
 
 	return { updatePanelSizeMutation }

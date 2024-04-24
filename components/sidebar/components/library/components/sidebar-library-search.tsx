@@ -5,7 +5,7 @@ import { useResizePanelsQuery } from "@/lib/query/ui/resize-panels-query";
 export const SidebarLibrarySearch = () => {
 	const { data: resizeState } = useResizePanelsQuery()
 
-	if (resizeState.sidebarPanel.size < 17) return;
+	if (resizeState.sidebarPanel.isCollapsed) return;
 
 	return (
 		<div className="flex items-center justify-between gap-x-2 w-full px-2">

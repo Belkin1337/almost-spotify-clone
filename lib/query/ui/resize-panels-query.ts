@@ -5,13 +5,15 @@ export const useResizePanelsQuery = () => {
 	return useQuery<IPanelState, Error>({
 		queryKey: resizeStateQueryKey,
 		retry: 1,
+		gcTime: Infinity,
+		staleTime: Infinity,
+		refetchOnMount: false,
+		refetchOnWindowFocus: false,
 		initialData: {
 			sidebarPanel: {
-				id: null,
-				size: 18
+				isCollapsed: false,
+				isExpanded: true
 			}
 		},
-		refetchOnMount: false,
-		refetchOnWindowFocus: false
 	})
 }
