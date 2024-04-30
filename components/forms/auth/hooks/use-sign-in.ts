@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import { useMutation } from "@tanstack/react-query";
-import { zodSignInSchema } from "@/components/forms/auth/components/sign-in";
+import { zodSignInSchema } from "@/components/forms/auth/components/sign-in-form";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

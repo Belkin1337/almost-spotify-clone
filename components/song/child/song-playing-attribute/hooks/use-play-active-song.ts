@@ -23,7 +23,7 @@ export const usePlayActiveSong = () => {
 				songs: song_list ? song_list : (playerAttributes?.ids ? playerAttributes.ids : [])
 			})
 		}
-	}, [playerAttributes?.active?.id])
+	}, [onPlay, playerAttributes?.active?.id])
 
 	return { playingHandler }
 }

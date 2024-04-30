@@ -31,17 +31,24 @@ export const SidebarLibraryTitle = () => {
 				}
 			})
 		}
-	}, [updatePanelSizeMutation, resizeState.sidebarPanel.controlled, resizeState.sidebarPanel.isCollapsed, resizeState.sidebarPanel.isExpanded])
+	}, [
+		updatePanelSizeMutation,
+		resizeState.sidebarPanel.controlled,
+		resizeState.sidebarPanel.isCollapsed,
+		resizeState.sidebarPanel.isExpanded
+	])
 
 	const tip = resizeState.sidebarPanel.isExpanded ? 'Collapse sidebar' : 'Expand sidebar';
 
 	return (
 		<div className="flex gap-x-2 items-center">
 			<UserTips action={tip}>
-				<MediaLibraryIcon onClick={handleResizePanel}/>
+				<div className="flex items-center justify-center">
+					<MediaLibraryIcon onClick={handleResizePanel}/>
+				</div>
 			</UserTips>
 			{isExpanded && (
-				<Typography text_color="gray" font="medium" size="xl">
+				<Typography text_color="gray" font="semibold" size="base">
 					{libraryLocale('media-library')}
 				</Typography>
 			)}

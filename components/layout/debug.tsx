@@ -4,128 +4,104 @@ import { Expand } from 'lucide-react';
 import { Typography } from "@/ui/typography";
 import { useWidget } from "@/lib/hooks/ui/use-widget";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/ui/accordion";
-import { useUserQuery } from "@/lib/query/user/user-query";
 import { useState } from "react";
 import { useAudioStateQuery } from "@/lib/query/player/audio-state-query";
 import { usePlayerStateQuery } from "@/lib/query/player/player-state-query";
 import { useVolumeStateQuery } from "@/lib/query/player/volume-state-query";
+import { User } from "@supabase/supabase-js";
 
-export const Debug = () => {
+export const Debug = ({
+	user
+}: {
+	user: User
+}) => {
 	const [open, setOpen] = useState(false);
-
-	const { data: user } = useUserQuery();
 	const { widgetState } = useWidget()
 	const { playerAttributes } = usePlayerStateQuery();
 	const { audioAttributes } = useAudioStateQuery()
 	const { volumeAttribute } = useVolumeStateQuery()
 
+	const mapProperties = (properties: {
+		label: string;
+		value: string | null }[]
+	) => {
+		return properties.map((prop, index) => (
+			<Typography key={index}>
+				{prop.label}: {prop.value || ''}
+			</Typography>
+		));
+	};
+
 	return (
-		<div className="absolute z-40 right-1/2 top-4 bg-neutral-800 w-fit p-2 rounded-xl h-fit border border-neutral-700">
+		<div
+			className="absolute z-[1000] right-1/2 top-4 bg-neutral-800 w-fit p-2 rounded-xl h-fit border border-neutral-700">
 			{open ? (
 				<>
-					<Expand onClick={() => {
-						setOpen((prevState) => !prevState);
-					}}/>
-					<Accordion type="multiple" className="min-w-[400px]">
+					<Expand onClick={() => setOpen((prevState) => !prevState)}/>
+					<Accordion
+						type="multiple"
+						className="min-w-[400px]"
+					>
 						<AccordionItem value="all">
-							<AccordionTrigger>
-								song state
-							</AccordionTrigger>
+							<AccordionTrigger>Player</AccordionTrigger>
 							<AccordionContent>
-								{playerAttributes?.active ? (
-										<div className="flex flex-col">
-											<Typography>
-												Current Active Song: {playerAttributes?.active?.title || ''}
-											</Typography>
-											<Typography>
-												Current Position: {audioAttributes.position || ''}
-											</Typography>
-											<Typography>
-												Is Playing: {playerAttributes?.isPlaying?.toString()}
-											</Typography>
-											<Typography>
-												Is Loaded: {playerAttributes?.isLoaded?.toString()}
-											</Typography>
-											<Typography>
-												Current Volume: {volumeAttribute?.volume?.toString()}
-											</Typography>
-											<Typography>
-												Widget (opened?): {widgetState?.data?.isOpen?.toString()}
-											</Typography>
-											{audioAttributes.howl ? (
-												<Accordion type="multiple" className="min-w-[400px]">
-													<AccordionItem value="howl">
-														<AccordionTrigger>
-															Howl Instance
-														</AccordionTrigger>
-														<AccordionContent>
-															<Typography>
-																Duration: {audioAttributes.howl?.duration().toString()}
-															</Typography>
-															<Typography>
-																Song Url: {audioAttributes.songUrl}
-															</Typography>
-															<Typography>
-																State: {audioAttributes.howl?.state().toString()}
-															</Typography>
-															<Typography>
-																Loop: {audioAttributes.howl?.loop().toString()}
-															</Typography>
-															<Typography>
-																Position: {audioAttributes.howl?.pos().toString()}
-															</Typography>
-														</AccordionContent>
-													</AccordionItem>
-												</Accordion>
-											) : (
-												<Typography>No howl instance.</Typography>
-											)}
-										</div>
-									) :
-									<Typography>No actived song.</Typography>
-								}
+								{playerAttributes ? (
+									<div className="flex flex-col">
+										{playerAttributes && mapProperties([
+											{ label: 'Current Active Song', value: playerAttributes.active?.title || '' },
+											{ label: 'Current Position', value: audioAttributes.position?.toString() || '' },
+											{ label: 'Is Playing', value: playerAttributes.isPlaying?.toString() || '' },
+											{ label: 'Is Loaded', value: playerAttributes.isLoaded?.toString() || '' },
+											{ label: 'Current Volume', value: volumeAttribute?.volume?.toString() || '' },
+											{ label: 'Widget (opened?)', value: widgetState?.data?.isOpen?.toString() || '' },
+										])}
+										{audioAttributes.howl ? (
+											<Accordion type="multiple" className="min-w-[400px]">
+												<AccordionItem value="howl">
+													<AccordionTrigger>Audio</AccordionTrigger>
+													<AccordionContent>
+														{mapProperties([
+															{ label: 'Duration', value: audioAttributes.howl.duration().toString() },
+															{ label: 'Song Url', value: audioAttributes.songUrl || '' },
+															{ label: 'State', value: audioAttributes.howl.state().toString() },
+															{ label: 'Loop', value: audioAttributes.howl.loop().toString() },
+															{ label: 'Position', value: audioAttributes.howl.pos().toString() },
+														])}
+													</AccordionContent>
+												</AccordionItem>
+											</Accordion>
+										) : (
+											<Typography>No howl instance.</Typography>
+										)}
+									</div>
+								) : (
+									<Typography>No active song.</Typography>
+								)}
 							</AccordionContent>
 						</AccordionItem>
 						<AccordionItem value="item-2">
-							<AccordionTrigger>
-								user state
-							</AccordionTrigger>
+							<AccordionTrigger>User</AccordionTrigger>
 							<AccordionContent>
 								{user ? (
-										<div className="flex flex-col">
-											<Typography>
-												Username: {user.full_name}
-											</Typography>
-											<Typography>
-												Id: {user.id}
-											</Typography>
-											<Typography>
-												Email: {user.email?.toString()}
-											</Typography>
-											<Typography>
-												Created at: {user.created_at?.toString()}
-											</Typography>
-											<Typography>
-												Attributes:
-												<p>
-													Public profile: {user.attributes?.is_public?.toString()}
-												</p>
-												<p>
-													Shuffled mode: {user.attributes?.is_shuffle?.toString()}
-												</p>
-											</Typography>
-										</div>
-									) :
+									<div className="flex flex-col">
+										{mapProperties([
+											// { label: 'Username', value: user.full_name },
+											{ label: 'Id', value: user.id },
+											{ label: 'Email', value: user.identities![0]?.identity_data?.email || '' },
+											{ label: 'Created at', value: user.created_at?.toString() || '' },
+											{ label: 'Role', value: user.role },
+											{ label: 'Provider', value: user.identities![0]?.provider || '' },
+										])}
+									</div>
+								) : (
 									<Typography>Not auth.</Typography>
-								}
+								)}
 							</AccordionContent>
 						</AccordionItem>
 					</Accordion>
 				</>
 			) : (
-				<Expand onClick={() => {
-					setOpen((prevState) => !prevState);
-				}}/>
+				<Expand onClick={() => setOpen((prevState) => !prevState)}/>
 			)}
 		</div>
 	)

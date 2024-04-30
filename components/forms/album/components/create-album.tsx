@@ -62,7 +62,7 @@ export const CreateAlbumForm = () => {
         title: "Альбом создан!",
         variant: "right",
         description: (
-          <Link href={`${album_route}/${album.id}`}>
+          <Link href={album_route(album.id)}>
             <Typography className="underline" text_color="black" font="bold">
               Перейти к альбому
             </Typography>
@@ -81,16 +81,12 @@ export const CreateAlbumForm = () => {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-y-6"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-6">
         <AlbumFormFields 
           form={form}
           isLoading={createAlbum.isPending}
-          refs={{
-            imageRef: imageRef
-          }}
+          refs={{ imageRef: imageRef
+        }}
         />
       </form>
     </Form>

@@ -1,9 +1,12 @@
 "use client";
- 
+
 import Image from "next/image";
-import React from "react";
-import { CardBody, CardContainer, CardItem } from "@/ui/3d-card";
- 
+import { CardBody, CardContainer } from "@/ui/3d-card";
+import dynamic from "next/dynamic";
+
+const CardItem = dynamic(() => import("@/ui/3d-card")
+  .then(mod => mod.CardItem))
+
 interface IWidgetItem {
   title?: string,
   content: string,

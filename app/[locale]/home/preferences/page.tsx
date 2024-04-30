@@ -4,27 +4,20 @@ import { cookies } from "next/headers";
 import { createClient } from "@/lib/utils/supabase/server/supabase-server";
 import { redirect } from "next/navigation";
 import { Wrapper } from "@/ui/wrapper";
-import { PreferencesList } from "@/components/lists/preferences/preferences-list";
+import { Preferences } from "@/components/sections/preferences/preferences";
 
 export default async function PreferencesPage({ 
   params: { locale } 
 }: { 
   params: { locale: string } 
 }) {
-  const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
-
-  const { data: { 
-    user 
-  }, error } = await supabase.auth.getUser()
+  const supabase = createClient(cookies())
+  const { data: { user }, error } = await supabase.auth.getUser()
 
   setStaticParamsLocale(locale);
-  
   const settingsLocale = await getScopedI18n('main-service.pages.settings-content.navbar')
 
-  if (error || !user) {
-    redirect('/home')
-  }
+  if (error || !user) redirect('/home')
 
   return (
     <Wrapper variant="page">
@@ -33,7 +26,7 @@ export default async function PreferencesPage({
           {settingsLocale('welcome-message')}
         </h1>
       </div>
-      <PreferencesList />
+      <Preferences />
     </Wrapper>
   )
 }

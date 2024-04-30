@@ -1,9 +1,9 @@
 import { Button } from "@/ui/button";
-import { EditArtistForm } from "@/components/forms/artist/components/edit-artist";
+import { EditArtistForm } from "@/components/forms/artist/components/edit-artist-form";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
 import { ArtistEntity } from "@/types/artist";
 import { MouseEvent } from "react";
-import { DeleteArtistForm } from "@/components/forms/artist/components/delete-artist";
+import { DeleteConfirmArtistForm } from "@/components/forms/artist/components/delete-confirm-artist-form";
 
 export const ArtistEditSubMenu = ({
 	artist
@@ -33,7 +33,7 @@ export const ArtistEditSubMenu = ({
 				onClick={(e: MouseEvent<HTMLButtonElement>) => {
 					e.stopPropagation();
 					openDialog({
-						dialogChildren: <DeleteArtistForm artist={artist}/>
+						dialogChildren: <DeleteConfirmArtistForm artist={artist}/>
 					})
 				}}
 			>

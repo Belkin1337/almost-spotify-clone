@@ -27,7 +27,5 @@ export const usePlayerStateQuery = () => {
 		refetchOnMount: false
 	});
 
-	return {
-		playerAttributes
-	}
+	return { playerAttributes }
 }

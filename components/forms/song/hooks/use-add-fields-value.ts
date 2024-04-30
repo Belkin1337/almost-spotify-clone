@@ -1,9 +1,9 @@
-import { createSchema } from "@/components/forms/song/components/fields/types/fields-types";
 import { GenreType } from "@/lib/constants/shared/genres-list";
 import { ArtistEntity } from "@/types/artist";
 import { UseFormReturn } from "react-hook-form";
-import { PreviewSongType } from "@/types/preview";
+import { PreviewSongType } from "@/types/form";
 import { UseMutationResult } from "@tanstack/react-query";
+import { zodSongSchema } from "@/components/forms/song/components/create/types/create-form-types";
 
 export const useAddFieldsValue = () => {
 	const changeInputValues = ({
@@ -16,12 +16,12 @@ export const useAddFieldsValue = () => {
 		setSongPreviewAttributes
 	}: {
 		form: UseFormReturn<any, unknown, any>,
-		key: keyof createSchema,
+		key: keyof zodSongSchema,
 		genres: GenreType[] | undefined,
 		userArtists: ArtistEntity[] | null | undefined,
 		value: string,
-		songPreviewState: PreviewSongType,
-		setSongPreviewAttributes: UseMutationResult<PreviewSongType | undefined, Error, PreviewSongType, unknown>
+		songPreviewState?: PreviewSongType,
+		setSongPreviewAttributes?: UseMutationResult<PreviewSongType | undefined, Error, PreviewSongType, unknown>
 	}) => {
 		const genreItem = genres?.find(item => item.id === value);
 
@@ -31,14 +31,14 @@ export const useAddFieldsValue = () => {
 		if (key === 'genre') {
 			if (!genreItem) return;
 
-			if (songPreviewState.genre?.id === value) {
+			if (songPreviewState?.genre?.id === value) {
 				return;
 			} else {
 				updatedGenre = genreItem;
 
 				form.setValue("genre", updatedGenre?.id.toString());
 
-				setSongPreviewAttributes.mutate({
+				setSongPreviewAttributes?.mutate({
 					genre: updatedGenre
 				});
 			}
@@ -47,13 +47,13 @@ export const useAddFieldsValue = () => {
 
 			const artistItem = userArtists?.find(item => item.id === value);
 
-			if (songPreviewState.artists?.some(item => item.id === artistItem?.id)) {
+			if (songPreviewState?.artists?.some(item => item.id === artistItem?.id)) {
 				return;
 			} else {
-				if (songPreviewState.artists?.length! < 4 && artistItem) {
-					updatedArtists = [...songPreviewState.artists!, artistItem];
+				if (songPreviewState?.artists?.length! < 4 && artistItem) {
+					updatedArtists = [...songPreviewState?.artists!, artistItem];
 
-					setSongPreviewAttributes.mutate({
+					setSongPreviewAttributes?.mutate({
 						artists: updatedArtists
 					})
 
@@ -67,7 +67,7 @@ export const useAddFieldsValue = () => {
 				form.setValue("single", false)
 			}
 		} else {
-			setSongPreviewAttributes.mutate({
+			setSongPreviewAttributes?.mutate({
 				[key]: value
 			});
 		}

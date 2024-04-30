@@ -4,14 +4,12 @@ import { useToast } from "@/lib/hooks/ui/use-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateAvatarSchema } from "@/components/forms/user/personal/avatar/schemas/schema-update-avatar";
-import { z } from "zod";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
 import { useRouter } from "next/navigation";
 import { UpdateAttributesType } from "@/components/forms/user/personal/name/types/update-name-types";
 import { useUserQuery } from "@/lib/query/user/user-query";
 import { userAvatarQueryKey } from "@/lib/querykeys/user";
-
-export type zodAvatarSchema = z.infer<typeof updateAvatarSchema>
+import { zodAvatarSchema } from "@/components/forms/user/personal/avatar/types/update-avatar-types";
 
 const supabase = createClient();
 
@@ -92,5 +90,5 @@ export const useUpdateAvatar = () => {
 		},
 	});
 
-	return { form, uploadAvatar: uploadAvatarMutation };
+	return { form, uploadAvatarMutation };
 };

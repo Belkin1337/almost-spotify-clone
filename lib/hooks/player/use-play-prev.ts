@@ -14,29 +14,31 @@ export const usePlayPrev = () => {
   const currentSongArray = playerAttributes.ids!;
 
   const onPlayPrev = useCallback(async () => {
-    if (currentSong) {
-      const currentIdx = currentSongArray
-        .findIndex(song => song.id === currentSong.id);
+    if (user) {
+      if (currentSong) {
+        const currentIdx = currentSongArray
+          .findIndex(song => song.id === currentSong.id);
 
-      console.log(currentIdx)
-      if (currentIdx !== -1) {
-        const prevIdx = (currentIdx - 1) % currentSongArray.length;
-        const prevSong = currentSongArray[prevIdx];
+        console.log(currentIdx)
+        if (currentIdx !== -1) {
+          const prevIdx = (currentIdx - 1) % currentSongArray.length;
+          const prevSong = currentSongArray[prevIdx];
 
-        if (currentSong !== prevSong) {
-          await setNewSongAttributes({
-            nextSong: prevSong,
-            nextSongArray: currentSongArray
-          })
+          if (currentSong !== prevSong) {
+            await setNewSongAttributes({
+              nextSong: prevSong,
+              nextSongArray: currentSongArray
+            })
+          } else {
+            console.log("currentIndex", currentSong, prevSong)
+            return;
+          }
         } else {
-          console.log("currentIndex", currentSong, prevSong)
-          return;
+          console.log("currentIndex", currentSong)
+          setPlayerAttributes.mutate({
+            isPlaying: false
+          })
         }
-      } else {
-        console.log("currentIndex", currentSong)
-        setPlayerAttributes.mutate({
-          isPlaying: false
-        })
       }
     }
   }, [setNewSongAttributes, currentSong, currentSongArray])

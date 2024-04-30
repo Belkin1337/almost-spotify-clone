@@ -1,23 +1,48 @@
 import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import { useCreateArtistImage } from "@/components/forms/artist/hooks/use-create-artist-image";
 import { useUserQuery } from "@/lib/query/user/user-query";
-import { ArtistAttributes } from "@/components/forms/artist/hooks/use-create-artist";
+import { ArtistAttributesType } from "@/components/forms/artist/hooks/use-create-artist";
 import { useMutation } from "@tanstack/react-query";
 import { ArtistEntity } from "@/types/artist";
+import { ArtistEditedNotify } from "@/components/notifies/actions/artist/artist-edited-notify";
+import { useToast } from "@/lib/hooks/ui/use-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createArtistSchema } from "@/components/forms/artist/schemas/schema-artist";
+import { z } from "zod";
 
 const supabase = createClient();
 
-export const useEditArtist = () => {
-	const { data: user } = useUserQuery();
+export type zodEditSchema = z.infer<typeof createArtistSchema>
 
-	const { uploadArtistImage } = useCreateArtistImage();
+export const useEditArtist = ({
+	artist
+}: {
+	artist: ArtistEntity
+}) => {
+	const { data: user } = useUserQuery();
+	const { toast } = useToast();
+
+	const { uploadArtistImageMutation } = useCreateArtistImage();
+
+	const form = useForm<zodEditSchema>({
+		resolver: zodResolver(createArtistSchema),
+		defaultValues: {
+			name: artist?.name,
+			cover_image: undefined,
+			description: artist?.description,
+			avatar: undefined
+		}
+	})
 
 	const editArtist = useMutation({
-		mutationFn: async (values: ArtistAttributes) => {
+		mutationFn: async (
+			values: ArtistAttributesType
+		) => {
 			if (user) {
 				try {
 					const [imageData] = await Promise.all([
-						uploadArtistImage.mutateAsync(values)
+						uploadArtistImageMutation.mutateAsync(values)
 					])
 
 					if (!imageData) return;
@@ -36,17 +61,30 @@ export const useEditArtist = () => {
 
 					if (error) return;
 
-					if (newArtist && !error) {
-						return newArtist as ArtistEntity[];
-					}
+					if (newArtist && !error) return newArtist as ArtistEntity[];
 				} catch (e) {
 					throw e;
 				}
 			}
+		},
+		onSuccess: async (data) => {
+			if (data) {
+				form.reset();
+
+				toast({
+					title: "Данные артиста изменены",
+					description: (<ArtistEditedNotify artist={data[0]}/>),
+					variant: "right"
+				})
+			}
+		},
+		onError: () => {
+			toast({
+				title: "Ошибка изменения артиста. Повторите попытку позже!",
+				variant: "red"
+			})
 		}
 	})
 
-	return {
-		editArtist
-	}
+	return { editArtist, form }
 }

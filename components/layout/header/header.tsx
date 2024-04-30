@@ -1,16 +1,25 @@
-import { useRouter } from "next/navigation"
+"use client"
+
 import { useState } from "react"
 import { listComponents } from "@/content/lang/pages"
-import { ChangeLang } from "@/features/change-lang"
 import { useScopedI18n } from "@/locales/client"
 import { Button } from "@/ui/button"
-import { Sheet, SheetContent, SheetHeader } from "@/ui/sheet"
+import { SheetContent, SheetHeader } from "@/ui/sheet"
 import Image from "next/image"
 import Link from "next/link"
+import dynamic from "next/dynamic";
+
+const ChangeLang = dynamic(() => import("@/features/change-lang")
+  .then(mod => mod.ChangeLang))
+
+const Sheet = dynamic(() => import("@/ui/sheet")
+  .then(mod => mod.Sheet));
+
+const GITHUB_LINK_TO_PROJECT = "https://github.com/Belkin1337/smotify-service";
 
 export const Header = () => {
   const [sheetOpen, setSheetOpen] = useState<boolean>(false);
-  const { push } = useRouter();
+
   const header_locale = useScopedI18n('brand.main.const-components.header')
   const headers_list = listComponents(header_locale);
 
@@ -18,7 +27,7 @@ export const Header = () => {
     <>
       <div className="fixed top-0 right-0 left-0 z-20 w-full backdrop-blur backdrop-filter bg-black/10 rounded-md">
         <div className="w-[95%] flex items-center justify-between h-[84px] mx-auto">
-          <div onClick={() => push('/')} className="flex flex-row items-center gap-x-2 cursor-pointer">
+          <Link href="/" className="flex flex-row items-center gap-x-2 cursor-pointer">
             <Image
               width={46}
               height={46}
@@ -30,27 +39,28 @@ export const Header = () => {
             <p className="center font-bold text-[1rem]">
               Smotify
             </p>
-          </div>
+          </Link>
           <div className="hidden md:flex flex-row items-center justify-center w-1/3 gap-x-6">
             {headers_list.map((item, idx) => (
-              <button
+              <Link
                 key={idx}
-                onClick={() => push(item.route)}
-                className="font-bold text-[1rem] text-WHITE uppercase"
+                href={item.route}
+                className={`font-bold text-[1rem] text-WHITE uppercase cursor-pointer 
+                ${item.route === '/home' && "bg-jade-800 rounded-md px-2 py-1"}`}
               >
                 {item.name}
-              </button>
+              </Link>
             ))}
           </div>
           <Button
-						onClick={() => setSheetOpen(!sheetOpen)}
+						onClick={() => setSheetOpen((prevState) => !prevState)}
 						className="md:hidden block"
 					>
-            Navigation
+            &times;
           </Button>
           <div className="hidden md:flex items-center justify-start gap-x-4">
             <ChangeLang />
-            <Link href="https://github.com/Belkin1337/smotify-service">
+            <Link href={GITHUB_LINK_TO_PROJECT}>
               <Image
                 src="/icons/svg/github.svg"
                 width={32}
@@ -62,13 +72,14 @@ export const Header = () => {
           </div>
         </div>
       </div>
-      <Sheet modal onOpenChange={setSheetOpen} open={sheetOpen}>
+      <Sheet
+        modal
+        onOpenChange={setSheetOpen}
+        open={sheetOpen}
+      >
         <SheetContent className="h-screen w-[296px]">
           <SheetHeader>
-            <div
-							onClick={() => push('/')}
-							className="flex flex-row items-center gap-x-2 cursor-pointer"
-						>
+            <Link href="/" className="flex flex-row items-center gap-x-2 cursor-pointer">
               <Image
                 width={46}
                 height={46}
@@ -80,7 +91,7 @@ export const Header = () => {
               <p className="center font-bold text-[1rem]">
                 Smotify
               </p>
-            </div>
+            </Link>
           </SheetHeader>
           <div className="flex flex-col items-start">
             {headers_list.map((item, idx) => (

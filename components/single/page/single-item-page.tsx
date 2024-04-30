@@ -11,7 +11,10 @@ import { SongItem } from "@/components/song/song-item/song-item";
 import { useSingleSongsQuery } from "@/lib/query/single/single-songs-query";
 import { useSingleQuery } from "@/lib/query/single/single-query";
 import { useSingleArtistsQuery } from "@/lib/query/single/single-artists-query";
-import { PageSongMore } from "@/components/song/components/page/components/page-song-more";
+import dynamic from "next/dynamic";
+
+const PageSongMore = dynamic(() => import("@/components/song/components/page/components/page-song-more")
+	.then(mod => mod.PageSongMore));
 
 export const SingleItemPage = ({
 	singleId
@@ -41,8 +44,8 @@ export const SingleItemPage = ({
 							<SongItem
 								key={song.id}
 								type="page"
-								isLoading={isLoading}
 								song={song}
+								queryOptions={{ isLoading: isLoading }}
 								song_list={{
 									id: String(idx + 1),
 									data: songs

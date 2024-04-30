@@ -1,9 +1,8 @@
 import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import { useMutation } from "@tanstack/react-query";
-import { zodSignUpSchema } from "@/components/forms/auth/components/sign-up";
+import { zodSignUpSchema } from "@/components/forms/auth/components/sign-up-form";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/lib/hooks/ui/use-toast";
 import { useState } from "react";
 
 const supabase = createClient();
@@ -12,7 +11,6 @@ export function useSignUp() {
 	const [error, setError] = useState<string>('')
 	const { closeDialog } = useDialog();
 	const { refresh } = useRouter()
-	const { toast } = useToast();
 
 	const signUpMutation = useMutation({
 		mutationFn: async ({

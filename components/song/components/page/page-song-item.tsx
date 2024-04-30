@@ -11,7 +11,10 @@ import { SongImageItem } from "../../child/song-image/components/song-image";
 import { useSongArtistListQuery } from "@/lib/query/song/song-artist-list-query";
 import { useSongQuery } from "@/lib/query/song/song-query";
 import { useArtistQuery } from "@/lib/query/artist/artist-query";
-import { PageSongMore } from "@/components/song/components/page/components/page-song-more";
+import dynamic from "next/dynamic";
+
+const PageSongMore = dynamic(() => import("@/components/song/components/page/components/page-song-more")
+  .then(mod => mod.PageSongMore))
 
 export const SongItemPage = ({
   songId
@@ -41,11 +44,9 @@ export const SongItemPage = ({
           <div className="p-6">
             <SongItem
               type="page"
-              isLoading={isLoading}
               song={song}
-              song_list={{
-                id: '1',
-              }}
+              song_list={{ id: '1', }}
+              queryOptions={{ isLoading: isLoading }}
             />
           </div>
           <div className="flex flex-col max-w-[340px] overflow-hidden py-6 px-8">

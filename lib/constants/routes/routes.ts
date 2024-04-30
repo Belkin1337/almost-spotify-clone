@@ -1,56 +1,34 @@
-// song route
-const song_route = "/home/track"
+export const song_route = (id: string) => { return `/home/track/${id}` }
+export const single_route = (id: string) => { return `/home/single/${id}` }
+export const album_route = (id: string) => { return `/home/album/${id}` }
+export const playlist_route= (id: string) => { return `/home/playlist/${id}` }
 
+export const profile_route = (id: string) => { return `/home/profile/${id}` }
+export const profile_route_following = (id: string) => { return `/home/profile/${id}/following` }
+export const profile_route_followers = (id: string) => { return `/home/profile/${id}/followers` }
 
-// single route
-const single_route = "/home/single"
+export const home_route = "/home";
+export const settings_route = "/home/preferences"
+export const followed_songs = "/home/collection/tracks"
+export const search_route = "/home/search"
+export const search_route_all_artist = "/home/search/all-artists"
+export const auth_route = "/auth";
 
+export const for_authors_route = "/home/for-authors"
+export const for_authors_route_create_song = "/home/for-authors/create-song"
+export const for_authors_route_create_album = "/home/for-authors/create-album"
+export const for_authors_route_create_artist = "/home/for-authors/create-artist"
 
-// album route
-const album_route = "/home/album"
+export const for_authors_route_artists = (id: string) => { return `${profile_route(id)}/artists` }
 
+export const for_authors_route_tracks = (id: string) => { return `${profile_route(id)}/tracks` }
 
-// playlist route
-const playlist_route = "/home/playlist"
+export const for_authors_route_albums = (id: string) => { return `${profile_route(id)}/albums` }
 
+export const genre_route = (id: string) => { return `/home/genre/${id}` }
 
-// user routes
-const profile_route = "/home/profile"
-const settings_route = "/home/preferences"
-const followed_songs = "/home/collection/tracks"
-const search_route = "/home/search"
-
-
-// for-authors route
-const for_authors_route = "/home/for-authors"
-
-
-// artist routes
-const artist_route_profile = "/home/artist"
-const artist_route_liked_songs = (id: string) => { return `/home/artist/${id}/liked-songs` };
-const artist_route_discography_all = (id: string) => { return `/home/artist/${id}/discography/all` }
-const artist_route_discography_albums = (id: string) => { return `/home/artist/${id}/discography/albums` }
-const artist_route_discography_singles = (id: string) => { return `/home/artist/${id}/discography/singles` }
-
-
-// storage and other routes
-const storage_users = "https://huhpmogbdpibjlquvuli.supabase.co/storage/v1/object/public/users"
-
-
-export {
-  album_route,
-  song_route,
-  playlist_route,
-  artist_route_profile,
-  artist_route_liked_songs,
-  artist_route_discography_all,
-  artist_route_discography_albums,
-  artist_route_discography_singles,
-  followed_songs,
-  storage_users,
-  profile_route,
-  settings_route,
-  for_authors_route,
-  search_route,
-  single_route
-}
+export const artist_route_profile = "/home/artist"
+export const artist_route_liked_songs = (id: string) => { return `/home/artist/${id}/liked-songs` };
+export const artist_route_discography_all = (id: string) => { return `/home/artist/${id}/discography/all` }
+export const artist_route_discography_albums = (id: string) => { return `/home/artist/${id}/discography/albums` }
+export const artist_route_discography_singles = (id: string) => { return `/home/artist/${id}/discography/singles` }

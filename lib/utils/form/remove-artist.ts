@@ -1,7 +1,7 @@
 import { ArtistEntity } from "@/types/artist";
 import { UseFormReturn } from "react-hook-form";
 import { UseMutationResult } from "@tanstack/react-query";
-import { PreviewSongType } from "@/types/preview";
+import { PreviewSongType } from "@/types/form";
 
 export const removeArtist = (
 	id: string,

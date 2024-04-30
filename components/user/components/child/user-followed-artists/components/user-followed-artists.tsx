@@ -1,5 +1,5 @@
 import { Typography } from "@/ui/typography";
-import { ArtistCard } from "@/components/artist/card/components/artist-card";
+import { ArtistCard } from "@/components/artist/components/card/components/artist-card";
 import { useFollowedArtistsQuery } from "@/lib/query/user/followed-artists-query";
 import { UserEntity } from "@/types/user";
 

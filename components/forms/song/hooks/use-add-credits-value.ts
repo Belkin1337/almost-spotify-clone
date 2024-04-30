@@ -11,8 +11,7 @@ export const useAddCreditsValue = () => {
 		songPreviewState,
 		setSongPreviewAttributes
 	} = useSongPreviewState({
-		song: undefined,
-		type: "create"
+		song: undefined
 	});
 
 	const creditsLength = songPreviewState?.credits?.length || 0;

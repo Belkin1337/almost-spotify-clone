@@ -25,6 +25,7 @@ export const usePlaylistsListByUser = (
 			return data;
 		},
 		enabled: !!userId,
-		retry: 3
+		retry: 1,
+		refetchOnWindowFocus: false
 	})
 }

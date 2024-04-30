@@ -15,7 +15,7 @@ export function useArtistFollow(artistId: string) {
 
 	const getFollowedArtist = useCallback(async () => {
 		if (user && artistId) {
-			return await getFollowArtist(supabase, artistId, user.id);
+			return await getFollowArtist(supabase, user.id, artistId);
 		}
 	}, [artistId, user])
 

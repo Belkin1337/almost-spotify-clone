@@ -2,20 +2,22 @@
 
 import { I18nProviderClient } from '@/locales/client'
 import { Toaster } from '@/ui/toaster'
-import { TooltipProvider } from '@/ui/tooltip';
 import QueryProvider from '@/providers/query-provider';
 import dynamic from 'next/dynamic';
-import React from "react";
+import { ReactNode } from "react";
 
 const DialogProvider = dynamic(() => import("@/providers/dialog-provider")
 	.then(mod => mod.DialogProvider))
+
+const TooltipProvider = dynamic(() => import("@/ui/tooltip")
+	.then(mod => mod.TooltipProvider))
 
 export default function SubLayout({
 	params: { locale },
 	children
 }: {
 	params: { locale: string },
-	children: React.ReactNode
+	children: ReactNode
 }) {
 	return (
 		<QueryProvider>

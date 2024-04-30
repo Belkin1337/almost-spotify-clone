@@ -18,7 +18,7 @@ export const SingleCard = ({
 	if (!song) return;
 
 	return (
-		<Link href={`${song_route}/${song.id}`}>
+		<Link href={song_route(song?.id)}>
 			<AlbumItem>
 				<AlbumImageItem>
 					<Image

@@ -1,13 +1,13 @@
 "use client"
 
-import { VariantProps, cva } from "class-variance-authority"
+import { cva, VariantProps } from "class-variance-authority"
 import { HTMLAttributes } from "react";
 
 const typographyVariants = cva("", {
   variants: {
     variant: {
       link: "hover:underline cursor-pointer",
-      page_title: "text-4xl",
+      page_title: "text-3xl font-semibold",
       subtitle: "text-neutral-400 text-medium font-medium",
       song_table_list_attribute: "text-neutral-400 text-[0.9rem] font-medium"
     },
@@ -24,8 +24,10 @@ const typographyVariants = cva("", {
     },
     size: {
       default: "text-medium",
-      small: "text-small",
-      medium: "text-small md:text-medium",
+      super_small: "text-[12px]",
+      small: "text-sm",
+      medium: "text-sm md:text-medium",
+      base: "text-base",
       large: "text-base md:text-lg",
       xl: "text-lg md:text-xl",
       attributes: "text-[0.9rem]"
@@ -47,6 +49,7 @@ export const Typography = ({
   variant,
   text_color,
   align,
+  size,
   font,
   className,
   ...props
@@ -55,6 +58,7 @@ export const Typography = ({
     <p className={typographyVariants(({
       variant,
       align,
+      size,
       text_color,
       font,
       className

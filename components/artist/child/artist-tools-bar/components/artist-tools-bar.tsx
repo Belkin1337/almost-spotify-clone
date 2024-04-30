@@ -3,16 +3,15 @@
 import { MouseEvent, useCallback, useEffect } from "react"
 import { SongShuffleButton } from "@/components/song/child/song-shuffle-button/components/song-shuffle-button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/ui/dropdown-menu"
-import { X, Radio } from 'lucide-react';
+import { Radio, UserPlus, X } from 'lucide-react';
 import { ArtistFollowButton } from "@/components/artist/child/artist-follow-button/components/artist-follow-button";
 import { IToolsBar } from "@/components/artist/child/artist-tools-bar/types/artist-tools-bar-types";
-import { ArtistPlayButton } from "@/components/artist/profile/components/artist-play-button";
+import { ArtistPlayButton } from "@/components/artist/components/profile/components/artist-play-button";
 import { useArtistSongListQuery } from "@/lib/query/artist/artists-songs-list-query";
 import { MoreIcon } from "@/ui/icons/more-icon";
 import { Typography } from "@/ui/typography";
 import { useArtistFollow } from "@/components/artist/child/artist-follow-button/hooks/use-artist-follow";
 import { useToast } from "@/lib/hooks/ui/use-toast";
-import { UserPlus } from 'lucide-react';
 
 export const ArtistToolsBar = ({
 	artistId,

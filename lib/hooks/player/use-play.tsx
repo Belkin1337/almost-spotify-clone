@@ -9,82 +9,54 @@ import { usePlayer } from "@/components/player/hooks/use-player";
 import { useUserQuery } from "@/lib/query/user/user-query";
 import { getSongUrl } from "@/lib/queries/song/single/get-song-url";
 import { createClient } from "@/lib/utils/supabase/client/supabase-client";
-import { useUnloadHowl } from "@/lib/hooks/player/use-unload-howl";
+import { useStopPlayAudio } from "@/components/player/hooks/use-stop-play-audio";
+import { useSetActiveSongSongs } from "@/components/player/hooks/use-set-active-song-songs";
 
 const supabase = createClient();
 
-
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
+type OnPlayType = {
+	song: SongEntity,
+	songs: SongEntity[]
+}
 
 export const usePlay = () => {
 	const { data: user } = useUserQuery();
 	const { audioAttributes } = useAudioStateQuery()
-	const { setAudioAtrributes } = useAudio();
+	const { setAudioAttributes } = useAudio();
 	const { setPlayerAttributes } = usePlayer()
 	const { createHowlInstance } = useHowler();
 	const { openDialog } = useDialog();
-	const { unload } = useUnloadHowl()
+	const { stop } = useStopPlayAudio()
+	const { setActive } = useSetActiveSongSongs()
 
- 	const onPlay = useCallback(async ({
-		song,
-		songs
-	}: {
-		song: SongEntity,
-		songs: SongEntity[]
-	}) => {
-		if (!user) {
-			openDialog({
-				dialogChildren: <AuthForm/>
-			})
-		} else {
+	const howl = audioAttributes.howl;
+	const currentSongUrl = audioAttributes.songUrl;
+
+	const onPlay = useCallback(async ({ song, songs }: OnPlayType) => {
+		if (!user) openDialog({ dialogChildren: <AuthForm/> })
+
+		if (user) {
 			const { data } = await getSongUrl(supabase, song?.song_path);
-			const songUrl = data.publicUrl;
+			const targetSongUrl = data.publicUrl;
 
-			if (audioAttributes?.songUrl !== songUrl) {
-				if (songUrl) {
-					unload();
-
-					createHowlInstance({
-						songUrl: songUrl
-					})
-
-					setPlayerAttributes.mutate({
-						active: song,
-						ids: songs,
-					});
-
-					setAudioAtrributes.mutate({
-						songUrl: songUrl,
-					})
+			if (currentSongUrl !== targetSongUrl) {
+				if (targetSongUrl) {
+					await setActive(song, songs, targetSongUrl)
 				}
-			} else {
-				unload();
-
-				createHowlInstance({
-					songUrl: songUrl
-				})
+			} else if (currentSongUrl === targetSongUrl && howl) {
+				stop(howl);
 			}
 		}
 	}, [
-		user,
-		audioAttributes?.songUrl,
-		createHowlInstance,
+		setActive,
+		stop,
+		currentSongUrl,
+		howl,
 		openDialog,
+		setAudioAttributes,
+		setPlayerAttributes,
+		createHowlInstance
 	])
 
-	return {
-		onPlay
-	}
+	return { onPlay }
 }

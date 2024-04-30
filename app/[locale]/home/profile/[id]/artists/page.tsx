@@ -1,8 +1,21 @@
 import { UserArtistsList } from "@/components/user/components/for-authors/user-artists/components/user-artists-list";
 import { Typography } from "@/ui/typography";
 import { Wrapper } from "@/ui/wrapper";
+import { createClient } from "@/lib/utils/supabase/server/supabase-server";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default async function ProfileListArtistsPage() {
+export default async function ProfileListArtistsPage({
+  params
+}: {
+  params: { id: string }
+}) {
+  const supabase = createClient(cookies());
+
+  const { data: { user }, error } = await supabase.auth.getUser();
+
+  if (!user || error) redirect('/home');
+
   return (
     <Wrapper variant="page">
       <div className="flex flex-col gap-y-8 p-4">
@@ -18,7 +31,7 @@ export default async function ProfileListArtistsPage() {
             </li>
           </ul>
         </div>
-        <UserArtistsList />
+        <UserArtistsList userId={params.id}/>
       </div>
     </Wrapper>
   )

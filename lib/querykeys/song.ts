@@ -13,7 +13,7 @@ export const followedSongsQueryKey = (userId: string): QueryKey => {
 	return ["followed_songs", userId];
 }
 
-export const songByUrlQueryKey = (song: SongEntity | null, path: string | null): QueryKey => {
+export const songByUrlQueryKey = (song?: SongEntity, path?: string): QueryKey => {
 	return ["song_url", song, path]
 }
 

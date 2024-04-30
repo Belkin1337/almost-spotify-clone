@@ -4,11 +4,9 @@ import { useSongArtistListQuery } from "@/lib/query/song/song-artist-list-query"
 import { useLoadImage } from "@/lib/hooks/image/use-load-image";
 
 export const useSongPreviewState = ({
-	song,
-	type
+	song
 }: {
-	song: SongEntity | undefined,
-	type: "create" | "edit"
+	song?: SongEntity,
 }) => {
 	const { data: songImage } = useLoadImage(song?.image_path || '');
 	const { data: artists } = useSongArtistListQuery(song?.id || '');
@@ -20,9 +18,9 @@ export const useSongPreviewState = ({
 		title: song ? song.title : '',
 		genre: song ? song.genre : null,
 		image: song ? songImage?.url : '',
-		artists: song ? type === 'create' ? [] : artists?.artists! : [],
+		artists: song ? artists?.artists : [],
 		credits: []
-	});
-
+	})
+	
 	return { songPreviewState, setSongPreviewAttributes }
 }

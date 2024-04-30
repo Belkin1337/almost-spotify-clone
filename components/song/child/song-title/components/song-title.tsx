@@ -18,8 +18,8 @@ export const SongItemTitle = ({
   const targetToTrack = useCallback(() => {
     if (player && song) {
       if (album?.length! > 0) {
-        push(`${album_route}/${album![0].id}`)
-      } else push(`${song_route}/${song.id}`)
+        push(album_route(album![0].id))
+      } else push(song_route(song?.id))
     }
   }, [push, song, player, album])
 

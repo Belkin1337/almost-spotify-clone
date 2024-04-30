@@ -14,7 +14,9 @@ export const SongFollowButton = ({
 }: IFollowButton) => {
   const { followedSong, followMutation } = useSongFollow(songId);
 
-  const handleLike = useCallback(async (e: MouseEvent<HTMLButtonElement>) => {
+  const handleLike = useCallback(async (
+    e: MouseEvent<HTMLButtonElement>
+  ) => {
 		e.stopPropagation();
     await followMutation.mutateAsync();
   }, [followMutation])
@@ -26,7 +28,7 @@ export const SongFollowButton = ({
 			align="centered"
       className="hover:scale-[1.04]"
     >
-      {followedSong?.data?.song_id === songId ? (
+      {followedSong?.song_id === songId ? (
         <UserTips action="Удалить из любимых треков">
           <CheckmarkCircleIcon page={variant?.page}/>
         </UserTips>

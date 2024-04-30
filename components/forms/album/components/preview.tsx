@@ -1,6 +1,6 @@
 import { PreviewAlbumCard } from "@/components/preview/album/album-card"
 import { PreviewCard } from "@/ui/preview-card"
-import { PreviewAlbumType } from "@/types/preview"
+import { PreviewAlbumType } from "@/types/form"
 import { memo } from "react";
 
 export const AlbumFormPreview = memo(({

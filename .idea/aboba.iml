@@ -5,6 +5,10 @@
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/supabase/.branches" />
+      <excludeFolder url="file://$MODULE_DIR$/supabase/.temp" />
+      <excludeFolder url="file://$MODULE_DIR$/supabase/functions" />
     </content>
     <content url="file://$MODULE_DIR$/.next" />
     <content url="file://$MODULE_DIR$/node_modules" />

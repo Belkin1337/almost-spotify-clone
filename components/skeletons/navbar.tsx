@@ -1,8 +1,13 @@
 "use client"
 
 import { Skeleton } from "@/ui/skeleton"
+import { ReactNode } from "react";
 
-export const NavbarSkeleton = ({ children }: { children: React.ReactNode }) => {
+export const NavbarSkeleton = ({
+  children
+}: {
+  children: ReactNode
+}) => {
   return (
     <div className={`h-fit bg-gradient-to-b from-MAIN_VIOLET/10 to-transparent rounded-sm p-4`}>
       <div className="w-full mb-4 flex items-center justify-between">

@@ -1,7 +1,6 @@
 "use client"
 
 import { UserEntity } from "@/types/user";
-import React from "react";
 import dynamic from "next/dynamic";
 
 const Player = dynamic(() => import('@/components/player/player')

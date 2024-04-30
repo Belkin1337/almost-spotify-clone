@@ -1,14 +1,14 @@
-import {useMutation} from "@tanstack/react-query";
-import {ArtistAttributes} from "@/components/forms/artist/hooks/use-create-artist";
-import {createClient} from "@/lib/utils/supabase/client/supabase-client";
+import { useMutation } from "@tanstack/react-query";
+import { ArtistAttributesType } from "@/components/forms/artist/hooks/use-create-artist";
+import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import uniqid from "uniqid";
 
 const supabase = createClient();
 const uniqueID = uniqid();
 
 export const useCreateArtistCoverImage = () => {
-	const uploadArtistCoverImage = useMutation({
-		mutationFn: async (values: ArtistAttributes) => {
+	const uploadArtistCoverImageMutation = useMutation({
+		mutationFn: async (values: ArtistAttributesType) => {
 			if (values.cover_image) {
 				try {
 					const {data: imageCoverData, error} = await supabase
@@ -29,7 +29,5 @@ export const useCreateArtistCoverImage = () => {
 		}
 	})
 
-	return {
-		uploadArtistCoverImage
-	}
+	return { uploadArtistCoverImageMutation }
 }

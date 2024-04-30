@@ -5,12 +5,16 @@ import { cookies } from "next/headers";
 import { createClient } from "@/lib/utils/supabase/server/supabase-server";
 import { redirect } from "next/navigation";
 
-export default async function ProfileListTracksPage() {
-	const supabase = createClient(cookies())
+export default async function ProfileListTracksPage({
+	params
+}: {
+	params: { id: string }
+}) {
+	const supabase = createClient(cookies());
 
-	const { data: { user }, error } = await supabase.auth.getUser()
+	const { data: { user }, error } = await supabase.auth.getUser();
 
-	if (error || !user) redirect('/home')
+	if (!user || error) redirect('/home')
 
 	return (
 		<Wrapper variant="page">
@@ -27,7 +31,7 @@ export default async function ProfileListTracksPage() {
 						</li>
 					</ul>
 				</div>
-				<UserTracks/>
+				<UserTracks userId={params.id}/>
 			</div>
 		</Wrapper>
 	)

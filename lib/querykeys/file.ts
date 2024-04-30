@@ -1,6 +1,6 @@
 import { QueryKey } from "@tanstack/react-query";
 
-export const imageQueryKey = (bucket: string, path: string): QueryKey => {
+export const imageQueryKey = (bucket: string, path?: string): QueryKey => {
 	return ["image", bucket, path]
 }
 

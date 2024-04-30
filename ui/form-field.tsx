@@ -1,10 +1,4 @@
-import {
-  FormControl,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from "./form"
-import { Input } from "./input"
+import { FormControl, FormItem, FormLabel, FormMessage } from "./form"
 import { HTMLAttributes, ReactNode } from "react";
 
 interface IInput extends HTMLAttributes<HTMLInputElement> {
@@ -19,7 +13,7 @@ interface IInput extends HTMLAttributes<HTMLInputElement> {
 }
 
 interface IFormFieldItem {
-  label: string,
+  label?: string,
   optional?: boolean,
   children: ReactNode
 }
@@ -32,9 +26,11 @@ export const FormFieldItem = ({
 }: IFormFieldItem) => {
   return (
     <FormItem {...props}>
-      <FormLabel>
-        {label} {optional && "(опционально)"}
-      </FormLabel>
+      {label && (
+        <FormLabel>
+          {label} {optional && "(опционально)"}
+        </FormLabel>
+      )}
       <FormControl>
         {children}
       </FormControl>

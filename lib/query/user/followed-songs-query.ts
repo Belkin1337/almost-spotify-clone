@@ -11,14 +11,15 @@ export const useFollowedSongsQuery = (
 	return useQuery({
 		queryKey: followedSongsQueryKey(userId),
 		queryFn: async () => {
-			const { data, error } = await getFollowedSongs(supabase, userId);
+			const { data } = await getFollowedSongs(supabase, userId);
 
-			if (error) throw error;
+			if (data) {
+				const songs = data?.map(item => item.songs).flat();
 
-			const songs = data?.map(item => item.songs).flat();
-
-			return { songs };
+				return { songs };
+			}
 		},
-		enabled: !!userId
+		enabled: !!userId,
+		retry: 1
 	})
 }

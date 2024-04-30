@@ -22,7 +22,7 @@ export const Player = memo(({
 		(playerAttributes?.active) && (
 			<div className="fixed flex items-center bottom-0 bg-black w-full h-[88px] px-4">
 				<div className="flex justify-stretch items-center h-full w-full">
-					<PlayerSongItem song={playerAttributes?.active} list={playerAttributes?.ids!}/>
+					<PlayerSongItem song={playerAttributes?.active}/>
 					<PlayerPlayControls variant="mobile" state={isPlaying || false}/>
 					<div className="hidden h-full md:flex flex-col justify-center gap-y-[6px] items-center w-[40%] max-h-[760px]">
 						<div className="flex flex-row gap-x-6 w-full justify-center items-center">
@@ -38,4 +38,5 @@ export const Player = memo(({
 		)
 	)
 })
-Player.displayName === 'Player';
+
+Player.displayName = 'Player';

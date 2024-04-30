@@ -31,7 +31,7 @@ export const genresList: GenreType[] = [
     icon: "/images/hip-hop.png"
   },
   //
-  // popular songs category
+  // popular result category
   {
     name: "Popular",
     id: "popular",

@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from "react"
+import { Fragment, HTMLAttributes } from "react"
 import { artist_route_profile } from "@/lib/constants/routes/routes"
 import { useLoadImage } from "@/lib/hooks/image/use-load-image"
 import { cva, VariantProps } from "class-variance-authority"
@@ -9,6 +9,7 @@ import { SkeletonSongImage } from "@/components/skeletons/song/skeleton-song-ima
 import Image from "next/image"
 import { useSongArtistListQuery } from "@/lib/query/song/song-artist-list-query";
 import Link from "next/link";
+import { nullAvatarImage } from "@/lib/constants/files/invalid-or-null-images";
 
 const songAuthorVariants = cva("text-neutral-400 truncate", {
 	variants: {
@@ -25,7 +26,7 @@ const songAuthorVariants = cva("text-neutral-400 truncate", {
 	}
 })
 
-interface ISongAuthor
+interface ISongArtist
 	extends HTMLAttributes<HTMLParagraphElement>,
 		VariantProps<typeof songAuthorVariants> {
 	song: SongEntity
@@ -35,14 +36,13 @@ export const SongArtist = ({
 	variant,
 	className,
 	song
-}: ISongAuthor) => {
+}: ISongArtist) => {
 	const { data, isFetching } = useSongArtistListQuery(song.id)
 
 	const artists = data?.artists;
 	const firstArtist = data?.firstArtist;
 
-	// avatar of the first artist
-	const { data: image } = useLoadImage(firstArtist?.avatar_path!)
+	const { data: image } = useLoadImage(firstArtist?.avatar_path || nullAvatarImage);
 
 	if (!artists) return;
 
@@ -71,14 +71,11 @@ export const SongArtist = ({
 				) : (
 					artists?.map((artist,
 						idx) => (
-						<React.Fragment key={artist.id}>
+						<Fragment key={artist.id}>
 							<Link href={`${artist_route_profile}/${artist.id}`}>
 								<p
 									key={artist.id}
-									className={songAuthorVariants(({
-										variant,
-										className
-									}))}
+									className={songAuthorVariants(({ variant, className }))}
 								>
 									{artist.name}
 									{(idx !== artists.length - 1 && variant !== 'page') && (
@@ -89,7 +86,7 @@ export const SongArtist = ({
 							{variant === 'page' && (
 								<FaCircle size={4} className="fill-white"/>
 							)}
-						</React.Fragment>
+						</Fragment>
 					))
 				)}
 			</div>

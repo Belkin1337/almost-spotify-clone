@@ -1,12 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import { createClient } from "@/lib/utils/supabase/client/supabase-client";
-import { ArtistAttributes } from "@/components/forms/artist/hooks/use-create-artist";
+import { ArtistAttributesType } from "@/components/forms/artist/hooks/use-create-artist";
 
 const supabase = createClient();
 
 export const useDeleteArtistImage = () => {
-	const deleteArtistImage = useMutation({
-		mutationFn: async (values: ArtistAttributes) => {
+	const deleteArtistImageMutation = useMutation({
+		mutationFn: async (values: ArtistAttributesType) => {
 			if (values.avatar_path) {
 				const { data: deletedSongImage, error } = await supabase
 					.storage
@@ -22,7 +22,5 @@ export const useDeleteArtistImage = () => {
 		}
 	})
 
-	return {
-		deleteArtistImage
-	}
+	return { deleteArtistImageMutation }
 }

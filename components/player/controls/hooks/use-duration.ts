@@ -9,8 +9,5 @@ export function useDuration() {
   const raw = playerAttributes.duration || 0;
   const formatted = durationConverter(raw);
 
-  return {
-    raw,
-    formatted
-  }
+  return { raw, formatted }
 }

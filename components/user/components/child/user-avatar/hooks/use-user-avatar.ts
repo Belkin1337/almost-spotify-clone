@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createClient } from "@/lib/utils/supabase/client/supabase-client";
-import { getUserAvatar } from "@/lib/queries/user/get-user-avatar";
+import { getUserAvatar } from "@/lib/queries/user/single/get-user-avatar";
 import { nullAvatarImage } from "@/lib/constants/files/invalid-or-null-images";
 import { userAvatarQueryKey } from "@/lib/querykeys/user";
 

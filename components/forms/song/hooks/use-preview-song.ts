@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { PreviewSongType } from "@/types/preview";
+import { PreviewSongType } from "@/types/form";
 import { songPreviewQueryKey } from "@/lib/querykeys/song";
 
 const initialSongPreviewData = (
@@ -40,8 +40,8 @@ export const usePreviewSong = ({
 				}
 			)
 		},
-		onSuccess: () => {
-			return queryClient.invalidateQueries({
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({
 				queryKey: songPreviewQueryKey
 			});
 		}

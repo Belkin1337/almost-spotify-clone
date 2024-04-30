@@ -1,42 +1,38 @@
-"use client"
-
-import React from "react"
-import { UserEntity } from "@/types/user"
-import { UserName } from "../../child/user-name/components/user-name"
-import { useUserQuery } from "@/lib/query/user/user-query"
+import React, { MouseEvent, useCallback } from "react"
 import { Typography } from "@/ui/typography"
-import { FaCircle } from "react-icons/fa";
+import { useRouter } from "next/navigation"
+import { profile_route } from "@/lib/constants/routes/routes"
+import { UserEntity } from "@/types/user";
 import { UserAvatar } from "@/components/user/components/child/user-avatar/components/user-avatar";
-import { IUserCard, userCardVariants } from "@/components/user/components/card/types/user-card-types";
 
 export const UserCard = ({
-	variant,
-	followed_songs_length,
-	className,
-}: IUserCard) => {
-	const { data: user } = useUserQuery();
+	user
+}: {
+	user: UserEntity
+}) => {
+	const { push } = useRouter();
 
-	if (!user) return;
+	const handlePushArtist = useCallback((e: MouseEvent<HTMLDivElement>) => {
+		e.stopPropagation()
+		push(`${profile_route}/${user?.id}`)
+	}, [user?.id, push])
 
 	return (
-		<div className={userCardVariants(({ variant, className }))}>
-			<UserAvatar
-				user={user}
-				variant="playlist"
-				rounded="full"
-			/>
-			<UserName
-				user={user as UserEntity}
-				variant={variant === "miniauture" ? "playlist" : "profile"}
-			/>
-			{variant === "miniauture" && (
-				<>
-					<FaCircle size={4} className="fill-white"/>
-					<Typography className="text-sm font-normal">
-						{followed_songs_length} songs
-					</Typography>
-				</>
-			)}
+		<div
+			onClick={handlePushArtist}
+			className="flex flex-col w-[220px] p-4 hover:bg-neutral-800 gap-y-4 overflow-hidden cursor-pointer rounded-md"
+		>
+			<div className="flex flex-col items-center w-full">
+				<UserAvatar user={user}/>
+			</div>
+			<div className="flex flex-col">
+				<Typography size="medium" font="medium">
+					{user.full_name}
+				</Typography>
+				<Typography size="small" text_color="gray">
+					Profile
+				</Typography>
+			</div>
 		</div>
 	)
 }

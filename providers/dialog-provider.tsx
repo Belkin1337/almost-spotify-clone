@@ -1,13 +1,7 @@
 "use client"
 
 import { createContext, useCallback, useReducer } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle
-} from '@/ui/dialog';
-import { twMerge } from "tailwind-merge"
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/ui/dialog';
 
 export type DialogType = {
   id?: string,
@@ -116,7 +110,9 @@ export const DialogProvider = ({
       modalContent: dialog,
     }}>
       <Dialog open={isOpen} onOpenChange={closeDialog}>
-        <DialogContent className="flex flex-col gap-y-2 w-2xl overflow-hidden h-[640px]">
+        <DialogContent
+          className="flex flex-col gap-y-2 w-2xl overflow-hidden h-[640px]"
+        >
           {dialog?.title && (
             <DialogTitle>
               {dialog.title}

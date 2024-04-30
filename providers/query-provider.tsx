@@ -14,10 +14,13 @@ export default function QueryProvider({
       defaultOptions: {
         queries: {
           staleTime: 60 * 1000,
+          gcTime: 1000 * 60 * 60 * 24, // 24 hours
         },
       },
     })
   )
+
+
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -17,15 +17,12 @@ export const useVolume = () => {
       return queryClient.setQueryData<VolumeAttributeType>(
         volumeStateQueryKey,
         (prev) => {
-          return {
-            ...prev,
-            ...newAttribute
-          }
+          return { ...prev, ...newAttribute }
         }
       )
     },
-    onSuccess: () => {
-      return queryClient.invalidateQueries({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: volumeStateQueryKey
       });
     }
@@ -52,10 +49,5 @@ export const useVolume = () => {
     setVolume(prevVolume);
   }, [setVolume, prevVolume]);
 
-  return { 
-    volume,
-    setVolume,
-    mute, 
-    unmute
-  };
+  return { volume, setVolume, mute, unmute };
 };

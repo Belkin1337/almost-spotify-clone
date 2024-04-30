@@ -1,6 +1,5 @@
 "use client"
 
-import { useUserQuery } from "@/lib/query/user/user-query"
 import { Input } from "@/ui/input";
 import { Typography } from "@/ui/typography";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -15,7 +14,11 @@ import { UserTracksList } from "@/components/user/components/for-authors/user-tr
 import { ItemLoader } from "@/ui/item-loader";
 import { SortType } from "@/components/user/components/for-authors/user-tracks/types/user-tracks-types";
 
-export const UserTracks = () => {
+export const UserTracks = ({
+	userId
+}: {
+	userId: string
+}) => {
 	const [isOpenInput, setIsOpenInput] = useState(false);
 
 	const [sortType, setSortType] = useState<SortType>({
@@ -27,9 +30,8 @@ export const UserTracks = () => {
 
 	const searchRef = useRef<HTMLDivElement>(null);
 
-	const { data: user } = useUserQuery();
-	const { data: userSongs, isLoading, isPending, refetch } = useUserSongsQuery(user?.id!, sortType, sortType.songsType);
-	const { data: artists } = useUserArtistListQuery(user?.id!, sortType.songsType)
+	const { data: userSongs, isLoading, isPending, refetch } = useUserSongsQuery(userId, sortType, sortType.songsType);
+	const { data: artists } = useUserArtistListQuery(userId, sortType.songsType)
 
 	const handleSort = useCallback((
 		type: 'orderType' | 'viewType' | 'songsType' | "setArtist",
@@ -75,7 +77,7 @@ export const UserTracks = () => {
 		console.log(sortType.selectedArtistId)
 	}, [sortType])
 
-	if (!user) return;
+	if (!userId) return;
 
 	return (
 		<Wrapper variant="page" className="gap-y-8">

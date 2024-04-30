@@ -1,7 +1,7 @@
 import { SongItemTitle } from "../../../child/song-title/components/song-title"
 import { SongEntity } from "@/types/song"
 import { SongArtist } from "../../../child/song-artist/song-artist"
-import { SONG_TYPE_ALBUM, SONG_TYPE_DEFAULT, SONG_TYPE_SINGLE } from "@/types/preview"
+import { SONG_TYPE_ALBUM, SONG_TYPE_DEFAULT, SONG_TYPE_SINGLE } from "@/types/form"
 import { EntityType } from "@/ui/entity-type"
 import { Timestamp } from "@/ui/timestamp"
 

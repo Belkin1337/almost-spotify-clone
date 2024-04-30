@@ -14,10 +14,18 @@ export const userByIdQueryKey = (userId: string): QueryKey => {
 	return ["user", userId]
 }
 
-export const userPlaylistsQueryKey = (param?: string, show_hidden_playlists?: boolean, count?: number): QueryKey => {
-	return ["user_playlists", param, show_hidden_playlists, count]
+export const userPlaylistsQueryKey = (userId?: string, show_hidden_playlists?: boolean, count?: number): QueryKey => {
+	return ["user_playlists", userId, show_hidden_playlists, count]
 }
 
-export const userAvatarQueryKey = (param: string): QueryKey => {
-	return ["user_avatar", param]
+export const userAvatarQueryKey = (userId: string): QueryKey => {
+	return ["user_avatar", userId]
+}
+
+export const userFollowers = (userId?: string): QueryKey => {
+	return ["user_followers", userId]
+}
+
+export const userFollower = (userId?: string, responder_id?: string): QueryKey => {
+	return ["user_follower", userId, responder_id]
 }

@@ -1,4 +1,4 @@
-import { ArtistCard } from "@/components/artist/card/components/artist-card";
+import { ArtistCard } from "@/components/artist/components/card/components/artist-card";
 import { Typography } from "@/ui/typography";
 import { useUserRecentArtistsQuery } from "@/lib/query/user/user-recent-artists-query";
 import { UserEntity } from "@/types/user";

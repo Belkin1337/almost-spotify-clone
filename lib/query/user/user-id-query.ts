@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getUserById } from "@/lib/queries/user/get-user-by-id";
+import { getUserById } from "@/lib/queries/user/single/get-user-by-id";
 import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import { userByIdQueryKey } from "@/lib/querykeys/user";
 

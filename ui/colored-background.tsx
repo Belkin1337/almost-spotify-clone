@@ -1,43 +1,40 @@
 "use client"
 
-import { useImageBackgroundColor } from "@/lib/hooks/image/use-image-background-color";
-import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { backgroundColorSampleQueryKey } from "@/lib/querykeys/file";
-
-export interface ColoredBackgroundType {
-  imageUrl?: string | null;
-  color?: string | null;
-}
+import { useCallback, useEffect } from "react";
+import { IBackgroundStateQuery, useBackgroundStateQuery } from "@/lib/query/ui/background-state-query";
+import { useControlBackgroundState } from "@/lib/hooks/ui/use-control-background-state";
 
 export const ColoredBackground = ({
   imageUrl,
-  color
-}: ColoredBackgroundType) => {
-  const { data: backgroundColor } = useQuery({
-    queryKey: backgroundColorSampleQueryKey
-  });
+  type
+}: IBackgroundStateQuery) => {
+  const { data: backgroundColor } = useBackgroundStateQuery();
+  const { getBackgroundSampleImage } = useControlBackgroundState();
 
-  const { handleBackgroundColor } = useImageBackgroundColor();
-
-  useEffect(() => {
+  const setBackgroungContent = useCallback(async () => {
     if (imageUrl) {
-      handleBackgroundColor({ imageUrl })
-    } else if (color && !imageUrl) {
-      handleBackgroundColor({ color });
-    } else if (!color && !imageUrl) {
-      handleBackgroundColor({
-        color: '#262626'
+      await getBackgroundSampleImage({
+        imageUrl: imageUrl
+      })
+    } else if (!imageUrl && type) {
+      await getBackgroundSampleImage({
+        type: type
       })
     }
-  }, [handleBackgroundColor, imageUrl, color]);
+  }, [type, imageUrl, getBackgroundSampleImage])
+
+  useEffect(() => {
+    setBackgroungContent()
+  }, [setBackgroungContent]);
 
   return (
     <div className={`absolute w-full top-0 right-0 left-0 h-[600px] 
-    ${!imageUrl ? 'bg-gradient-to-b from-violet-700/90 to-transparent' : ''}`}
-      style={imageUrl ? { backgroundImage: `linear-gradient(to bottom, 
-      ${backgroundColor || 'transparent'}, transparent)` } :
-        {}}
+    ${
+      imageUrl ? '' : 'bg-gradient-to-b from-violet-700/90 to-transparent'}`}
+      style={imageUrl ? {
+        backgroundImage: `linear-gradient(to bottom, ${backgroundColor.imageUrl || 'transparent'}, transparent)` } :
+        {}
+    }
     />
   )
 }

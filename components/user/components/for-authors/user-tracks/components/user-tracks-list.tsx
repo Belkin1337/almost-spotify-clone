@@ -1,12 +1,11 @@
 import { SongItemMain } from "@/components/song/components/main/main-song-item";
-import { EditSongSubMenu } from "@/components/forms/song/components/edit-song-sub-menu";
+import { EditSongSubMenu } from "@/components/forms/song/components/edit/components/edit-song-sub-menu";
 import { SongItem } from "@/components/song/song-item/song-item";
 import { Typography } from "@/ui/typography";
 import { SongsType, } from "@/lib/constants/ui/sort-songs";
 import { useCallback } from "react";
 import { SortedListBlock } from "@/ui/sorted-list-block";
 import { IUserTracksList } from "@/components/user/components/for-authors/user-tracks/types/user-tracks-types";
-import { SongListTableHead } from "@/ui/song-list-table-head";
 
 const UserTracksNotFound = () => {
 	return (
@@ -55,7 +54,9 @@ export const UserTracksList = ({
 									key={song.id}
 									song={song}
 									type="edit"
-									isLoading={isLoading}
+									queryOptions={{
+										isLoading: isLoading
+									}}
 									song_list={{
 										id: String(idx + 1)
 									}}
@@ -68,7 +69,9 @@ export const UserTracksList = ({
 									key={song.id}
 									song={song}
 									variant="compact"
-									isLoading={isLoading}
+									queryOptions={{
+										isLoading: isLoading
+									}}
 									type="edit"
 									song_list={{
 										id: String(idx + 1)

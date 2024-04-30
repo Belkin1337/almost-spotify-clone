@@ -1,17 +1,16 @@
 import { createClient } from "@/lib/utils/supabase/client/supabase-client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getFollowSong } from "@/lib/queries/song/single/get-follow-song";
 import { useCallback } from "react";
 import { followedSongQueryKey, followedSongsQueryKey } from "@/lib/querykeys/song";
 import { useUserQuery } from "@/lib/query/user/user-query";
-import { ToastAction } from "@/ui/toast";
-import Image from "next/image";
 import { useScopedI18n } from "@/locales/client";
 import { useToast } from "@/lib/hooks/ui/use-toast";
+import { LikeSongNotify } from "@/components/notifies/actions/song/like-song-notify";
 
 const supabase = createClient();
 
-export type FollowedSong = {
+export type FollowedSongType = {
 	user_id: string,
 	song_id: string,
 	created_at: string
@@ -24,16 +23,19 @@ export function useSongFollow(songId: string) {
 	const queryClient = useQueryClient();
 	const likeButtonLocale = useScopedI18n('main-service.main-part.config')
 
-	const getFollowedSong = useCallback(async () => {
-		if (user && songId) {
-			return await getFollowSong(supabase, songId, user.id);
-		}
-	}, [songId, user])
-
 	const { data: followedSong } = useQuery({
 		queryKey: followedSongQueryKey(user?.id!, songId),
-		queryFn: getFollowedSong,
-		enabled: !!user && !!songId
+		queryFn: async () => {
+			const { data } = await getFollowSong(supabase, songId, user?.id!);
+
+			if (data) {
+				return data;
+			}
+		},
+		enabled: !!user && !!songId,
+		placeholderData: keepPreviousData,
+		retry: 1,
+		refetchOnWindowFocus: false,
 	});
 
 	const follow = useCallback(async () => {
@@ -59,14 +61,14 @@ export function useSongFollow(songId: string) {
 
 	const followMutation = useMutation({
 		mutationFn: async () => {
-			if (followedSong?.data?.song_id === songId) {
+			if (followedSong?.song_id === songId) {
 				try {
 					await unFollow();
 					return 'unfollowed';
 				} catch (e) {
 					throw e;
 				}
-			} else if (followedSong?.data?.song_id !== songId) {
+			} else if (followedSong?.song_id !== songId) {
 				try {
 					await follow();
 					return 'followed';
@@ -87,21 +89,11 @@ export function useSongFollow(songId: string) {
 				toast({
 					title: variantToast.message,
 					variant: variantToast.variant,
-					action:
-						<ToastAction
-							altText={`${variantToast.message}`}
-							className="rounded-md p-0 overflow-hidden h-[36px] w-[36px]">
-							<Image
-								src="/images/liked.png"
-								width={36}
-								height={36}
-								alt={`${variantToast.message}`}
-							/>
-						</ToastAction>
+					action: <LikeSongNotify variantToast={variantToast}/>
 				});
 
 				await queryClient.invalidateQueries({
-					queryKey: followedSongsQueryKey(user?.id!) // invalidate user followed songs song_list
+					queryKey: followedSongsQueryKey(user?.id!) // invalidate user followed result song_list
 				})
 
 				await queryClient.invalidateQueries({
@@ -114,5 +106,5 @@ export function useSongFollow(songId: string) {
 		},
 	})
 
-	return { followedSong, followMutation, }
+	return { followedSong, followMutation }
 }

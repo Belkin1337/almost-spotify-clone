@@ -1,5 +1,5 @@
 import { Wrapper } from "@/ui/wrapper";
-import { ArtistWidget } from "@/components/artist/widget/components/artist-widget";
+import { ArtistWidget } from "@/components/artist/components/widget/main/components/artist-widget";
 import { CalcHeight } from "@/lib/utils/styles/calc-height";
 import { usePlayerStateQuery } from "@/lib/query/player/player-state-query";
 import { SongWidget } from "@/ui/song-widget";
@@ -25,7 +25,7 @@ export const SongWidgetItem = () => {
 			<div className="flex flex-col gap-y-4 w-full pl-4 py-4 pr-1">
 				<SongWidget>
 					<SongArtist variant="widget_title" song={song}/>
-					<Link href={`${song_route}/${song.id}`}>
+					<Link href={song_route(song?.id)}>
 						<div className="max-w-[600px] max-h-[600px] overflow-hidden">
 							<SongImageItem variant="widget" song={song}/>
 						</div>

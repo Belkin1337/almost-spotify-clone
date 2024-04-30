@@ -11,7 +11,7 @@ export const SongAlbum = ({
   if (!album) return;
 
   return (
-    <Link href={`${album_route}/${album.id}`}>
+    <Link href={album_route(album.id)}>
       <Typography
         text_color="gray"
         font="medium"

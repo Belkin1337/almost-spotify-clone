@@ -70,7 +70,7 @@ export default {
         "sign-up": "Sign-in",
         "prev-page": "Back",
         "next-page": "Next",
-        "liked-tracks-widget": "Followed songs",
+        "liked-tracks-widget": "Followed result",
         "add-liked-songs": "Add to favorites",
         "appearance": "Appearance",
         "account": "Account",

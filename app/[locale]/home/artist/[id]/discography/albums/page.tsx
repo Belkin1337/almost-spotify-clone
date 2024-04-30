@@ -7,6 +7,9 @@ export default async function ArtistDiscographyAlbumsPage({
 		id: string
 	}
 }) {
+
+
+
 	return (
 		<Wrapper variant="page">
 			<div className="flex flex-col gap-y-1">

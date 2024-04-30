@@ -1,4 +1,4 @@
-import { UpdateNameForm } from "@/components/forms/user/personal/name/components/update-name";
+import { UpdateNameForm } from "@/components/forms/user/personal/name/components/update-name-form";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
 import { IoIosMore } from "react-icons/io";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/ui/dropdown-menu"

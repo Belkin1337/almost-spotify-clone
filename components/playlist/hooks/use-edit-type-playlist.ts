@@ -3,67 +3,58 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import { PlaylistEntity } from "@/types/playlist";
 import { playlistByParamIdQueryKey } from "@/lib/querykeys/playlist";
-import { useState } from "react";
 import { userPlaylistsQueryKey } from "@/lib/querykeys/user";
 
 const supabase = createClient();
 
 export const useEditTypePlaylist = () => {
-	const [playlistId, setPlalistId] = useState('');
 	const queryClient = useQueryClient();
+
 	const { data: user } = useUserQuery();
 
-	const editType = useMutation({
+	const editTypePlaylistMutation = useMutation({
 		mutationFn: async (
 			playlist: PlaylistEntity
 		) => {
 			if (user) {
-				const currentType = playlist.attributes.is_public;
+				if (playlist.user_id === user.id) {
+					const currentType = playlist.attributes.is_public;
 
-				try {
-					const { data: updatedPlaylist, error: updatedPlaylistError } = await supabase
-						.from("playlists")
-						.update({
-							attributes: {
-								is_public: !currentType
-							}
-						})
-						.eq("user_id", user?.id)
-						.eq("id", playlist.id)
-						.select()
+					try {
+						const { data, error } = await supabase
+							.from("playlists")
+							.update({
+								attributes: { is_public: !currentType }
+							})
+							.eq("user_id", user?.id)
+							.eq("id", playlist.id)
+							.select()
 
-					setPlalistId(playlist.id);
+						if (error) return;
 
-					if (updatedPlaylistError) {
-						console.log(updatedPlaylistError.message)
-						throw updatedPlaylistError;
+						return data as PlaylistEntity[]
+					} catch (error) {
+						throw error;
 					}
-
-					if (updatedPlaylist) {
-						return updatedPlaylist as PlaylistEntity[]
-					}
-
-				} catch (error) {
-					throw error;
 				}
 			}
 		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: playlistByParamIdQueryKey(playlistId)
-			})
+		onSuccess: async (variables) => {
+			if (variables) {
+				await queryClient.invalidateQueries({
+					queryKey: playlistByParamIdQueryKey(variables[0].id)
+				})
 
-			queryClient.invalidateQueries({
-				queryKey: userPlaylistsQueryKey(user?.id!, true)
-			})
+				await queryClient.invalidateQueries({
+					queryKey: userPlaylistsQueryKey(user?.id, true)
+				})
 
-			queryClient.invalidateQueries({
-				queryKey: userPlaylistsQueryKey(user?.id!, false)
-			})
+				await queryClient.invalidateQueries({
+					queryKey: userPlaylistsQueryKey(user?.id, false)
+				})
+			}
 		}
 	})
 
-	return {
-		editType
-	}
+	return { editTypePlaylistMutation }
 }

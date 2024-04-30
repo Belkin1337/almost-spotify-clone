@@ -47,7 +47,9 @@ export const useUploadPlaylistImage = () => {
 				}
 			}
 		},
-		onSuccess: async (data, variables, context) => {
+		onSuccess: async (data,
+			variables,
+			context) => {
 			await queryClient.invalidateQueries({
 				queryKey: playlistByParamIdQueryKey(variables.playlist.id)
 			})

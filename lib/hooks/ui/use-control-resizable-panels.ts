@@ -1,9 +1,9 @@
-import { QueryKey, useMutation, useQueryClient } from "@tanstack/react-query";
-
-export const resizeStateQueryKey: QueryKey = ["resize_state"];
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { resizeStateQueryKey } from "@/lib/querykeys/ui";
 
 export interface IPanelState {
 	sidebarPanel: {
+		size?: number,
 		controlled?: boolean,
 		isCollapsed?: boolean,
 		isExpanded?: boolean
@@ -20,13 +20,15 @@ export const useControlResizablePanels = () => {
 			queryClient.setQueryData<IPanelState>(
 				resizeStateQueryKey,
 				(prev) => {
-					return {
-						...prev,
-						...newValues
-					}
+					return { ...prev, ...newValues }
 				}
 			)
 		},
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: resizeStateQueryKey
+			})
+		}
 	})
 
 	return { updatePanelSizeMutation }

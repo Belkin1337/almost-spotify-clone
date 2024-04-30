@@ -16,9 +16,7 @@ export async function getRecentArtists(
 		.select("*, artists(*)")
 		.eq("user_id", userId)
 
-	if (count) {
-		return query.limit(count)
-	}
+	if (count) return query.limit(count)
 
 	return query;
 }

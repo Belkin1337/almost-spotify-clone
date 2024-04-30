@@ -1,5 +1,5 @@
 import { SongShuffleButton } from "@/components/song/child/song-shuffle-button/components/song-shuffle-button";
-import { ArtistPlayButton } from "@/components/artist/profile/components/artist-play-button";
+import { ArtistPlayButton } from "@/components/artist/components/profile/components/artist-play-button";
 import { AlbumFollowButton } from "@/components/album/child/album-follow/album-follow-button";
 import { AlbumEntity } from "@/types/album";
 import { useAlbumSongsQuery } from "@/lib/query/album/album-songs-query";

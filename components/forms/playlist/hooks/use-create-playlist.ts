@@ -12,6 +12,7 @@ const supabase = createClient();
 
 export const useCreatePlaylist = () => {
 	const queryClient = useQueryClient();
+
 	const { toast } = useToast()
 	const { push } = useRouter()
 	const { data: user } = useUserQuery();
@@ -20,7 +21,7 @@ export const useCreatePlaylist = () => {
 	const userPlaylistsLength = userPlaylists ? userPlaylists?.length + 1 : 1;
 	const defaultPlaylistTitle = `My Playlist #${userPlaylistsLength}`
 
-	const createPlaylist = useMutation({
+	const createPlaylistMutation = useMutation({
 		mutationFn: async () => {
 			try {
 				if (!user) return;
@@ -33,9 +34,20 @@ export const useCreatePlaylist = () => {
 					})
 					.select();
 
-				if (newPlaylistError) {
-					return
-				} else if (newPlaylist && !newPlaylistError) {
+				if (newPlaylistError) throw newPlaylistError;
+
+				if (newPlaylist && !newPlaylistError) {
+					const playlistId = newPlaylist[0].id;
+
+					const { error } = await supabase
+						.from("playlists_users")
+						.insert({
+							playlist_id: playlistId,
+							user_id: user.id
+						})
+
+					if (error) throw error;
+
 					return newPlaylist as PlaylistEntity[]
 				}
 			} catch (e) {
@@ -46,7 +58,7 @@ export const useCreatePlaylist = () => {
 			if (data) {
 				const playlist = data[0];
 
-				push(`${playlist_route}/${playlist.id}`);
+				push(playlist_route(playlist.id));
 
 				await queryClient.invalidateQueries({
 					queryKey: userPlaylistsQueryKey(user?.id!)
@@ -55,11 +67,11 @@ export const useCreatePlaylist = () => {
 		},
 		onError: () => {
 			toast({
-				title: "Ошибка создания трека. Повторите попытку позже!",
+				title: "Ошибка создания плейлиста. Повторите попытку позже!",
 				variant: "red"
 			})
 		}
 	})
 
-	return { createPlaylist }
+	return { createPlaylistMutation }
 }

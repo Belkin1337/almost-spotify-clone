@@ -4,13 +4,14 @@ import { Button } from "@/ui/button";
 import { Folder, Music, Plus } from "lucide-react";
 import { useCreatePlaylist } from "@/components/forms/playlist/hooks/use-create-playlist";
 import { Typography } from "@/ui/typography";
+import { useCallback } from "react";
 
 export const SidebarLibraryPlaylist = () => {
-	const { createPlaylist } = useCreatePlaylist();
+	const { createPlaylistMutation } = useCreatePlaylist();
 
-	const handleCreatePlaylist = async () => {
-		await createPlaylist.mutateAsync()
-	}
+	const handleCreatePlaylist = useCallback(async () => {
+		await createPlaylistMutation.mutateAsync()
+	}, [createPlaylistMutation])
 
 	return (
 		<DropdownMenu>

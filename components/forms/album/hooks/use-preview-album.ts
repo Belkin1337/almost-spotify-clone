@@ -1,5 +1,5 @@
 import { QueryKey, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { PreviewAlbumType } from "@/types/preview";
+import { PreviewAlbumType } from "@/types/form";
 
 export const albumPreviewQueryKey: QueryKey = ["form-album-preview"]
 

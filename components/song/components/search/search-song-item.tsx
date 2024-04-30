@@ -30,10 +30,7 @@ export const SearchSongItem = ({
 		<div
 			className="flex justify-between items-center rounded-md p-2 hover:bg-neutral-700/50 group focus-within:bg-neutral-700 w-full">
 			<div className="flex items-center gap-x-4 overflow-hidden w-full">
-				<SongPlayingAttribute
-					song={song}
-					list_id={String(song_list.id)}
-				/>
+				<SongPlayingAttribute song={song} list_id={String(song_list.id)}/>
 				<SongImageItem song={song}/>
 				<div className="flex flex-col overflow-hidden justify-self-start">
 					<SongItemTitle song={song}/>

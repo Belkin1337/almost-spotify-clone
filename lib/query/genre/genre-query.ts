@@ -10,7 +10,13 @@ export const useGenreQuery = (
 ) => {
 	return useQuery({
 		queryKey: genreByParamQueryKey(genreId),
-		queryFn: () => getGenreById(supabase, genreId),
+		queryFn: async () => {
+			const { data, error } = await getGenreById(supabase, genreId);
+
+			if (error) return;
+
+			return data;
+		},
 		retry: 1,
 		enabled: !!genreId,
 		refetchOnWindowFocus: false,

@@ -1,4 +1,4 @@
-import { PreviewAlbumType } from "@/types/preview"
+import { PreviewAlbumType } from "@/types/form"
 import { Typography } from "@/ui/typography"
 import Image from "next/image"
 import { Disc } from "lucide-react";

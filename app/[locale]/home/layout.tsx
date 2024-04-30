@@ -1,12 +1,13 @@
 import { cookies } from 'next/headers';
 import { createClient } from '@/lib/utils/supabase/server/supabase-server';
 import { UserEntity } from '@/types/user';
-import { ResizableHandle, ResizablePanelGroup } from "@/ui/resizable";
 import { Sidebar } from "@/components/sidebar/sidebar";
 import { MainPanel } from "@/components/layout/main-panel/main-panel";
 import { SongWidget } from "@/components/layout/widget/song-widget";
 import { PlayerItem } from "@/components/layout/player/player-item";
 import { ReactNode } from "react";
+import { ResizableHandle, ResizablePanelGroup } from "@/ui/resizable";
+import { Debug } from "@/components/layout/debug";
 
 export default async function HomeLayout({
 	children
@@ -14,12 +15,11 @@ export default async function HomeLayout({
 	children: ReactNode
 }) {
 	const supabase = createClient(cookies())
-
 	const { data: { user } } = await supabase.auth.getUser()
 
 	return (
 		<>
-			{/*<Debug/>*/}
+			<Debug user={user as UserEntity}/>
 			<ResizablePanelGroup direction="horizontal" className="flex gap-1 p-1 bg-black">
 				<Sidebar user={user as UserEntity}/>
 				<ResizableHandle/>

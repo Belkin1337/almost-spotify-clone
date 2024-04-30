@@ -2,7 +2,7 @@
 
 import { Typography } from "@/ui/typography";
 import { usePlaylistsListByUser } from "@/lib/query/playlist/playlists-by-user-query";
-import { PlaylistCard } from "@/components/playlist/card/playlist-card";
+import { PlaylistCard } from "@/components/playlist/components/card/playlist-card";
 
 export const UserPublicPlaylists = ({
 	userId

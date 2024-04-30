@@ -1,0 +1,2 @@
+export const LIKED_SONGS_COLOR = "#5b21b6";
+export const DEFAULT_BACKGROUND_COLOR = "#262626"

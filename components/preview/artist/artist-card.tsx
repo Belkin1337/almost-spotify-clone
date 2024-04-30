@@ -1,4 +1,4 @@
-import { PreviewArtistType } from "@/types/preview"
+import { PreviewArtistType } from "@/types/form"
 import { Typography } from "@/ui/typography"
 import Image from "next/image"
 import { IoMdMusicalNote } from "react-icons/io"

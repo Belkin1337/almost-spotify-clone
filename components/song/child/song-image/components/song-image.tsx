@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
 import { ISongImageItem, songImageVariants } from "@/components/song/child/song-image/types/song-image-types";
 import Image from "next/image"
+import { DialogImage } from "@/ui/dialog-image";
 
 export const SongImageItem = ({
 	variant,
@@ -11,32 +12,18 @@ export const SongImageItem = ({
 	children
 }: ISongImageItem) => {
 	const { openDialog } = useDialog()
-	const { data: image } = useLoadImage(song?.image_path!);
+	const { data: image } = useLoadImage(song?.image_path);
 
 	const handleDialog = useCallback(() => {
-		openDialog({
-			dialogChildren: (
-				image?.url && (
-					<div className="w-[448px] h-[448px] overflow-hidden rounded-md">
-						<Image
-							src={image.url}
-							width={660}
-							height={660}
-							loading="lazy"
-							alt={song?.title || "Song"}
-							className="w-full h-full object-cover"
-						/>
-					</div>
-				)
-			)
-		})
-	}, [openDialog])
+		if (image?.url) {
+			openDialog({
+				dialogChildren: <DialogImage imageUrl={image.url} title={song.title}/>
+			})
+		}
+	}, [image?.url, song?.title, openDialog])
 
 	return (
-		<div className={songImageVariants(({
-			variant,
-			className,
-		}))}>
+		<div className={songImageVariants(({ variant, className, }))}>
 			{variant === "page" ? (
 				<Image
 					onClick={handleDialog}

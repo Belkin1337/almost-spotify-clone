@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { IPanelState, resizeStateQueryKey } from "@/lib/hooks/ui/use-control-resizable-panels";
+import { IPanelState } from "@/lib/hooks/ui/use-control-resizable-panels";
+import { resizeStateQueryKey } from "@/lib/querykeys/ui";
 
 export const useResizePanelsQuery = () => {
 	return useQuery<IPanelState, Error>({

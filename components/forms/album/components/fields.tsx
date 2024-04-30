@@ -11,29 +11,28 @@ import { z } from "zod";
 import { ArtistEntity } from "@/types/artist";
 import { AlbumFormPreview } from "./preview";
 import { Input } from "@/ui/input";
-import { ArtistCardSelect } from "@/components/artist/select/components/artist-card-select";
+import { ArtistCardSelect } from "@/components/artist/components/select/components/artist-card-select";
 import { SongCardSelect } from "@/components/song/components/select/song-card-select";
 import { useUserArtistListQuery } from "@/lib/query/user/user-artists-list-query";
 import { useUserSongsQuery } from "@/lib/query/user/user-songs-query";
 import { useUserQuery } from "@/lib/query/user/user-query";
-import { createSchema } from "@/components/forms/song/components/fields/types/fields-types";
 import { handleChangeImage } from "@/lib/utils/form/handle-change-image";
 import { usePreviewAlbum } from "@/components/forms/album/hooks/use-preview-album";
 import { removeArtist } from "@/lib/utils/form/remove-artist";
 
 type zodAlbumSchema = z.infer<typeof createAlbumSchema>
 
+interface IAlbumFormFields {
+	form: UseFormReturn<zodAlbumSchema>,
+	isLoading: boolean,
+	refs: { imageRef: MutableRefObject<HTMLInputElement | null> }
+}
+
 export const AlbumFormFields = ({
 	form,
 	isLoading,
 	refs
-}: {
-	form: UseFormReturn<zodAlbumSchema>,
-	isLoading: boolean,
-	refs: {
-		imageRef: MutableRefObject<HTMLInputElement | null>
-	}
-}) => {
+}: IAlbumFormFields) => {
 	const { data: user } = useUserQuery();
 	const { data: userArtists } = useUserArtistListQuery(user?.id!);
 	const { data: songs } = useUserSongsQuery(user?.id!)
@@ -46,7 +45,7 @@ export const AlbumFormFields = ({
 	});
 
 	const handleChangeInputValues = useCallback((
-		key: keyof createSchema,
+		key: keyof zodAlbumSchema,
 		value: string,
 	) => {
 		const artistItem = userArtists?.find(item => item.id === value);
@@ -71,7 +70,7 @@ export const AlbumFormFields = ({
 					form.setValue("artists", updatedArtists.map(item => item.id));
 				}
 			}
-		} else if (key === 'song') {
+		} else if (key === 'songs') {
 			if (!songItem) return;
 
 			if (albumPreviewState.songs?.some(item => item.id === value)) {
@@ -184,7 +183,7 @@ export const AlbumFormFields = ({
 							</Typography>
 							<Select
 								defaultValue={field.value[0]}
-								onValueChange={(value: string) => handleChangeInputValues('song', value)}
+								onValueChange={(value: string) => handleChangeInputValues('songs', value)}
 							>
 								<div className="flex flex-wrap items-start gap-4">
 									{albumPreviewState.songs?.length! > 0 && (

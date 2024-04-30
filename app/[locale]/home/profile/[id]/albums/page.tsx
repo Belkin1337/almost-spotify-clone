@@ -1,8 +1,21 @@
 import { Wrapper } from "@/ui/wrapper";
 import { Typography } from "@/ui/typography";
 import { UserAlbums } from "@/components/user/components/for-authors/user-albums/components/user-albums";
+import { createClient } from "@/lib/utils/supabase/server/supabase-server";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default async function ProfileListAlbumsPage() {
+export default async function ProfileListAlbumsPage({
+  params
+}: {
+  params: { id: string }
+}) {
+  const supabase = createClient(cookies());
+
+  const { data: { user }, error } = await supabase.auth.getUser();
+
+  if (!user || error) redirect('/home')
+
   return (
     <Wrapper variant="page">
       <div className="flex flex-col gap-y-8 p-4">
@@ -18,7 +31,7 @@ export default async function ProfileListAlbumsPage() {
             </li>
           </ul>
         </div>
-        <UserAlbums/>
+        <UserAlbums userId={params.id}/>
       </div>
     </Wrapper>
   )

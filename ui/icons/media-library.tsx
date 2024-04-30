@@ -1,10 +1,12 @@
 import { TbPlaylist } from "react-icons/tb";
 
-export const MediaLibraryIcon = ({ ...props }) => {
+export const MediaLibraryIcon = ({
+	...props
+}) => {
 	return (
 		<TbPlaylist
 			className="text-neutral-400"
-			size={46}
+			size={32}
 			{...props}
 		/>
 	)

@@ -4,22 +4,22 @@ import { useAudio } from "@/components/player/hooks/use-audio";
 import { useAudioStateQuery } from "@/lib/query/player/audio-state-query";
 import { usePlayer } from "@/components/player/hooks/use-player";
 import { usePlayerStateQuery } from "@/lib/query/player/player-state-query";
-import { useUnloadHowl } from "@/lib/hooks/player/use-unload-howl";
 import { useUserQuery } from "@/lib/query/user/user-query";
 
 export const useHowler = () => {
 	const { data: user } = useUserQuery()
-	const { setAudioAtrributes } = useAudio()
+	const { setAudioAttributes } = useAudio()
 	const { setPlayerAttributes } = usePlayer()
 	const { audioAttributes } = useAudioStateQuery()
 	const { playerAttributes } = usePlayerStateQuery()
-	const { unload } = useUnloadHowl();
 
 	const currentSong = playerAttributes.active;
 	const currentSongArray = playerAttributes.ids!;
 	const currentIdx = currentSongArray.findIndex(song => song.id === currentSong?.id)
 	const nextIdx = (currentIdx + 1) % currentSongArray.length;
 	const nextSong = currentSongArray[nextIdx];
+	const currentSongUrl = audioAttributes.songUrl;
+	const howl = audioAttributes.howl;
 
 	const createHowlInstance = useCallback(({
 		songUrl
@@ -27,24 +27,30 @@ export const useHowler = () => {
 		songUrl: string
 	}) => {
 		if (user) {
-			unload();
+			if (howl && songUrl) {
+				howl.unload();
 
-			if (songUrl && songUrl !== audioAttributes?.songUrl) {
+				setAudioAttributes.mutate({
+					howl: null,
+					songUrl: null,
+					position: 0
+				})
+
+				setPlayerAttributes.mutate({
+					isPlaying: false,
+					isLoaded: false,
+					duration: 0
+				})
+			}
+
+			if (songUrl && songUrl !== currentSongUrl && howl === null) {
 				const newHowl = new Howl({
 					src: songUrl,
 					autoplay: true,
 					format: ["mp3"],
 					html5: true,
-					onplay: () => {
-						setPlayerAttributes.mutate({
-							isPlaying: true
-						});
-					},
-					onpause: () => {
-						setPlayerAttributes.mutate({
-							isPlaying: false
-						});
-					},
+					onplay: () => setPlayerAttributes.mutate({ isPlaying: true }),
+					onpause: () => setPlayerAttributes.mutate({ isPlaying: false }),
 					onend: () => {
 						setPlayerAttributes.mutate({
 							active: nextSong,
@@ -53,22 +59,24 @@ export const useHowler = () => {
 						});
 					},
 					onload: () => {
-						setPlayerAttributes.mutate({
-							isLoaded: true,
-							duration: newHowl?.duration()
-						});
+						if (newHowl) {
+							setPlayerAttributes.mutate({
+								isLoaded: true,
+								duration: newHowl?.duration()
+							});
+						}
 					}
 				})
 
-				setAudioAtrributes.mutate({
-					howl: newHowl,
-					position: newHowl.duration()
-				})
+				if (howl !== newHowl) {
+					setAudioAttributes.mutate({
+						howl: newHowl,
+						position: newHowl.duration()
+					})
+				}
 			}
-		} else {
-			unload();
 		}
-	}, [user, audioAttributes.songUrl, nextSong])
+	}, [howl, user])
 
 	return { createHowlInstance }
 }

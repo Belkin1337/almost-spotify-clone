@@ -4,11 +4,13 @@ import { useScopedI18n } from "@/locales/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useAudioStateQuery } from "@/lib/query/player/audio-state-query";
+import { auth_route } from "@/lib/constants/routes/routes";
 
 const supabase = createClient();
 
 export function useLogout() {
 	const queryClient = useQueryClient();
+
 	const { audioAttributes } = useAudioStateQuery()
 	const { toast } = useToast();
 	const { push, refresh } = useRouter()
@@ -29,7 +31,7 @@ export function useLogout() {
 				variant: "right"
 			});
 
-			push("/");
+			push(auth_route);
 			refresh();
 
 			if (howl) howl.unload() // Unload and destroy a Howl object.
@@ -37,6 +39,8 @@ export function useLogout() {
 			queryClient.clear();
 		},
 		onError: (e: Error) => {
+			push(auth_route);
+
 			throw e;
 		}
 	});

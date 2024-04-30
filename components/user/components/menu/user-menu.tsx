@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { Typography } from "@/ui/typography";
 import { UserEntity } from "@/types/user";
 import { UserAvatar } from "@/components/user/components/child/user-avatar/components/user-avatar";
-import { userContextMenu } from "@/lib/constants/ui/menus";
+import { USER_CONTEXT_MENUS } from "@/lib/constants/ui/menus";
 import { useLogout } from "@/components/forms/auth/hooks/use-logout";
 
 export const UserMenu = ({
@@ -40,11 +40,11 @@ export const UserMenu = ({
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="relative w-[200px]">
-				{userContextMenu({
+				{USER_CONTEXT_MENUS({
 					locale: { navbarLocale: navbarLocale, sidebarLocale: sidebarLocale },
 					userId: user?.id!,
 					push: push,
-					handleLogout: () => logoutMutation.mutate()
+					handleLogout: async () => logoutMutation.mutateAsync()
 				}).map((item,
 					idx) => (
 					<Fragment key={item.name}>
@@ -53,7 +53,7 @@ export const UserMenu = ({
 								{item.name}
 							</Typography>
 						</DropdownMenuItem>
-						{idx === userContextMenu.length - 2 && <DropdownMenuSeparator/>}
+						{idx === USER_CONTEXT_MENUS.length - 2 && <DropdownMenuSeparator/>}
 					</Fragment>
 				))}
 			</DropdownMenuContent>

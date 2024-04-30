@@ -19,13 +19,13 @@ export const PlaylistImage = ({
 	return (
 		<div className={playlistImageVariants(({ variant, className }))} {...props}>
 			<Image
-				src={image?.url as string || nullAvatarImage}
+				src={image?.url || nullAvatarImage}
 				alt={playlist?.title}
 				title={playlist?.title}
 				width={64}
 				height={64}
 				loading="lazy"
-				className={`'w-full h-full object-cover`}
+				className="w-full h-full object-cover"
 			/>
 		</div>
 	)

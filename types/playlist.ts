@@ -3,6 +3,7 @@ export interface PlaylistEntity {
   user_id: string,
   title: string,
   image_path: string,
+  description: string,
   created_at: string,
   attributes: {
     is_public: boolean,

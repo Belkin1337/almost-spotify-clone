@@ -3,8 +3,8 @@ import { FollowedArtistType } from "@/types/artist";
 
 export async function getFollowArtist(
 	client: SupabaseClient,
-	artistId: string,
-	userId: string
+	userId?: string,
+	artistId?: string,
 ): Promise<PostgrestSingleResponse<FollowedArtistType>> {
 	return client
 		.from("followed_artists")

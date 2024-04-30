@@ -39,15 +39,15 @@ img {
 }
 
 /* Scrollbar */
-::-webkit-scrollbar { 
+::-webkit-scrollbar {
   width: 12px;
 }
 
-div::-webkit-scrollbar-thumb {
+.panel > div::-webkit-scrollbar-thumb {
   background-color: transparent;
 }
 
-div::-webkit-scrollbar-thumb:hover {
+.panel > div::-webkit-scrollbar-thumb:hover {
   background-color: #404040
 }
 

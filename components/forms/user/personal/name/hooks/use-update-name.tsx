@@ -30,7 +30,7 @@ export const useUpdateName = () => {
     }
   })
 
-  const uploadUserName = useMutation({
+  const uploadUserNameMutation = useMutation({
     mutationFn: async (
       values: UpdateAttributesType
     ) => {
@@ -87,8 +87,5 @@ export const useUpdateName = () => {
     }
   })
 
-  return {
-    form,
-    uploadUserName,
-  }
+  return { form, uploadUserNameMutation, }
 }

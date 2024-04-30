@@ -1,5 +1,4 @@
-import { PagePlaylistItem } from "@/components/playlist/components/page-playlist-item";
-import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import { PagePlaylistItem } from "@/components/playlist/components/page/page-playlist-item";
 import { createClient } from "@/lib/utils/supabase/server/supabase-server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -11,16 +10,13 @@ export default async function PlaylistPage({
 		id: string
 	}
 }) {
-	const queryClient = new QueryClient();
 	const supabase = createClient(cookies())
 
-	const { data: { user } } = await supabase.auth.getUser()
+	const { data: { user }, error } = await supabase.auth.getUser()
 
-	if (!user) redirect('/home');
+	if (!user || error) redirect('/home');
 
 	return (
-		<HydrationBoundary state={dehydrate(queryClient)}>
-			<PagePlaylistItem playlistId={params.id}/>
-		</HydrationBoundary>
+		<PagePlaylistItem playlistId={params.id}/>
 	)
 }

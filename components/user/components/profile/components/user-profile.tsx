@@ -17,6 +17,8 @@ import {
 import { useUserByIdQuery } from "@/lib/query/user/user-id-query";
 import { ProfileUserType } from "@/components/user/components/profile/types/user-profile-types";
 import { useUserAvatar } from "@/components/user/components/child/user-avatar/hooks/use-user-avatar";
+import { UserStats } from "@/components/user/components/child/user-stats/components/user-stats";
+import { UserFollowButton } from "@/components/user/components/child/user-follow-button/components/user-follow-button";
 
 export const ProfileUser = ({
 	userId,
@@ -38,25 +40,28 @@ export const ProfileUser = ({
 		<>
 			<ColoredBackground imageUrl={avatar}/>
 			<div className="flex relative items-start p-6">
-				<div className="flex items-center gap-4">
-					<div className="flex items-center justify-center relative overflow-hidden group rounded-full h-[248px] w-[248px]">
-						<UserAvatar user={userById} currentUser={currentUser}/>
-					</div>
-					<div className="flex flex-col justify-between gap-y-4">
+				<div className="flex items-center gap-x-8">
+					<UserAvatar user={userById} currentUser={currentUser}/>
+					<div className="flex flex-col self-end justify-between gap-y-4">
 						<Typography font="medium" text_color="white" size="medium">
 							Профиль
 						</Typography>
 						<UserName user={userById} variant="profile"/>
+						<UserStats user={userById}/>
 					</div>
 				</div>
 			</div>
-			<div className="flex flex-col h-full bg-gradient-to-b from-black/20 to-transparent backdrop-filter backdrop-blur-md">
+			<div
+				className="flex flex-col h-full bg-gradient-to-b from-black/20 to-transparent backdrop-filter backdrop-blur-md">
 				<div className="flex flex-col gap-y-12 p-6">
 					{currentUser && (
 						<>
 							<UserToolsBar/>
 							<UserTopListenedArtist user={user}/>
 						</>
+					)}
+					{!currentUser && (
+						<UserFollowButton userId={userById.id}/>
 					)}
 					<UserPublicPlaylists userId={userById.id}/>
 					<UserSubsList/>

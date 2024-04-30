@@ -1,16 +1,18 @@
 "use client"
 
-import { useUserQuery } from "@/lib/query/user/user-query"
-import { ArtistCard } from "@/components/artist/card/components/artist-card";
+import { ArtistCard } from "@/components/artist/components/card/components/artist-card";
 import { ArtistEditSubMenu } from "@/components/forms/artist/components/artist-edit-sub-menu";
 import { useUserArtistListQuery } from "@/lib/query/user/user-artists-list-query";
 import { ItemLoader } from "@/ui/item-loader";
 
-export const UserArtistsList = () => {
-	const { data: user } = useUserQuery();
-	const { data: artists, isError: artistsError, isPending } = useUserArtistListQuery(user?.id!)
+export const UserArtistsList = ({
+	userId
+}: {
+	userId: string
+}) => {
+	const { data: artists, isError: artistsError, isPending } = useUserArtistListQuery(userId)
 
-	if (artistsError || !user) return;
+	if (artistsError || !userId) return;
 
 	return (
 		<div className="flex flex-wrap w-full h-full gap-4">

@@ -3,7 +3,6 @@ import { updateNameSchema } from "@/components/forms/user/personal/name/schemas/
 
 export type UpdateAttributesType = {
 	full_name?: string,
-	description?: string,
 	userId?: string;
 	avatarUrl?: any;
 };

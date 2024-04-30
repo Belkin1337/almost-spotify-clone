@@ -2,7 +2,7 @@
 
 import { FaPen } from "react-icons/fa"
 import { useDialog } from "@/lib/hooks/ui/use-dialog"
-import { UpdateAvatarForm } from "@/components/forms/user/personal/avatar/components/update-avatar"
+import { UpdateAvatarForm } from "@/components/forms/user/personal/avatar/components/update-avatar-form"
 import { Avatar } from "@/ui/avatar";
 import { IUserAvatar } from "@/components/user/components/child/user-avatar/types/user-avatar-types";
 import { useUserAvatar } from "@/components/user/components/child/user-avatar/hooks/use-user-avatar";
@@ -18,7 +18,7 @@ export const UserAvatar = ({
 	const { openDialog } = useDialog();
 
 	return (
-		<>
+		<div className="flex items-center justify-center relative overflow-hidden group rounded-full h-[248px] w-[248px]">
 			<Avatar
 				variant={variant || 'default'}
 				rounded={rounded || 'full'}
@@ -38,6 +38,6 @@ export const UserAvatar = ({
 					</Typography>
 				</div>
 			)}
-		</>
+		</div>
 	)
 }

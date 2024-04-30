@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { getArtistBySong } from "@/lib/queries/artist/single/get-artist-by-song";
+import { getArtistsBySong } from "@/lib/queries/artist/multiple/get-artists-by-song";
 import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import { songArtistsQueryKey } from "@/lib/querykeys/song";
 
@@ -11,7 +11,7 @@ export const useSongArtistListQuery = (
 	return useQuery({
 		queryKey: songArtistsQueryKey(songId),
 		queryFn: async () => {
-			const { data, error } = await getArtistBySong(supabase, songId)
+			const { data, error } = await getArtistsBySong(supabase, songId)
 
 			if (error) throw error;
 

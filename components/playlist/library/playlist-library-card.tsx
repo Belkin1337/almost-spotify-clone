@@ -2,25 +2,31 @@ import { Typography } from "@/ui/typography";
 import { playlist_route } from "@/lib/constants/routes/routes";
 import { PlaylistEntity } from "@/types/playlist";
 import { PlaylistImage } from "@/components/playlist/child/playlist-image/components/playlist-image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 
 export const PlaylistLibraryCard = ({
 	playlist,
-	isCollapsed
+	isExpanded
 }: {
 	playlist: PlaylistEntity,
-	isCollapsed: boolean
+	isExpanded: boolean
 }) => {
+	const { push } = useRouter();
+
+	const handlePushToPlaylist = useCallback(() => {
+		push(playlist_route(playlist.id))
+	}, [push, playlist.id])
 
 	if (!playlist) return;
 
 	return (
-		<Link
-			href={`${playlist_route}/${playlist.id}`}
+		<div
+			onClick={handlePushToPlaylist}
 			className="flex items-center w-full cursor-pointer bg-transparent hover:bg-neutral-800 rounded-md p-2 gap-x-4"
 		>
 			<PlaylistImage variant="library" playlist={playlist}/>
-			{isCollapsed && (
+			{isExpanded && (
 				<div className="flex flex-col gap-y-1">
 					<Typography text_color="white" size="medium" font="medium">
 						{playlist.title}
@@ -30,6 +36,6 @@ export const PlaylistLibraryCard = ({
 					</Typography>
 				</div>
 			)}
-		</Link>
+		</div>
 	)
 }

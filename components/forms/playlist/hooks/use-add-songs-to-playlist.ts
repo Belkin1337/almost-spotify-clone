@@ -12,6 +12,7 @@ const supabase = createClient();
 
 export const useAddSongsToPlaylist = () => {
 	const queryClient = useQueryClient();
+
 	const { toast } = useToast();
 	const { data: user } = useUserQuery()
 	const { uploadPlaylistImageMutation } = useUploadPlaylistImage()
@@ -24,17 +25,26 @@ export const useAddSongsToPlaylist = () => {
 			song: SongEntity,
 			playlist: PlaylistEntity
 		}) => {
-			const { data: addedSong, error } = await supabase
-				.from("song_playlists")
-				.insert({
-					song_id: song.id,
-					playlist_id: playlist.id
+			if (playlist.user_id === user?.id) {
+				const { data: addedSong, error } = await supabase
+					.from("song_playlists")
+					.insert({
+						song_id: song.id,
+						playlist_id: playlist.id
+					})
+					.select()
+
+				if (error) return;
+
+				return addedSong as SongEntity[]
+			} else {
+				toast({
+					title: "Вы не имеете разрешения на изменение контента плейлиста!",
+					variant: "red"
 				})
-				.select()
 
-			if (error) return;
-
-			return addedSong as SongEntity[]
+				return;
+			}
 		},
 		onSuccess: async (data, variables, context) => {
 			if (data) {
