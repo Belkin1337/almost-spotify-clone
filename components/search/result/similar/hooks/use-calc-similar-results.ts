@@ -1,12 +1,13 @@
 import { SongEntity } from "@/types/song";
 
-export const useCalcSimilarResults = ({
-	searchedSongs,
-	title
-}: {
+type CalcSimilarResults = {
 	searchedSongs: SongEntity[] | undefined,
 	title: string
-}) => {
+}
+
+export const useCalcSimilarResults = ({
+	searchedSongs, title
+}: CalcSimilarResults) => {
 	if (!searchedSongs || searchedSongs.length === 0) return;
 
 	let bestMatch = searchedSongs[0];

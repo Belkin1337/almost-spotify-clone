@@ -6,7 +6,7 @@ import {
   VIEW_TYPE_COMPACT,
   VIEW_TYPE_GRID,
   VIEW_TYPE_LIST
-} from "../../../types/ui"
+} from "@/types/ui"
 import { FaList } from "react-icons/fa";
 import { FiGrid } from "react-icons/fi";
 import { HiOutlineViewList } from "react-icons/hi";

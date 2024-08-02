@@ -1,4 +1,4 @@
-import React, { MouseEvent, useCallback } from "react"
+import { MouseEvent } from "react"
 import { ArtistImage } from "../../../child/artist-image/components/artist-image"
 import { ArtistName } from "../../../child/artist-name/components/artist-name"
 import { Typography } from "@/ui/typography"
@@ -9,22 +9,18 @@ import { artistCardVariants, IArtistCard } from "@/components/artist/components/
 import { Skeleton } from "@/ui/skeleton";
 
 export const ArtistCard = ({
-	variant,
-	artist,
-	className,
-	children,
-	isLoading
+	variant, artist, className, children, isLoading
 }: IArtistCard) => {
 	const { push } = useRouter();
 
-	const handlePushArtist = useCallback((e: MouseEvent<HTMLDivElement>) => {
+	if (!artist) return;
+	
+	const handlePushArtist = (e: MouseEvent<HTMLDivElement>) => {
 		e.stopPropagation()
-		push(`${artist_route_profile}/${artist?.id}`)
-	}, [artist?.id, push])
-
-	if (isLoading) {
-		return <Skeleton className={artistCardVariants(({ variant, className }))} />
+		push(artist_route_profile(artist.id))
 	}
+
+	if (isLoading) return <Skeleton className={artistCardVariants(({ variant, className }))} />
 
 	return (
 		<div
@@ -50,7 +46,7 @@ export const ArtistCard = ({
 				/>
 			</div>
 			<div className="flex flex-col">
-				<ArtistName variant={variant === 'search' ? 'search' : 'default'} artist={artist}/>
+				<ArtistName variant={variant === 'search' ? 'search' : 'default'} artistName={artist.name} artistId={artist.id}/>
 				{variant === 'search' && (
 					<Typography size="small" text_color="gray">
 						Artist

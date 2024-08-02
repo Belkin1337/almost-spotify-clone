@@ -23,7 +23,6 @@ import { useUserArtistListQuery } from "@/lib/query/user/user-artists-list-query
 import { useGenresQuery } from "@/lib/query/genre/genres-query";
 import { useSongPreviewState } from "@/components/forms/song/hooks/use-song-preview-state";
 import { UseFormReturn } from "react-hook-form";
-import { SongEntity } from "@/types/song";
 
 export const AddItemButton = () => {
 	return (
@@ -34,7 +33,6 @@ export const AddItemButton = () => {
 }
 
 export interface IFormFields {
-	song?: SongEntity,
 	form: UseFormReturn<zodSongSchema>,
 	refs: {
 		imageRef?: RefObject<HTMLInputElement>,

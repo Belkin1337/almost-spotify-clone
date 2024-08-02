@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getFollowedUsers } from "@/lib/queries/user/multiple/get-followed-users";
 import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import { userFollowers } from "@/lib/querykeys/user";
@@ -21,6 +21,7 @@ export const useFollowedUsersQuery = (
 		},
 		enabled: !!userId,
 		refetchOnWindowFocus: false,
+		placeholderData: keepPreviousData,
 		refetchOnMount: false
 	})
 }

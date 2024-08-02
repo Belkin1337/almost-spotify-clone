@@ -1,13 +1,15 @@
 import Image from "next/image";
 import { ArtistEntity } from "@/types/artist";
 
+type ArtistWidgetSongImageProps = {
+	imageUrl: string,
+	artist: ArtistEntity
+}
+
 export const ArtistWidgetSongImage = ({
 	imageUrl,
 	artist
-}: {
-	imageUrl: string,
-	artist: ArtistEntity
-}) => {
+}: ArtistWidgetSongImageProps) => {
 	return (
 		<Image
 			src={imageUrl}

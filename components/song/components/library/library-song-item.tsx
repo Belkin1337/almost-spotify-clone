@@ -2,7 +2,7 @@ import { ISongItem } from "@/components/song/types/song-item-types";
 import { SongPlayingAttribute } from "@/components/song/child/song-playing-attribute/components/song-playing-attribute";
 import { SongImageItem } from "@/components/song/child/song-image/components/song-image";
 import { SongItemTitle } from "@/components/song/child/song-title/components/song-title";
-import { SongArtist } from "@/components/song/child/song-artist/song-artist";
+import { SongArtist } from "@/components/song/child/song-artist/components/song-artist";
 import { AiFillSound } from "react-icons/ai";
 import { useCallback } from "react";
 import { album_route, song_route } from "@/lib/constants/routes/routes";
@@ -10,13 +10,22 @@ import { useRouter } from "next/navigation";
 import { useAlbumBySong } from "@/lib/query/album/album-by-song";
 import { usePlay } from "@/lib/hooks/player/use-play";
 import { usePlayerStateQuery } from "@/lib/query/player/player-state-query";
+import { useSongArtistListQuery } from "@/lib/query/song/song-artist-list-query";
 
 export const LibrarySongItem = ({
 	song,
 	song_list
 }: ISongItem) => {
 	const { push } = useRouter();
-	const { data: album } = useAlbumBySong(song.id);
+	const {
+		data: artists,
+		isLoading: artistIsLoading,
+		isSuccess
+	} = useSongArtistListQuery(song.id);
+	const {
+		data: album,
+		isLoading: albumIsLoading
+	} = useAlbumBySong(song.id, isSuccess);
 	const { onPlay } = usePlay();
 	const { playerAttributes } = usePlayerStateQuery()
 
@@ -49,7 +58,7 @@ export const LibrarySongItem = ({
 		await handlePlay()
 	}, [handlePlay])
 
-	if (!song) return;
+	if (!song || !artists) return;
 
 	return (
 		<div
@@ -60,7 +69,7 @@ export const LibrarySongItem = ({
 			<div className={`flex items-center gap-x-2 overflow-hidden w-full`}>
 				<SongPlayingAttribute
 					song={song}
-					list_id={String(song_list.id)}
+					id={String(song_list.id)}
 				/>
 				<SongImageItem
 					song={song}
@@ -72,8 +81,10 @@ export const LibrarySongItem = ({
 						className={`${playerAttributes?.isPlaying && playerAttributes?.active?.id === song.id && '!text-jade-500'}`}
 					/>
 					<SongArtist
-						variant={"default"}
-						song={song}
+						variant="default"
+						artists={artists.artists}
+						firstArtist={artists.firstArtist}
+						isLoading={artistIsLoading}
 					/>
 				</div>
 				{playerAttributes?.isPlaying && playerAttributes?.active?.id === song.id && (

@@ -1,13 +1,13 @@
 import { LuPlusCircle } from "react-icons/lu";
-import React from "react";
+import { Plus } from "lucide-react"
 
-type PlusIconVariantsType = {
+type LuPlusIconVariantsType = {
 	page?: boolean
 }
 
-export const PlusIcon = ({
+const LuPlusIcon = ({
 	page
-}: PlusIconVariantsType) => {
+}: LuPlusIconVariantsType) => {
 	return (
 		<LuPlusCircle
 			className={page ? "text-neutral-400" : ''}
@@ -15,3 +15,11 @@ export const PlusIcon = ({
 		/>
 	)
 }
+
+const DefaultPlusIcon = () => {
+	return (
+		<Plus size={18} className="text-neutral-400"/>
+	)
+}
+
+export { LuPlusIcon, DefaultPlusIcon }

@@ -1,4 +1,3 @@
-import { ArtistEntity } from "@/types/artist";
 import { useLoadImage } from "@/lib/hooks/image/use-load-image";
 import { Typography } from "@/ui/typography";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
@@ -6,12 +5,11 @@ import { useCallback } from "react";
 import { ArtistWidgetInfo } from "@/components/artist/components/widget/main/components/artist-widget-info";
 import { ArtistAboutItem } from "@/ui/artist-about-item";
 import { Overlay } from "@/ui/overlay";
+import { ArtistItemProps } from "@/components/artist/types/artist-types";
 
 export const ArtistAbout = ({
 	artist
-}: {
-	artist: ArtistEntity
-}) => {
+}: ArtistItemProps) => {
 	const { openDialog } = useDialog();
 
 	const handleArtistInfo = useCallback(() => {

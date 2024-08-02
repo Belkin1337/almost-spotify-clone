@@ -27,9 +27,7 @@ export const SearchNavigationBar = () => {
 		<div className="flex items-center gap-2 w-full">
 			{NAVIGATION_TYPES_LIST.map((item, idx) => (
 				<Badge key={idx}>
-					<Typography>
-						{item.name}
-					</Typography>
+					<Typography>{item.name}</Typography>
 				</Badge>
 			))}
 		</div>

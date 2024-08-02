@@ -3,11 +3,13 @@ import { Typography } from "@/ui/typography"
 import Image from "next/image"
 import { IoMdMusicalNote } from "react-icons/io"
 
+type PreviewArtistCardProps = {
+  preview: PreviewArtistType
+}
+
 export const PreviewArtistCard = ({
   preview
-}: {
-  preview: PreviewArtistType
-}) => {
+}: PreviewArtistCardProps) => {
   return (
     <div className="flex relative bg-neutral-800 border border-neutral-700 bg-cover bg-center w-full gap-x-4 rounded-xl p-4 overflow-hidden"
       style={{ backgroundImage: `url(${preview.cover_image})` }}

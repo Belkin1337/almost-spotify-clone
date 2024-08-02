@@ -4,13 +4,15 @@ import { SearchSimilarTracksList } from "@/components/search/result/similar/comp
 import { useCalcSimilarResults } from "@/components/search/result/similar/hooks/use-calc-similar-results";
 import { SongEntity } from "@/types/song";
 
+type SearchSimilarTracksProps = {
+	title: string,
+	searchedSongs?: SongEntity[]
+}
+
 export const SearchSimilarTracks = ({
 	title,
 	searchedSongs
-}: {
-	title: string,
-	searchedSongs: SongEntity[] | undefined
-}) => {
+}: SearchSimilarTracksProps) => {
 	const topResult = useCalcSimilarResults({
 		searchedSongs: searchedSongs,
 		title: title

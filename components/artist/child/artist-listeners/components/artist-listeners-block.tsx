@@ -4,16 +4,7 @@ import {
 } from "@/components/artist/child/artist-listeners/types/artist-listeners-block-types";
 
 export const ArtistListenersBlock = ({
-	variant,
-	className,
-	...props
+	variant, className, ...props
 }: IArtistListenersBlock) => {
-	return (
-		<div className={artistListenersVariants(({
-			variant,
-			className
-		}))}
-				 {...props}
-		/>
-	)
+	return <div className={artistListenersVariants(({ variant, className }))} {...props}/>
 }

@@ -7,15 +7,18 @@ import { Typography } from "@/ui/typography";
 import { useArtistQuery } from "@/lib/query/artist/artist-query";
 import { SongListTableHead } from "@/ui/song-list-table-head";
 import dynamic from "next/dynamic";
+import { ArtistItemProps } from "@/components/artist/types/artist-types";
 
-const SongItem = dynamic(() => import("@/components/song/song-item/song-item")
-	.then(mod => mod.SongItem));
+const SongItem = dynamic(() => import(
+	"@/components/song/song-item/song-item")
+	.then(mod => mod.SongItem)
+);
+
+type ArtistUserLikedSongsListProps = Pick<Pick<ArtistItemProps, "artist">["artist"], "id">
 
 export const ArtistUserLikedSongsList = ({
-	artistId
-}: {
-	artistId: string
-}) => {
+	id: artistId
+}: ArtistUserLikedSongsListProps) => {
 	const { data: artist } = useArtistQuery(artistId);
 	const { followedSongs, isLoading } = useUserFollowedSongsByArtist(artistId)
 

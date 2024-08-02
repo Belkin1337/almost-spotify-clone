@@ -17,7 +17,7 @@ export const useUserFollowedSongsByArtist = (
 			followedSong => followedSong.id
 		);
 
-		return artistSongs.filter(artistSong => likedSongIds.includes(artistSong.id));
+		return artistSongs.filter(artistSong => likedSongIds!.includes(artistSong.id));
 	}, [artistSongs, userFollowedSongs]);
 
 	const followedSongs = followedSongsByArtist();

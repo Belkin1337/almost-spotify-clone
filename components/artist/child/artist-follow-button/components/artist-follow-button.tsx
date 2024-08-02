@@ -1,21 +1,18 @@
 import { Button } from "@/ui/button";
 import { Typography } from "@/ui/typography";
-import React, { MouseEvent, useCallback } from "react";
+import { MouseEvent } from "react";
 import { useArtistFollow } from "@/components/artist/child/artist-follow-button/hooks/use-artist-follow";
+import { ArtistItemProps } from "@/components/artist/types/artist-types";
 
 export const ArtistFollowButton = ({
-	artistId
-}: {
-	artistId: string
-}) => {
+	id: artistId
+}: Pick<ArtistItemProps["artist"], "id">) => {
 	const { followedArtist, followMutation } = useArtistFollow(artistId);
 
-	const handleFollow = useCallback(async (
-		e: MouseEvent<HTMLButtonElement>
-	) => {
+	const handleFollow = (e: MouseEvent<HTMLButtonElement>) => {
 		e.stopPropagation();
-		await followMutation.mutateAsync()
-	}, [followMutation])
+		followMutation.mutate()
+	}
 
 	return (
 		<Button

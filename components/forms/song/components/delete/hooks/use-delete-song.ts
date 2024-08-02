@@ -11,6 +11,18 @@ import { useRouter } from "next/navigation";
 
 const supabase = createClient();
 
+async function deleteSongQuery(songId: string) {
+	const { data: deletedSong, error: deletedSongErr } = await supabase
+		.from("songs")
+		.delete()
+		.eq('id', songId)
+		.select();
+
+	if (deletedSongErr) throw deletedSong;
+
+	return { deletedSong };
+}
+
 export function useDeleteSong() {
 	const queryClient = useQueryClient()
 
@@ -19,8 +31,8 @@ export function useDeleteSong() {
 	const { closeDialog } = useDialog();
 	const { refresh } = useRouter();
 
-	const { deleteSongFile } = useDeleteSongFile()
-	const { deleteSongImage } = useDeleteSongImage()
+	const { deleteSongFileMutation } = useDeleteSongFile()
+	const { deleteSongImageMutation } = useDeleteSongImage()
 
 	const deleteSongMutation = useMutation({
 		mutationFn: async (
@@ -28,15 +40,14 @@ export function useDeleteSong() {
 		) => {
 			if (user) {
 				try {
-					await Promise.all([deleteSongFile.mutateAsync(values), deleteSongImage.mutateAsync(values)])
+					await Promise.all([
+						deleteSongFileMutation.mutateAsync(values),
+						deleteSongImageMutation.mutateAsync(values)
+					])
 
-					const { data: deletedSong, error } = await supabase
-						.from("songs")
-						.delete()
-						.eq('id', values.id)
-						.select();
+					if (values.id) {
+						const { deletedSong } = await deleteSongQuery(values.id)
 
-					if (deletedSong && !error) {
 						return deletedSong as SongEntity[];
 					}
 				} catch (e) {
@@ -44,7 +55,8 @@ export function useDeleteSong() {
 				}
 			}
 		},
-		onSuccess: async (data, variables) => {
+		onSuccess: async (data,
+			variables) => {
 			if (data) {
 				const song = data[0];
 

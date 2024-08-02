@@ -14,9 +14,7 @@ export const AuthForm = () => {
 
 	const handleDialogForm = useCallback((element: ReactElement) => {
 		if (!user) {
-			openDialog({
-				dialogChildren: element
-			})
+			openDialog({ dialogChildren: element })
 		}
 	}, [openDialog, user])
 

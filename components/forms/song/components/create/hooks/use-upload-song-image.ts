@@ -1,43 +1,33 @@
-import uniqid from "uniqid";
-import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import { useMutation } from "@tanstack/react-query";
-import { useScopedI18n } from "@/locales/client";
-import { useToast } from "../../../../../../lib/hooks/ui/use-toast";
 import { SongAttributes } from "@/types/song";
-
-const supabase = createClient();
-const uniqueID = uniqid();
+import { uploadFileToBuckets } from "@/lib/utils/file/upload-file-to-buckets";
+import { MESSAGE_ERROR_FILE_UPLOAD } from "@/lib/constants/messages/messages";
+import { useToast } from "@/lib/hooks/ui/use-toast";
 
 export function useUploadSongImage() {
 	const { toast } = useToast();
 
-	const uploadModalLocale = useScopedI18n("main-service.main-part.config");
-
 	const createSongImageMutation = useMutation({
 		mutationFn: async (
-			values: SongAttributes
+			{ image, title }: SongAttributes
 		) => {
-			if (values.image) {
-				try {
-					const { data: imageData, error: imageErr } = await supabase
-						.storage
-						.from("images")
-						.upload(`image-${values.title}-${uniqueID}`, values.image, {
-							upsert: true,
-							contentType: "fileBody"
-						});
+			if (image && title) {
+				const { fileData } = await uploadFileToBuckets({
+					title: title,
+					bucket: "images",
+					file: image,
+					type: "song"
+				})
 
-					if (imageErr) toast({
-						title: uploadModalLocale("error.song-image-error"),
-						description: imageErr.message,
-					});
-
-					return imageData;
-				} catch (error) {
-					throw error;
-				}
+				return fileData;
 			}
 		},
+		onError: () => {
+			toast({
+				title: MESSAGE_ERROR_FILE_UPLOAD,
+				variant: "red"
+			})
+		}
 	});
 
 	return { createSongImageMutation }

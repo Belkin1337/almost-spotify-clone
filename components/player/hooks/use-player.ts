@@ -3,13 +3,13 @@ import { playerStateQueryKey } from "@/lib/querykeys/player-state";
 import { PlayerAttributesType } from "@/lib/query/player/player-state-query";
 
 export const usePlayer = () => {
-	const queryClient = useQueryClient()
+	const qc = useQueryClient()
 
 	const setPlayerAttributes = useMutation({
 		mutationFn: async (
 			newAttributes: PlayerAttributesType
 		) => {
-			return queryClient.setQueryData<PlayerAttributesType>(
+			return qc.setQueryData<PlayerAttributesType>(
 				playerStateQueryKey,
 				(prev) => {
 					return { ...prev, ...newAttributes }
@@ -17,10 +17,9 @@ export const usePlayer = () => {
 			)
 		},
 		onSuccess: async () => {
-			await queryClient.invalidateQueries({
-				queryKey: playerStateQueryKey
-			});
-		}
+			await qc.invalidateQueries({ queryKey: playerStateQueryKey });
+		},
+		onError: (e) => { throw new Error(e.message) }
 	})
 
 	return { setPlayerAttributes }

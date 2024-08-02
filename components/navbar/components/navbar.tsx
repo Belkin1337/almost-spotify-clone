@@ -14,15 +14,13 @@ import { useBackgroundStateQuery } from "@/lib/query/ui/background-state-query";
 import { useControlBackgroundState } from "@/lib/hooks/ui/use-control-background-state";
 import { INavbar, navbarVariants } from "@/components/navbar/types/navbar-types";
 import dynamic from "next/dynamic"
+import { search_route } from "@/lib/constants/routes/routes";
 
 const SearchInput = dynamic(() => import("@/components/navbar/components/navbar-search")
 	.then(mod => mod.NavbarSearch))
 
 export const Navbar = memo(({
-	user,
-	inView,
-	type,
-	className
+	user, inView, type, className
 }: INavbar) => {
 	const { openDialog } = useDialog();
 	const { data: backgroundColor } = useBackgroundStateQuery()
@@ -48,7 +46,7 @@ export const Navbar = memo(({
 		>
 			<div className="hidden md:flex gap-x-2 items-center">
 				<NavbarNavigation/>
-				{pathname.includes('/home/search') && (<SearchInput/>)}
+				{pathname.includes(search_route) && (<SearchInput/>)}
 			</div>
 			<div className="flex justify-between items-center gap-x-4">
 				<WidgetMoreBrandInfo/>

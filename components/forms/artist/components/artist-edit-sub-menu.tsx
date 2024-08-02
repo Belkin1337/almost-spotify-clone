@@ -1,15 +1,13 @@
 import { Button } from "@/ui/button";
 import { EditArtistForm } from "@/components/forms/artist/components/edit-artist-form";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
-import { ArtistEntity } from "@/types/artist";
 import { MouseEvent } from "react";
 import { DeleteConfirmArtistForm } from "@/components/forms/artist/components/delete-confirm-artist-form";
+import { ArtistItemProps } from "@/components/artist/types/artist-types";
 
 export const ArtistEditSubMenu = ({
 	artist
-}: {
-	artist: ArtistEntity
-}) => {
+}: ArtistItemProps) => {
 	const { openDialog } = useDialog();
 
 	return (
@@ -19,9 +17,7 @@ export const ArtistEditSubMenu = ({
 				rounded="medium"
 				onClick={(e: MouseEvent<HTMLButtonElement>) => {
 					e.stopPropagation();
-					openDialog({
-						dialogChildren: <EditArtistForm artist={artist}/>
-					})
+					openDialog({ dialogChildren: <EditArtistForm artist={artist}/> })
 				}}
 			>
 				Редактировать
@@ -32,9 +28,7 @@ export const ArtistEditSubMenu = ({
 				rounded="medium"
 				onClick={(e: MouseEvent<HTMLButtonElement>) => {
 					e.stopPropagation();
-					openDialog({
-						dialogChildren: <DeleteConfirmArtistForm artist={artist}/>
-					})
+					openDialog({ dialogChildren: <DeleteConfirmArtistForm artist={artist}/> })
 				}}
 			>
 				Удалить

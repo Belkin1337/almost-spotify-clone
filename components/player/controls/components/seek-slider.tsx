@@ -10,10 +10,7 @@ interface ISeekSlider {
 }
 
 export const SeekSlider = ({
-  value,
-  max, 
-  defaultValue = 0, 
-  step,
+  value, max, defaultValue = 0, step,
 }: ISeekSlider) => {
   const { handleSliderChange } = useSeek()
   const { playerAttributes } = usePlayerStateQuery()

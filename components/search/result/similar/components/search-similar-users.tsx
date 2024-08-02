@@ -4,11 +4,13 @@ import { Typography } from "@/ui/typography";
 import { SearchSimilarUsersList } from "@/components/search/result/similar/components/list/search-similar-users-list";
 import { UserEntity } from "@/types/user";
 
+type SearchSimilarUsersProps = Partial<{
+	searchedUsers: UserEntity[]
+}>
+
 export const SearchSimilarUsers = ({
 	searchedUsers
-}: {
-	searchedUsers: UserEntity[] | undefined
-}) => {
+}: SearchSimilarUsersProps) => {
 	if (!searchedUsers?.length) return;
 
 	return (

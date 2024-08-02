@@ -24,7 +24,8 @@ const typographyVariants = cva("", {
     },
     size: {
       default: "text-medium",
-      super_small: "text-[12px]",
+      super_small: "text-[13px]",
+      medium_small: "text-[14px]",
       small: "text-sm",
       medium: "text-sm md:text-medium",
       base: "text-base",

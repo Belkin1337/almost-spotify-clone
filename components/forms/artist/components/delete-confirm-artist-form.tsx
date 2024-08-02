@@ -1,18 +1,16 @@
 import { Button } from "@/ui/button";
-import { ItemLoader } from "@/ui/item-loader";
+import { SongPlayingBar } from "@/ui/song-playing-bar";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
 import { useCallback } from "react";
-import { ArtistEntity } from "@/types/artist";
 import { useDeleteArtist } from "@/components/forms/artist/hooks/use-delete-artist";
 import { useUserQuery } from "@/lib/query/user/user-query";
 import { useToast } from "@/lib/hooks/ui/use-toast";
 import { Typography } from "@/ui/typography";
+import { ArtistItemProps } from "@/components/artist/types/artist-types";
 
 export const DeleteConfirmArtistForm = ({
 	artist
-}: {
-	artist: ArtistEntity
-}) => {
+}: ArtistItemProps) => {
 	const { data: user } = useUserQuery();
 	const { toast } = useToast();
 	const { closeDialog } = useDialog();
@@ -43,9 +41,7 @@ export const DeleteConfirmArtistForm = ({
 				Вы уверены?
 			</Typography>
 			<div className="flex items-center w-full gap-2">
-				{deleteArtistMutation.isPending && (
-					<ItemLoader/>
-				)}
+				{deleteArtistMutation.isPending && <SongPlayingBar/>}
 				<Button
 					variant="form"
 					align="centered"

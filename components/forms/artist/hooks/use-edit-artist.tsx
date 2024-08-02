@@ -15,6 +15,32 @@ const supabase = createClient();
 
 export type zodEditSchema = z.infer<typeof createArtistSchema>
 
+type UpdateArtistQueryType = {
+	userId: string,
+	values: ArtistAttributesType
+}
+
+async function updateArtistQuery({
+	userId,
+	values
+}: UpdateArtistQueryType) {
+	const { data: updatedArtist, error: updatedArtistErr } = await supabase
+		.from("artists")
+		.update({
+			user_id: userId,
+			title: values.name,
+			description: values.description,
+			avatar_path: values.avatar_path,
+			cover_image_path: values.cover_image_path,
+		})
+		.eq('id', values.id)
+		.select();
+
+	if (updatedArtistErr) throw updatedArtistErr;
+
+	return { updatedArtist }
+}
+
 export const useEditArtist = ({
 	artist
 }: {
@@ -35,36 +61,23 @@ export const useEditArtist = ({
 		}
 	})
 
-	const editArtist = useMutation({
+	const editArtistMutation = useMutation({
 		mutationFn: async (
 			values: ArtistAttributesType
 		) => {
-			if (user) {
-				try {
-					const [imageData] = await Promise.all([
-						uploadArtistImageMutation.mutateAsync(values)
-					])
+			if (user && values) {
+				const [imageData] = await Promise.all([
+					uploadArtistImageMutation.mutateAsync(values)
+				])
 
-					if (!imageData) return;
+				if (!imageData) return;
 
-					const { data: newArtist, error } = await supabase
-						.from("artists")
-						.update({
-							user_id: user.id,
-							title: values.name,
-							description: values.description,
-							avatar_path: values.avatar_path,
-							cover_image_path: values.cover_image_path,
-						})
-						.eq('id', values.id)
-						.select();
+				const { updatedArtist } = await updateArtistQuery({
+					userId: user.id,
+					values: values
+				})
 
-					if (error) return;
-
-					if (newArtist && !error) return newArtist as ArtistEntity[];
-				} catch (e) {
-					throw e;
-				}
+				return updatedArtist as ArtistEntity[];
 			}
 		},
 		onSuccess: async (data) => {
@@ -86,5 +99,5 @@ export const useEditArtist = ({
 		}
 	})
 
-	return { editArtist, form }
+	return { editArtistMutation, form }
 }

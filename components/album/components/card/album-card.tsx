@@ -3,16 +3,14 @@ import Image from "next/image";
 import { nullAvatarImage } from "@/lib/constants/files/invalid-or-null-images";
 import { Typography } from "@/ui/typography";
 import { FaCircle } from "react-icons/fa";
-import { AlbumEntity } from "@/types/album";
 import { useLoadImage } from "@/lib/hooks/image/use-load-image";
 import { album_route } from "@/lib/constants/routes/routes";
 import Link from "next/link";
+import { AlbumItemProps } from "@/components/album/types/album-types";
 
 export const AlbumCard = ({
 	album
-}: {
-	album: AlbumEntity
-}) => {
+}: AlbumItemProps) => {
 	const { data: image } = useLoadImage(album.image_url!);
 
 	if (!album) return;

@@ -3,17 +3,21 @@ import { useAllArtistsList } from "@/lib/query/artist/artists-list-query";
 import { ArtistListType } from "@/components/artist/components/list/types/artist-list-types";
 import dynamic from "next/dynamic";
 
-const ArtistCard = dynamic(() => import("@/components/artist/components/card/components/artist-card")
-  .then(mod => mod.ArtistCard));
+const ArtistCard = dynamic(() => import(
+  "@/components/artist/components/card/components/artist-card")
+  .then(mod => mod.ArtistCard)
+);
+
+type ArtistListProps = {
+  type: ArtistListType
+}
 
 export const ArtistList = ({
   type
-}: {
-  type: ArtistListType
-}) => {
+}: ArtistListProps) => {
   const { data: artists, isLoading } = useAllArtistsList();
 
-  if (!artists) return (<Typography>Артистов не найдено.</Typography>);
+  if (!artists) return <Typography>Артистов не найдено.</Typography>
 
   return (
     <>

@@ -6,7 +6,7 @@ import { SongEntity } from "@/types/song";
 import { useDeleteSong } from "@/components/forms/song/components/delete/hooks/use-delete-song";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
 import { Typography } from "@/ui/typography";
-import { ItemLoader } from "@/ui/item-loader";
+import { SongPlayingBar } from "@/ui/song-playing-bar";
 
 export const DeleteSongForm = ({
 	song
@@ -46,7 +46,7 @@ export const DeleteSongForm = ({
 			</Typography>
 			<div className="flex w-full items-center gap-2">
 				{deleteSongMutation.isPending && (
-					<ItemLoader/>
+					<SongPlayingBar/>
 				)}
 				<Button
 					variant="form"

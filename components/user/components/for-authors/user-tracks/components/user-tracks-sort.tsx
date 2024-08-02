@@ -15,9 +15,7 @@ import { IUserTracksList } from "@/components/user/components/for-authors/user-t
 import { CheckedIcon } from "@/ui/icons/checked";
 
 export const UserTracksSort = ({
-	artists,
-	sortType,
-	handleSort
+	artists, sortType, handleSort
 }: IUserTracksList) => {
 	return (
 		<>
@@ -52,7 +50,8 @@ export const UserTracksSort = ({
 										/>
 										<ArtistName
 											variant="select"
-											artist={artist}
+											artistName={artist.name}
+											artistId={artist.id}
 											className={`${sortType.selectedArtistId === artist.id && 'text-jade-500'}`}
 										/>
 									</div>
@@ -72,9 +71,7 @@ export const UserTracksSort = ({
 							</Typography>
 						</div>
 					)}
-					{item.type as SongsType === sortType.songsType && (
-						<Check size={18} className="text-jade-500"/>
-					)}
+					{item.type as SongsType === sortType.songsType && <Check size={18} className="text-jade-500"/>}
 				</div>
 			))}
 			<DropdownMenuSeparator/>
@@ -90,15 +87,11 @@ export const UserTracksSort = ({
 					<Typography className={item.type as OrderType === sortType.orderType ? '!text-jade-500' : 'text-white'}>
 						{item.name}
 					</Typography>
-					{item.type as OrderType === sortType.orderType && (
-						<CheckedIcon/>
-					)}
+					{item.type as OrderType === sortType.orderType && <CheckedIcon/>}
 				</div>
 			))}
 			<DropdownMenuSeparator/>
-			<Typography className="m-2" size="small" font="semibold" text_color="gray">
-				Вид
-			</Typography>
+			<Typography className="m-2" size="small" font="semibold" text_color="gray">Вид</Typography>
 			{SONGS_VIEW_TYPE_LIST.map(item => (
 				<div
 					key={item.type}
@@ -111,9 +104,7 @@ export const UserTracksSort = ({
 							{item.name}
 						</Typography>
 					</div>
-					{item.type as ViewType === sortType.viewType && (
-						<CheckedIcon/>
-					)}
+					{item.type as ViewType === sortType.viewType && <CheckedIcon/>}
 				</div>
 			))}
 		</>

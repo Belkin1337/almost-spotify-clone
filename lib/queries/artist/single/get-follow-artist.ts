@@ -1,11 +1,15 @@
 import { PostgrestSingleResponse, SupabaseClient } from "@supabase/supabase-js";
 import { FollowedArtistType } from "@/types/artist";
 
-export async function getFollowArtist(
+export type GetFollowArtist = {
 	client: SupabaseClient,
 	userId?: string,
-	artistId?: string,
-): Promise<PostgrestSingleResponse<FollowedArtistType>> {
+	artistId: string,
+}
+
+export async function getFollowArtist({
+	artistId, userId, client
+}: GetFollowArtist): Promise<PostgrestSingleResponse<FollowedArtistType>> {
 	return client
 		.from("followed_artists")
 		.select("*")

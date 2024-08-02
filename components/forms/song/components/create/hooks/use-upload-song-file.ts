@@ -1,11 +1,7 @@
-import uniqid from "uniqid";
 import { useMutation } from "@tanstack/react-query";
-import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import { sanitizeName } from "@/lib/helpers/sanitaze-name";
 import { SongAttributes } from "@/types/song";
-
-const supabase = createClient();
-const uniqueID = uniqid();
+import { uploadFileToBuckets } from "@/lib/utils/file/upload-file-to-buckets";
 
 export function useUploadSongFile() {
 	const createSongFileMutation = useMutation({
@@ -15,16 +11,14 @@ export function useUploadSongFile() {
 			if (values.song) {
 				const title = sanitizeName(values.title ? values.title : '');
 
-				const { data: songData, error: songErr } = await supabase.storage
-					.from("songs")
-					.upload(`song-${title}-${uniqueID}`, values.song, {
-						upsert: true,
-						contentType: "fileBody"
-					});
+				const { fileData } = await uploadFileToBuckets({
+					type: "song",
+					file: values.song,
+					bucket: "songs",
+					title: title
+				})
 
-				if (songErr) return;
-
-				return songData;
+				return fileData;
 			}
 		}
 	});

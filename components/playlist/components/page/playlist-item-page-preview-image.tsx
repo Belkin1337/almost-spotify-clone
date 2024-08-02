@@ -6,15 +6,16 @@ import { FaPen } from "react-icons/fa";
 import { Typography } from "@/ui/typography";
 import { PlaylistEditForm } from "@/components/forms/playlist/components/edit-playlist-form";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
+import { PlaylistItemProps } from "@/components/playlist/types/playlist-types";
+
+type PlaylistItemPagePreviewImageProps = PlaylistItemProps & {
+	currentUserPlaylist: boolean
+}
 
 export const PlaylistItemPagePreviewImage = ({
-	playlist,
-	currentUserPlaylist
-}: {
-	playlist: PlaylistEntity,
-	currentUserPlaylist: boolean
-}) => {
-	const { data: image, isLoading } = useLoadImage(playlist.image_path!)
+	playlist, currentUserPlaylist
+}: PlaylistItemPagePreviewImageProps) => {
+	const { data: image, isLoading } = useLoadImage(playlist.image_path)
 	const { openDialog } = useDialog();
 
 	if (isLoading || !image?.url) return <SkeletonPlaylistImage/>

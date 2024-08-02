@@ -3,14 +3,13 @@ import { useSongPreviewState } from "@/components/forms/song/hooks/use-song-prev
 import { useCallback, useEffect } from "react";
 import { ArtistEntity } from "@/types/artist";
 import { RoleType } from "@/types/role";
+import { usePreviewSong } from "@/components/forms/song/hooks/use-preview-song";
 
 export const useAddCreditsValue = () => {
 	const { data: roles } = useRolesQuery();
 
-	const {
-		songPreviewState,
-		setSongPreviewAttributes
-	} = useSongPreviewState({
+	const { setSongPreviewAttributes } = usePreviewSong();
+	const { songPreviewState } = useSongPreviewState({
 		song: undefined
 	});
 

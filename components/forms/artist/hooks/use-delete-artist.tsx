@@ -10,8 +10,27 @@ import { useToast } from "@/lib/hooks/ui/use-toast";
 import { Typography } from "@/ui/typography";
 import { useRouter } from "next/navigation";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
+import { MESSAGE_ERROR_SOMETHING, MESSAGE_SUCCESS_ARTIST_DELETE } from "@/lib/constants/messages/messages";
 
 const supabase = createClient();
+
+type DeleteArtistQueryType = {
+	values: ArtistAttributesType
+}
+
+async function deleteArtistQuery({
+	values
+}: DeleteArtistQueryType) {
+	const { data: deletedArtist, error: deletedArtistError } = await supabase
+		.from("artists")
+		.delete()
+		.eq('id', values.id)
+		.select();
+
+	if (deletedArtistError) throw deletedArtistError;
+
+	return { deletedArtist }
+}
 
 export function useDeleteArtist() {
 	const { toast } = useToast();
@@ -27,31 +46,23 @@ export function useDeleteArtist() {
 		mutationFn: async (
 			values: ArtistAttributesType
 		) => {
-			if (user) {
-				try {
-					if (!values) return;
+			if (user && values) {
+				const [deletedAvatarFile, deletedCoverImageFile] = await Promise.all([
+					deleteArtistImageMutation.mutateAsync(values),
+					deleteArtistCoverImageMutation.mutateAsync(values)
+				])
 
-					const [deletedAvatarFile, deletedCoverImageFile] = await Promise.all([
-						deleteArtistImageMutation.mutateAsync(values),
-						deleteArtistCoverImageMutation.mutateAsync(values)
-					])
+				const { deletedArtist } = await deleteArtistQuery({
+					values: values
+				})
 
-					const { data: deletedArtist, error: deletedArtistError } = await supabase
-						.from("artists")
-						.delete()
-						.eq('id', values.id)
-						.select();
-
-					if (deletedArtist) {
-						await deleteSongMutation.mutateAsync({
-							artists: [values.id!]
-						})
-					}
-
-					if (deletedArtist && !deletedArtistError) return deletedArtist as ArtistEntity[]
-				} catch (e) {
-					throw e;
+				if (deletedArtist) {
+					await deleteSongMutation.mutateAsync({
+						artists: [values.id!]
+					})
 				}
+
+				return deletedArtist as ArtistEntity[]
 			}
 		},
 		onSuccess: async (data) => {
@@ -62,7 +73,7 @@ export function useDeleteArtist() {
 				refresh();
 
 				toast({
-					title: "Артист успешно удален!",
+					title: MESSAGE_SUCCESS_ARTIST_DELETE,
 					variant: "right",
 					description: (
 						<Typography className="!text-black !font-bold underline">
@@ -74,7 +85,7 @@ export function useDeleteArtist() {
 		},
 		onError: () => {
 			toast({
-				title: "Что-то пошло не так при удалении артиста. Повторите попытку позже!",
+				title: MESSAGE_ERROR_SOMETHING,
 				variant: "red"
 			})
 		}

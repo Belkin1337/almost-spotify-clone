@@ -1,17 +1,17 @@
 import { cva, VariantProps } from "class-variance-authority";
 import { HTMLAttributes } from "react";
-import { ArtistEntity } from "@/types/artist";
+import { ArtistItemProps } from "@/components/artist/types/artist-types";
 
-export const artistImageVariants = cva("flex justify-center items-center bg-black overflow-hidden", {
+export const artistImageVariants = cva("flex justify-center items-center bg-black overflow-hidden rounded-full", {
 	variants: {
 		variant: {
 			default: "h-[420px]",
-			library: "min-h-[48px] min-w-[48px] max-h-[48px] max-w-[48px] rounded-full",
-			list: "w-[200px] h-[200px] rounded-full",
-			select: "w-[32px] h-[32px] rounded-full",
-			search: "w-[160px] h-[160px] rounded-full",
-			medium: "w-[112px] h-[112px] rounded-full",
-			profile: "w-[256px] h-[256px] rounded-full"
+			library: "h-[48px] w-[48px]",
+			list: "w-[200px] h-[200px]",
+			select: "w-[32px] h-[32px]",
+			search: "w-[160px] h-[160px]",
+			medium: "w-[112px] h-[112px]",
+			profile: "w-[256px] h-[256px]"
 		}
 	},
 	defaultVariants: {
@@ -20,7 +20,4 @@ export const artistImageVariants = cva("flex justify-center items-center bg-blac
 })
 
 export interface IArtistImage
-	extends HTMLAttributes<HTMLDivElement>,
-		VariantProps<typeof artistImageVariants> {
-	artist: ArtistEntity
-}
+	extends HTMLAttributes<HTMLDivElement>, VariantProps<typeof artistImageVariants>, ArtistItemProps {}

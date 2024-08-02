@@ -4,10 +4,7 @@ import {
 } from "@/components/playlist/child/playlist-title/types/playlist-title-types";
 
 export const PlaylistTitle = ({
-	playlist,
-	variant,
-	className,
-	...props
+	playlist, variant, className, ...props
 }: IPlaylistTitle) => {
 	return (
 		<p className={playlistTitleVariants(({ variant, className }))} {...props}>

@@ -10,11 +10,9 @@ import { home_route } from "@/lib/constants/routes/routes";
 const supabase = createClient();
 
 export const useDeletePlaylist = () => {
-	const queryClient = useQueryClient()
-
+	const qc = useQueryClient()
 	const { push } = useRouter()
 	const { closeDialog } = useDialog()
-
 	const { data: user } = useUserQuery();
 
 	const deletePlaylistMutation = useMutation({
@@ -29,7 +27,7 @@ export const useDeletePlaylist = () => {
 							.eq("user_id", user.id)
 							.select()
 
-						if (error) throw error;
+						if (error) throw new Error(error.message);
 
 						return data as PlaylistEntity[];
 					} catch (error) {
@@ -44,14 +42,12 @@ export const useDeletePlaylist = () => {
 				push(home_route)
 			}
 
-			await queryClient.invalidateQueries({
-				queryKey: userPlaylistsQueryKey(user?.id, true)
-			})
-
-			await queryClient.invalidateQueries({
-				queryKey: userPlaylistsQueryKey(user?.id, false)
-			})
-		}
+			await Promise.all([
+				qc.invalidateQueries({ queryKey: userPlaylistsQueryKey(user?.id, true) }),
+				qc.invalidateQueries({ queryKey: userPlaylistsQueryKey(user?.id, false) })
+			])
+		},
+		onError: (e) => { throw new Error(e.message) }
 	})
 
 	return { deletePlaylistMutation }

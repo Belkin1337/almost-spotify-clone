@@ -24,8 +24,40 @@ export type ArtistAttributesType = {
 	cover_image_path?: string
 }
 
+type CreateArtistQueryType = {
+	userId: string,
+	values: ArtistAttributesType,
+	imagePath: string,
+	imageCoverPath?: string
+}
+
+async function createArtistQuery({
+	imageCoverPath,
+	values,
+	userId,
+	imagePath
+}: CreateArtistQueryType) {
+	const imageCover = imageCoverPath ? imageCoverPath : null;
+
+	const { data: createdArtist, error } = await supabase
+		.from("artists")
+		.insert({
+			user_id: userId,
+			name: values.name,
+			description: values.description,
+			avatar_path: imagePath,
+			cover_image_path: imageCover
+		})
+		.select()
+
+	if (error) throw error;
+
+	return { createdArtist }
+}
+
 export function useCreateArtist() {
 	const queryClient = useQueryClient();
+
 	const { toast } = useToast();
 	const { data: user } = useUserQuery();
 	const { uploadArtistImageMutation } = useCreateArtistImage();
@@ -46,31 +78,21 @@ export function useCreateArtist() {
 			values: ArtistAttributesType
 		) => {
 			if (user) {
-				try {
-					const [imageData, imageCoverData] = await Promise.all([
-						uploadArtistImageMutation.mutateAsync(values),
-						uploadArtistCoverImageMutation.mutateAsync(values)
-					])
+				const [imageData, imageCoverData] = await Promise.all([
+					uploadArtistImageMutation.mutateAsync(values),
+					uploadArtistCoverImageMutation.mutateAsync(values)
+				])
 
-					if (!imageData) return;
+				if (!imageData) return;
 
-					const { data: createdArtist, error } = await supabase
-						.from("artists")
-						.insert({
-							user_id: user.id,
-							name: values.name,
-							description: values.description,
-							avatar_path: imageData?.path,
-							cover_image_path: imageCoverData?.path
-						})
-						.select()
+				const { createdArtist } = await createArtistQuery({
+					imageCoverPath: imageCoverData?.path,
+					imagePath: imageData.path,
+					userId: user.id,
+					values: values
+				})
 
-					if (error) throw error;
-
-					if (createdArtist && !error) return createdArtist as ArtistEntity[];
-				} catch (e) {
-					throw e;
-				}
+				if (createdArtist) return createdArtist as ArtistEntity[];
 			}
 		},
 		onSuccess: async (data) => {

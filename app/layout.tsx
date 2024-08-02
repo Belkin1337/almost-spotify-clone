@@ -10,6 +10,7 @@ const font = localFont({
 
 export const metadata: Metadata = {
   title: 'Smotify | Web Player',
+  description: "Smotify - web player"
 }
 
 export default async function RootLayout({

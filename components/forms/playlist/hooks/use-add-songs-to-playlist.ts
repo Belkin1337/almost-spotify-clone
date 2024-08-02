@@ -7,9 +7,31 @@ import { useUploadPlaylistImage } from "@/components/forms/playlist/hooks/use-up
 import { useToast } from "@/lib/hooks/ui/use-toast";
 import { userPlaylistsQueryKey } from "@/lib/querykeys/user";
 import { useUserQuery } from "@/lib/query/user/user-query";
+import { MESSAGE_ERROR_PLAYLIST_DONT_PERMISSION, MESSAGE_ERROR_SOMETHING } from "@/lib/constants/messages/messages";
 
 const supabase = createClient();
 
+type AddSongToPlaylistQueryType = {
+	songId: string,
+	playlistId: string
+}
+
+async function addSongToPlaylistQuery({
+	songId,
+	playlistId,
+}: AddSongToPlaylistQueryType) {
+	const { data: addedSong, error: addedSongErr } = await supabase
+		.from("song_playlists")
+		.insert({
+			song_id: songId,
+			playlist_id: playlistId
+		})
+		.select()
+
+	if (addedSongErr) throw addedSongErr;
+
+	return { addedSong }
+}
 export const useAddSongsToPlaylist = () => {
 	const queryClient = useQueryClient();
 
@@ -26,27 +48,25 @@ export const useAddSongsToPlaylist = () => {
 			playlist: PlaylistEntity
 		}) => {
 			if (playlist.user_id === user?.id) {
-				const { data: addedSong, error } = await supabase
-					.from("song_playlists")
-					.insert({
-						song_id: song.id,
-						playlist_id: playlist.id
-					})
-					.select()
-
-				if (error) return;
+				const { addedSong } = await addSongToPlaylistQuery({
+					songId: song.id,
+					playlistId: playlist.id
+				})
 
 				return addedSong as SongEntity[]
 			} else {
 				toast({
-					title: "Вы не имеете разрешения на изменение контента плейлиста!",
+					title: MESSAGE_ERROR_PLAYLIST_DONT_PERMISSION,
 					variant: "red"
 				})
 
 				return;
 			}
 		},
-		onSuccess: async (data, variables, context) => {
+		onSuccess: async (
+			data,
+			variables,
+		) => {
 			if (data) {
 				if (variables.playlist.image_path === null) {
 					await uploadPlaylistImageMutation.mutateAsync({
@@ -71,7 +91,7 @@ export const useAddSongsToPlaylist = () => {
 		},
 		onError: () => {
 			toast({
-				title: `Something wrong error!`,
+				title: MESSAGE_ERROR_SOMETHING,
 				variant: "red"
 			})
 		}

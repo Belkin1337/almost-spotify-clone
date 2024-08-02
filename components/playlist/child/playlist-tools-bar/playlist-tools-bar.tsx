@@ -18,12 +18,11 @@ import { SongEntity } from "@/types/song";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/ui/hover-card";
 import { Button } from "@/ui/button";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
+import { PlaylistItemProps } from "@/components/playlist/types/playlist-types";
 
 const ConfirmDeleteDialog = ({
 	playlist
-}: {
-	playlist: PlaylistEntity
-}) => {
+}: PlaylistItemProps) => {
 	const { closeDialog } = useDialog();
 	const { deletePlaylistMutation } = useDeletePlaylist()
 
@@ -78,7 +77,6 @@ export const PlaylistToolsBar = ({
 	currentUserPlaylist
 }: IPlaylistToolsBar) => {
 	const { editTypePlaylistMutation } = useEditTypePlaylist()
-	const { deletePlaylistMutation } = useDeletePlaylist()
 	const { openDialog } = useDialog();
 
 	const handleEditPlaylistType = useCallback(async () => {
@@ -93,7 +91,7 @@ export const PlaylistToolsBar = ({
 			<div className="flex items-center gap-x-4">
 				{currentUserPlaylist && (
 					<UserTips action={`Invite collaborators to ${playlist.title}`}>
-						<UserPlus size={42} className="text-neutral-400 hover:scale-[1.06]"/>
+						<UserPlus size={34} className="text-neutral-400 hover:scale-[1.06]"/>
 					</UserTips>
 				)}
 				<DropdownMenu>
@@ -156,7 +154,7 @@ export const PlaylistToolsBar = ({
 							</>
 						)}
 						<HoverCard openDelay={0} closeDelay={0}>
-							<HoverCardTrigger className="w-full">
+							<HoverCardTrigger className="w-full" asChild>
 								<DropdownMenuItem className="flex justify-start gap-x-2 items-center">
 									<ExternalLink size={18} className="text-neutral-400"/>
 									<Typography size="small" text_color="white">

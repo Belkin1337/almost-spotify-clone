@@ -11,7 +11,7 @@ import { useUserSongsQuery } from "@/lib/query/user/user-songs-query";
 import { useUserArtistListQuery } from "@/lib/query/user/user-artists-list-query";
 import { UserTracksSort } from "@/components/user/components/for-authors/user-tracks/components/user-tracks-sort";
 import { UserTracksList } from "@/components/user/components/for-authors/user-tracks/components/user-tracks-list";
-import { ItemLoader } from "@/ui/item-loader";
+import { SongPlayingBar } from "@/ui/song-playing-bar";
 import { SortType } from "@/components/user/components/for-authors/user-tracks/types/user-tracks-types";
 
 export const UserTracks = ({
@@ -123,7 +123,7 @@ export const UserTracks = ({
 				</DropdownMenu>
 			</div>
 			{isPending && (
-				<ItemLoader />
+				<SongPlayingBar />
 			)}
 			<UserTracksList
 				isLoading={isLoading}

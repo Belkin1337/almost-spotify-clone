@@ -1,18 +1,15 @@
-import { PlaylistEntity } from "@/types/playlist";
 import { Typography } from "@/ui/typography";
 import { PlaylistTitle } from "@/components/playlist/child/playlist-title/components/playlist-title";
 import { PlaylistCreator } from "@/components/playlist/child/playlist-creator/components/playlist-creator";
 import { PlaylistInfo, PlaylistInfoType } from "@/components/playlist/child/playlist-info/components/playlist-info";
+import { PlaylistItemProps } from "@/components/playlist/types/playlist-types";
 
 type PlaylistItemPagePreviewType = Pick<PlaylistInfoType, 'playlistSongsLength'>
 
-interface IPlaylistItemPagePreview extends PlaylistItemPagePreviewType {
-	playlist: PlaylistEntity
-}
+interface IPlaylistItemPagePreview extends PlaylistItemPagePreviewType, PlaylistItemProps {}
 
 export const PlaylistItemPagePreview = ({
-	playlist,
-	playlistSongsLength
+	playlist, playlistSongsLength
 }: IPlaylistItemPagePreview) => {
 
 	if (!playlist) return;

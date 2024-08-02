@@ -1,15 +1,13 @@
-import { ArtistEntity } from "@/types/artist"
 import { ArtistDescription } from "../../../../child/artist-description/components/artist-description"
 import { ArtistImage } from "../../../../child/artist-image/components/artist-image"
 import { Typography } from "@/ui/typography";
 import Image from "next/image";
 import { nullAvatarImage } from "@/lib/constants/files/invalid-or-null-images";
+import { ArtistItemProps } from "@/components/artist/types/artist-types";
 
 export const ArtistWidgetInfo = ({
 	artist
-}: {
-	artist: ArtistEntity
-}) => {
+}: ArtistItemProps) => {
 	return (
 		<div className="flex flex-col w-[840px]">
 			<ArtistImage artist={artist}/>

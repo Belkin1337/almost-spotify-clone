@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/ui/input";
 import { useScopedI18n } from "@/locales/client";
@@ -12,22 +12,18 @@ export const NavbarSearch = () => {
 
   const searchLocale = useScopedI18n('main-service.pages.search-content')
 
-  const createQueryString = useCallback((
-    name: string,
-    value: string
-  ) => {
+  const createQueryString = (name: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString())
     params.set(name, value)
 
     return params.toString()
-  }, [searchParams])
+  }
   
   useEffect(() => {
-    if (value) {
+    if (value)
       push(pathname + '?' + createQueryString('title', value))
-    } else {
+     else
       push(pathname);
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [push, value])
 
@@ -35,7 +31,7 @@ export const NavbarSearch = () => {
     <Input
       placeholder={searchLocale('navbar.input-message')}
       value={value}
-      variant="search"
+      variant="global_search"
       rounded="full"
       className="w-[360px]"
       onChange={(e) => setValue(e.target.value)}

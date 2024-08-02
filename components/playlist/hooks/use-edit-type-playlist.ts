@@ -8,14 +8,11 @@ import { userPlaylistsQueryKey } from "@/lib/querykeys/user";
 const supabase = createClient();
 
 export const useEditTypePlaylist = () => {
-	const queryClient = useQueryClient();
-
+	const qc = useQueryClient();
 	const { data: user } = useUserQuery();
 
 	const editTypePlaylistMutation = useMutation({
-		mutationFn: async (
-			playlist: PlaylistEntity
-		) => {
+		mutationFn: async (playlist: PlaylistEntity) => {
 			if (user) {
 				if (playlist.user_id === user.id) {
 					const currentType = playlist.attributes.is_public;
@@ -41,19 +38,14 @@ export const useEditTypePlaylist = () => {
 		},
 		onSuccess: async (variables) => {
 			if (variables) {
-				await queryClient.invalidateQueries({
-					queryKey: playlistByParamIdQueryKey(variables[0].id)
-				})
-
-				await queryClient.invalidateQueries({
-					queryKey: userPlaylistsQueryKey(user?.id, true)
-				})
-
-				await queryClient.invalidateQueries({
-					queryKey: userPlaylistsQueryKey(user?.id, false)
-				})
+				await Promise.all([
+					qc.invalidateQueries({ queryKey: playlistByParamIdQueryKey(variables[0].id) }),
+					qc.invalidateQueries({ queryKey: userPlaylistsQueryKey(user?.id, true) }),
+					qc.invalidateQueries({ queryKey: userPlaylistsQueryKey(user?.id, false) })
+				])
 			}
-		}
+		},
+		onError: (e) => { throw new Error(e.message) }
 	})
 
 	return { editTypePlaylistMutation }

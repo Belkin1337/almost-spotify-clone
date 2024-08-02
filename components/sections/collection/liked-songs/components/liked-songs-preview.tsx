@@ -1,6 +1,6 @@
 "use client"
 
-import { UserCard } from "@/components/user/components/card/components/user-followed-card"
+import { UserCollectionCard } from "@/components/user/components/card/components/user-collection-card"
 import Image from "next/image"
 import { Typography } from "@/ui/typography";
 import { useScopedI18n } from "@/locales/client";
@@ -35,7 +35,10 @@ export const LikedSongsPreview = ({
           {likedPageLocale('subtitle-message')}
         </h1>
         <div className="flex items-center justify-start">
-          <UserCard variant="miniauture" followed_songs_length={followedSongs.songs?.length}/>
+          <UserCollectionCard
+            variant="miniauture"
+            followed_songs_length={followedSongs.songs?.length}
+          />
         </div>
       </div>
     </div>

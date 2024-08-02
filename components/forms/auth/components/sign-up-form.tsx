@@ -30,9 +30,7 @@ export const SignUpForm = () => {
 		},
 	})
 
-	const onSubmit = useCallback(async (
-		values: zodSignUpSchema
-	) => {
+	const onSubmit = useCallback(async (values: zodSignUpSchema) => {
 		await signUpMutation.mutateAsync({
 			values: values
 		});

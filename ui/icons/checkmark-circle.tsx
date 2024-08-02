@@ -10,7 +10,7 @@ export const CheckmarkCircleIcon = ({
 }: CheckmarkCircleVariantsType) => {
 	return (
 		<IoCheckmarkCircle
-			size={page ? 44 : 22}
+			size={page ? 44 : 18}
 			className="text-jade-400"
 		/>
 	)

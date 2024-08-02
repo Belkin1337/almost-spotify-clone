@@ -1,8 +1,7 @@
 import { AiFillStepForward } from "react-icons/ai"
 import { usePlayNext } from "@/lib/hooks/player/use-play-next";
-import { memo } from "react";
 
-export const PlayerNextSong = memo(() => {
+export const PlayerNextSong = () => {
   const { onPlayNext } = usePlayNext();
 
   return (
@@ -12,5 +11,4 @@ export const PlayerNextSong = memo(() => {
       className="text-neutral-400 cursor-pointer hover:text-white transition"
     />
   )
-})
-PlayerNextSong.displayName === 'PlayerNextSong'
+}

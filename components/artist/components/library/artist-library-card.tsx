@@ -17,7 +17,7 @@ export const ArtistLibraryCard = ({
 	const { push } = useRouter();
 
 	const handlePushToArtist = useCallback(() => {
-		push(`${artist_route_profile}/${artist.id}`)
+		push(artist_route_profile(artist?.id))
 	}, [push, artist.id])
 
 	if (!artist) return;

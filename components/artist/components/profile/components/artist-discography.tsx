@@ -1,6 +1,6 @@
 import { Typography } from "@/ui/typography";
 import { Badge } from "@/ui/badge";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { useAlbumByArtistQuery } from "@/lib/query/album/albums-by-artist-query";
 import { AlbumCard } from "@/components/album/components/card/album-card";
 import { useRouter } from "next/navigation";
@@ -10,14 +10,15 @@ import {
 	artist_route_discography_singles,
 } from "@/lib/constants/routes/routes";
 import { useSinglesByArtist } from "@/lib/query/single/singles-by-artist-query";
+import { ArtistItemProps } from "@/components/artist/types/artist-types";
 
 type SortTypeArtistDiscography = 'albums' | 'singles' | 'popular';
 
+type ArtistDiscographyProps = Pick<Pick<ArtistItemProps, "artist">['artist'], "id">
+
 export const ArtistDiscography = ({
-	artistId
-}: {
-	artistId: string
-}) => {
+	id: artistId
+}: ArtistDiscographyProps) => {
 	const { push } = useRouter();
 	const [sortType, setSortType] = useState<SortTypeArtistDiscography>('albums');
 
@@ -35,15 +36,13 @@ export const ArtistDiscography = ({
 		return item.type === 'album' || item.type === 'single';
 	});
 
-	const handlerSortType = useCallback((sortType: SortTypeArtistDiscography) => {
-		setSortType(sortType);
-	}, []);
+	const handlerSortType = (sortType: SortTypeArtistDiscography) => setSortType(sortType);
 
-	const targetToDiscographyType = useCallback(() => {
+	const targetToDiscographyType = () => {
 		if (sortType === 'albums') push(artist_route_discography_albums(artistId))
 		if (sortType === 'popular') push(artist_route_discography_all(artistId))
 		if (sortType === 'singles') push(artist_route_discography_singles(artistId))
-	}, [artistId, sortType]);
+	}
 
 	return (
 		<div className="flex flex-col items-start w-full px-6 gap-2">
@@ -90,21 +89,9 @@ export const ArtistDiscography = ({
 				</div>
 			</div>
 			<div className="flex flex-row items-center gap-4 w-fit">
-				{popular && sortType === 'popular' && (
-					popular.map(popular => (
-						<AlbumCard key={popular.id} album={popular}/>
-					))
-				)}
-				{albums && sortType === 'albums' && (
-					albums.map(album => (
-						<AlbumCard key={album.id} album={album}/>
-					))
-				)}
-				{singles.length >= 1 && sortType === 'singles' && (
-					singles.map(single => (
-						<AlbumCard album={single} key={single.id}/>
-					))
-				)}
+				{popular && sortType === 'popular' && popular.map(popular => <AlbumCard key={popular.id} album={popular}/>)}
+				{albums && sortType === 'albums' && (albums.map(album => <AlbumCard key={album.id} album={album}/>))}
+				{singles.length >= 1 && sortType === 'singles' && singles.map(single => <AlbumCard album={single} key={single.id}/>)}
 			</div>
 		</div>
 	)

@@ -10,8 +10,30 @@ import { UpdateAttributesType } from "@/components/forms/user/personal/name/type
 import { useUserQuery } from "@/lib/query/user/user-query";
 import { userAvatarQueryKey } from "@/lib/querykeys/user";
 import { zodAvatarSchema } from "@/components/forms/user/personal/avatar/types/update-avatar-types";
+import { uploadFileToBuckets } from "@/lib/utils/file/upload-file-to-buckets";
+import { MESSAGE_ERROR_FILE_UPLOAD, MESSAGE_SUCCESS_USER_UPDATE_AVATAR } from "@/lib/constants/messages/messages";
 
 const supabase = createClient();
+
+type UpdateUserAvatarQueryType = {
+	imagePath: string,
+	userId: string
+}
+
+async function updateUserAvatarQuery({
+	imagePath,
+	userId
+}: UpdateUserAvatarQueryType) {
+	const { data: updatedUserAvatar, error: updatedUserAvatarErr } = await supabase
+		.from("users")
+		.update({ avatar_url: imagePath, })
+		.eq("id", userId)
+		.select();
+
+	if (updatedUserAvatarErr) throw updatedUserAvatarErr;
+
+	return { updatedUserAvatar }
+}
 
 export const useUpdateAvatar = () => {
 	const { closeDialog } = useDialog();
@@ -30,27 +52,23 @@ export const useUpdateAvatar = () => {
 
 	const uploadFileMutation = useMutation({
 		mutationFn: async (
-			values: UpdateAttributesType
+			{ avatarUrl, userId }: UpdateAttributesType
 		) => {
-			try {
-				if (!values.avatarUrl || !values.userId) return;
+			if (user) {
+				try {
+					if (!avatarUrl || !userId) return;
 
-				const { data: userAvatar, error: uploadError } = await supabase
-					.storage
-					.from("users")
-					.upload(`${values.userId}-avatar`, values.avatarUrl, {
-						upsert: true,
-						contentType: "fileBody",
-					});
+					const { fileData } = await uploadFileToBuckets({
+						title: userId,
+						file: avatarUrl,
+						type: "user",
+						bucket: "users"
+					})
 
-				if (uploadError) {
-					toast({
-						title: uploadError.message,
-						variant: "red"
-					});
-				} else return userAvatar;
-			} catch (error) {
-				throw error;
+					return fileData;
+				} catch (error) {
+					throw error;
+				}
 			}
 		},
 	});
@@ -59,35 +77,42 @@ export const useUpdateAvatar = () => {
 		mutationFn: async (
 			values: UpdateAttributesType
 		) => {
-			const [userData] = await Promise.all([
-				uploadFileMutation.mutateAsync(values),
-			]);
+			if (values && user) {
+				const [userData] = await Promise.all([
+					uploadFileMutation.mutateAsync(values),
+				]);
 
-			if (userData) {
-				const { error: userError } = await supabase
-					.from("users")
-					.update({
-						avatar_url: userData?.path,
+				if (userData && values.userId) {
+					const { updatedUserAvatar } = await updateUserAvatarQuery({
+						imagePath: userData.path,
+						userId: values.userId
 					})
-					.eq("id", values.userId)
-					.select();
 
-				if (userError) return;
+					return updatedUserAvatar;
+				}
 			}
 		},
-		onSuccess: async () => {
-			toast({
-				title: "Аватар обновлен!",
-				variant: "right"
-			})
+		onSuccess: async (data) => {
+			if (data) {
+				toast({
+					title: MESSAGE_SUCCESS_USER_UPDATE_AVATAR,
+					variant: "right"
+				})
 
-			closeDialog();
-			refresh();
+				closeDialog();
+				refresh();
 
-			await queryClient.invalidateQueries({
-				queryKey: userAvatarQueryKey(user?.id!),
-			});
+				await queryClient.invalidateQueries({
+					queryKey: userAvatarQueryKey(user?.id),
+				});
+			}
 		},
+		onError: () => {
+			toast({
+				title: MESSAGE_ERROR_FILE_UPLOAD,
+				variant: "red"
+			})
+		}
 	});
 
 	return { form, uploadAvatarMutation };

@@ -7,6 +7,10 @@ import { useLoadImage } from "@/lib/hooks/image/use-load-image";
 
 export type zodPlaylistSchema = z.infer<typeof updatePlaylistSchema>;
 
+async function updatePlaylistQuery() {
+
+}
+
 export const useUpdatePlaylist = ({
 	playlist
 }: {

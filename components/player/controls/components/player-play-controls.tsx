@@ -5,15 +5,16 @@ import { useAudioStateQuery } from "@/lib/query/player/audio-state-query";
 import { PlayIcon } from "@/ui/icons/play-icon";
 import { PlayerPlayControlsButton } from "@/components/player/controls/components/player-play-controls-button";
 
-interface IPlayerPlayControls
-	extends HTMLAttributes<HTMLDivElement> {
+type PlayerPlayControls = {
 	variant: "desktop" | "mobile",
 	state: boolean,
 }
 
+interface IPlayerPlayControls
+	extends HTMLAttributes<HTMLDivElement>, PlayerPlayControls {}
+
 export const PlayerPlayControls = ({
-	variant,
-	state,
+	variant, state
 }: IPlayerPlayControls) => {
 	const { playerAttributes } = usePlayerStateQuery()
 	const isLoaded = playerAttributes?.isLoaded;
@@ -26,11 +27,10 @@ export const PlayerPlayControls = ({
 			isPlaying: !playerAttributes?.isPlaying
 		})
 
-		if (playerAttributes.isPlaying) {
+		if (playerAttributes.isPlaying)
 			audioAttributes.howl?.pause()
-		} else {
+		 else
 			audioAttributes.howl?.play()
-		}
 	}, [audioAttributes.howl, playerAttributes.isPlaying, setPlayerAttributes])
 
 	return (

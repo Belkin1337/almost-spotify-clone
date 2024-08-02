@@ -1,7 +1,7 @@
 import { PostgrestSingleResponse, SupabaseClient } from "@supabase/supabase-js";
 import { SongEntity } from "@/types/song";
 
-type SongsByPlaylist = {
+export type SongsByPlaylist = {
 	playlist_id: string,
 	songs: SongEntity[]
 }

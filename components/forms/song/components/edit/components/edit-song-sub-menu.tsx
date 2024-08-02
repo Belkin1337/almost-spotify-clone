@@ -1,15 +1,13 @@
 import { EditSongForm } from "@/components/forms/song/components/edit/components/edit-song-form"
 import { useDialog } from "@/lib/hooks/ui/use-dialog"
-import { SongEntity } from "@/types/song"
 import { Button } from "@/ui/button"
 import { DeleteSongForm } from "@/components/forms/song/components/delete/components/delete-song-form";
 import { MouseEvent } from "react";
+import { SongItemsProps } from "@/components/forms/song/types/song-types";
 
 export const EditSongSubMenu = ({
 	song
-}: {
-	song: SongEntity
-}) => {
+}: SongItemsProps) => {
 	const { openDialog } = useDialog()
 
 	return (

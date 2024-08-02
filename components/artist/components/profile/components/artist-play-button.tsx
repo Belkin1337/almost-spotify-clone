@@ -5,21 +5,22 @@ import { usePlayerStateQuery } from "@/lib/query/player/player-state-query";
 import { usePlay } from "@/lib/hooks/player/use-play";
 import { useCallback } from "react";
 
+type ArtistPlayButtonProps = {
+	songList: SongEntity[]
+}
+
 export const ArtistPlayButton = ({
-	song_list
-}: {
-	song_list: SongEntity[]
-}) => {
+	songList
+}: ArtistPlayButtonProps) => {
 	const { playerAttributes } = usePlayerStateQuery();
 
 	const { onPlay } = usePlay();
 
 	const handlePlay = useCallback(() => {
 		onPlay({
-			song: song_list[0],
-			songs: song_list
+			song: songList[0], songs: songList
 		})
-	}, [song_list])
+	}, [songList])
 
 	return (
 		<Button
@@ -30,7 +31,7 @@ export const ArtistPlayButton = ({
 			variant="single_page"
 			onClick={handlePlay}
 		>
-			{song_list.some(item => item.id === playerAttributes.active?.id) && playerAttributes.isPlaying ? (
+			{songList.some(item => item.id === playerAttributes.active?.id) && playerAttributes.isPlaying ? (
 				<FaPause className="text-black"/>
 			) : (
 				<FaPlay className="text-black" />

@@ -6,7 +6,8 @@ import { albumBySongQueryKey } from "@/lib/querykeys/album";
 const supabase = createClient();
 
 export const useAlbumBySong = (
-	songId: string
+	songId: string,
+	enabled?: boolean
 ) => {
 	return useQuery({
 		queryKey: albumBySongQueryKey(songId),
@@ -19,7 +20,7 @@ export const useAlbumBySong = (
 
 			return albums;
 		},
-		enabled: !!songId,
+		enabled: enabled ? !!enabled && !!songId : !!songId,
 		retry: 1,
 		placeholderData: keepPreviousData,
 		refetchOnWindowFocus: false,

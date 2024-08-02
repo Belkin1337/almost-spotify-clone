@@ -30,23 +30,18 @@ export const ArtistTopSongItem = ({
 		if (type === 'follow' || type === 'page') {
 			handlePlay()
 		}
-	}, [type])
+	}, [type, handlePlay])
+
+	if (!song) return;
 
 	return (
 		<div onDoubleClick={handleClickFollowed} className={songItemVariants(({ variant, className }))}>
 			<div className={`flex items-center gap-x-2 overflow-hidden w-1/2}`}>
-					<SongPlayingAttribute
-						song={song}
-						list_id={String(song_list.id)}
-					/>
-				{variant !== 'compact' && (
-					<SongImageItem
-						song={song}>
-					</SongImageItem>
-				)}
+				<SongPlayingAttribute song={song} id={String(song_list.id)}/>
+				{variant !== 'compact' && <SongImageItem song={song}/>}
 				<div className="flex flex-col overflow-hidden justify-self-start">
 					<SongItemTitle
-						song={song!}
+						song={song}
 						className={`${(playerAttributes?.isPlaying && playerAttributes?.active?.id === song.id) && 'text-jade-500'}`}
 					/>
 				</div>
@@ -58,7 +53,7 @@ export const ArtistTopSongItem = ({
 					</div>
 					<div className="flex items-center justify-between gap-x-2">
 						<SongDuration duration='0:00'/>
-						<SongActions/>
+						<SongActions song={song}/>
 					</div>
 				</div>
 			</div>

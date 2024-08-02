@@ -8,11 +8,13 @@ import { PlayerPrevSong } from "@/components/player/controls/components/prev-son
 import { PlayerNextSong } from "@/components/player/controls/components/next-song";
 import { SeekItem } from "@/components/player/controls/components/seek-item";
 
+type PlayerProps = {
+	user: UserEntity
+}
+
 export const Player = memo(({
 	user
-}: {
-	user: UserEntity
-}) => {
+}: PlayerProps) => {
 	const { playerAttributes } = usePlayerStateQuery()
 	const isPlaying = playerAttributes?.isPlaying;
 
@@ -38,5 +40,4 @@ export const Player = memo(({
 		)
 	)
 })
-
 Player.displayName = 'Player';

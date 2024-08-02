@@ -7,14 +7,57 @@ import { useToast } from "@/lib/hooks/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { playlist_route } from "@/lib/constants/routes/routes";
 import { userPlaylistsQueryKey } from "@/lib/querykeys/user";
+import { MESSAGE_ERROR_PLAYLIST_CREATE } from "@/lib/constants/messages/messages";
 
 const supabase = createClient();
+
+type CreatePlaylistQueryType = {
+	userId: string,
+	title: string
+}
+
+type CreatePlaylistUsersQueryType = {
+	playlistId: string,
+	userId: string
+}
+
+async function createPlaylistQuery({
+	userId,
+	title
+}: CreatePlaylistQueryType) {
+	const { data: newPlaylist, error: newPlaylistErr } = await supabase
+		.from("playlists")
+		.insert({
+			user_id: userId,
+			title: title
+		})
+		.select();
+
+	if (newPlaylistErr) throw newPlaylistErr;
+
+	return { newPlaylist }
+}
+
+async function createPlaylistUsersQuery({
+	userId,
+	playlistId
+}: CreatePlaylistUsersQueryType) {
+	const { error } = await supabase
+		.from("playlists_users")
+		.insert({
+			playlist_id: playlistId,
+			user_id: userId
+		})
+
+	if (error) throw error;
+}
 
 export const useCreatePlaylist = () => {
 	const queryClient = useQueryClient();
 
 	const { toast } = useToast()
 	const { push } = useRouter()
+
 	const { data: user } = useUserQuery();
 	const { data: userPlaylists } = usePlaylistsListByUser(user?.id!)
 
@@ -23,35 +66,26 @@ export const useCreatePlaylist = () => {
 
 	const createPlaylistMutation = useMutation({
 		mutationFn: async () => {
-			try {
-				if (!user) return;
-
-				const { data: newPlaylist, error: newPlaylistError } = await supabase
-					.from("playlists")
-					.insert({
-						user_id: user.id,
+			if (user) {
+				try {
+					const { newPlaylist } = await createPlaylistQuery({
+						userId: user.id,
 						title: defaultPlaylistTitle
 					})
-					.select();
 
-				if (newPlaylistError) throw newPlaylistError;
+					if (newPlaylist) {
+						const playlistId = newPlaylist[0].id;
 
-				if (newPlaylist && !newPlaylistError) {
-					const playlistId = newPlaylist[0].id;
-
-					const { error } = await supabase
-						.from("playlists_users")
-						.insert({
-							playlist_id: playlistId,
-							user_id: user.id
+						await createPlaylistUsersQuery({
+							userId: user.id,
+							playlistId: playlistId
 						})
 
-					if (error) throw error;
-
-					return newPlaylist as PlaylistEntity[]
+						return newPlaylist as PlaylistEntity[]
+					}
+				} catch (e) {
+					throw e;
 				}
-			} catch (e) {
-				throw e;
 			}
 		},
 		onSuccess: async (data) => {
@@ -67,7 +101,7 @@ export const useCreatePlaylist = () => {
 		},
 		onError: () => {
 			toast({
-				title: "Ошибка создания плейлиста. Повторите попытку позже!",
+				title: MESSAGE_ERROR_PLAYLIST_CREATE,
 				variant: "red"
 			})
 		}

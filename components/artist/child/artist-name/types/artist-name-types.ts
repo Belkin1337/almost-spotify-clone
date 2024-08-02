@@ -1,5 +1,5 @@
 import { cva, VariantProps } from "class-variance-authority";
-import React from "react";
+import { HTMLAttributes } from "react";
 import { ArtistEntity } from "@/types/artist";
 
 export const artistNameVariants = cva("min-h-[18px]", {
@@ -19,8 +19,13 @@ export const artistNameVariants = cva("min-h-[18px]", {
 	}
 })
 
+type ArtistName = Pick<ArtistEntity, "id" | "name">
+
+type RenamedArtist = {
+	artistId: ArtistName["id"];
+	artistName: ArtistName["name"];
+};
+
 export interface IArtistName
-	extends React.HTMLAttributes<HTMLParagraphElement>,
-		VariantProps<typeof artistNameVariants> {
-	artist: ArtistEntity
-}
+	extends HTMLAttributes<HTMLParagraphElement>,
+		VariantProps<typeof artistNameVariants>, RenamedArtist {}

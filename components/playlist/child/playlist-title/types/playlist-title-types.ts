@@ -1,6 +1,6 @@
 import { cva, VariantProps } from "class-variance-authority";
 import { HTMLAttributes } from "react";
-import { PlaylistEntity } from "@/types/playlist";
+import { PlaylistItemProps } from "@/components/playlist/types/playlist-types";
 
 export const playlistTitleVariants = cva("text-white truncate", {
 	variants: {
@@ -12,6 +12,4 @@ export const playlistTitleVariants = cva("text-white truncate", {
 })
 
 export interface IPlaylistTitle extends HTMLAttributes<HTMLParagraphElement>,
-	VariantProps<typeof playlistTitleVariants> {
-	playlist: PlaylistEntity
-}
+	VariantProps<typeof playlistTitleVariants>, PlaylistItemProps {}

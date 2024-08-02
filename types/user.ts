@@ -2,7 +2,7 @@ import { User } from "@supabase/supabase-js";
 
 export interface UserEntity extends User {
   id: string;
-  full_name?: string;
+  full_name: string;
   avatar_url?: string;
   attributes?: {
     is_public: boolean,

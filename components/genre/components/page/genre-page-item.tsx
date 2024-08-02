@@ -7,11 +7,13 @@ import { nullAvatarImage } from "@/lib/constants/files/invalid-or-null-images";
 import { Typography } from "@/ui/typography";
 import { Wrapper } from "@/ui/wrapper";
 
+type GenrePageItemProps = {
+	genreId: string
+}
+
 export const GenrePageItem = ({
 	genreId
-}: {
-	genreId: string
-}) => {
+}: GenrePageItemProps) => {
 	const { data: genre } = useGenreQuery(genreId);
 	const { data: imageUrl } = useLoadImage(genre?.icon || nullAvatarImage);
 

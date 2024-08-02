@@ -18,7 +18,18 @@ const nextConfig = {
         pathname: "/**"
       }
     ]
-  }
+  },
+  headers: () => [
+    {
+      source: '/user/:id',
+      headers: [
+        {
+          key: 'x-nextjs-cache',
+          value: 'MISS',
+        },
+      ],
+    },
+  ],
 }
 
 module.exports = process.env.ANALYZE === 'true' ? withBundleAnalyzer(nextConfig) : nextConfig

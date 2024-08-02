@@ -1,9 +1,10 @@
 import { SongItemTitle } from "../../../child/song-title/components/song-title"
 import { SongEntity } from "@/types/song"
-import { SongArtist } from "../../../child/song-artist/song-artist"
+import { SongArtist } from "../../../child/song-artist/components/song-artist"
 import { SONG_TYPE_ALBUM, SONG_TYPE_DEFAULT, SONG_TYPE_SINGLE } from "@/types/form"
 import { EntityType } from "@/ui/entity-type"
 import { Timestamp } from "@/ui/timestamp"
+import { useSongArtistListQuery } from "@/lib/query/song/song-artist-list-query";
 
 type SongItemPagePreviewType = {
   song: SongEntity,
@@ -14,8 +15,13 @@ export const PageSongPreview = ({
   song,
   type
 }: SongItemPagePreviewType) => {
+  const {
+    data: artists,
+    isLoading: artistIsLoading,
+    isSuccess
+  } = useSongArtistListQuery(song.id);
 
-  if (!song) return;
+  if (!song || !artists) return;
 
   return (
     <div className="flex flex-col gap-y-2 self-end">
@@ -24,7 +30,9 @@ export const PageSongPreview = ({
       <div className="flex items-center gap-x-2">
         <SongArtist
           variant="page"
-          song={song}
+          artists={artists.artists}
+          firstArtist={artists.firstArtist}
+          isLoading={artistIsLoading}
           className="text-white font-semibold"
         />
         <Timestamp date={song.created_at} />

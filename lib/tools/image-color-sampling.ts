@@ -6,6 +6,8 @@ export async function getColorAverage(
   imageUrl: string
 ): Promise<string | null> {
   return (await fac
-    .getColorAsync(imageUrl))
+    .getColorAsync(imageUrl, {
+      algorithm: "dominant",
+    }))
     .hex;
 }

@@ -1,6 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority";
 import { HTMLAttributes, ReactNode } from "react";
 import { SongEntity } from "@/types/song";
+import { PlaylistEntity } from "@/types/playlist";
 
 export const songItemVariants = cva("flex justify-between items-center rounded-md", {
 	variants: {
@@ -32,7 +33,8 @@ export interface ISongItem
 	},
 	queryOptions?: {
 		isLoading?: boolean,
-	}
+	},
+	playlist?: PlaylistEntity
 }
 
 // song_list -> target songs array (by playlist/artist/collection)

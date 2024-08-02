@@ -9,8 +9,8 @@ export const songByParamIdQueryKey = (param: string): QueryKey => {
 	return ["song", param]
 };
 
-export const followedSongsQueryKey = (userId: string): QueryKey => {
-	return ["followed_songs", userId];
+export const followedSongsQueryKey = (userId?: string, count?: number): QueryKey => {
+	return ["followed_songs", userId, count];
 }
 
 export const songByUrlQueryKey = (song?: SongEntity, path?: string): QueryKey => {

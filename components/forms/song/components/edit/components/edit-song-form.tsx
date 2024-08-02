@@ -2,15 +2,13 @@ import { Form } from "@/ui/form";
 import { useCallback, useRef } from "react";
 import { useUserQuery } from "@/lib/query/user/user-query";
 import { useEditSong } from "@/components/forms/song/components/edit/hooks/use-edit-song";
-import { SongEntity } from "@/types/song";
 import { zodSongSchema } from "@/components/forms/song/components/create/types/create-form-types";
 import { EditSongFormFields } from "@/components/forms/song/components/edit/components/edit-song-form-fields";
+import { SongItemsProps } from "@/components/forms/song/types/song-types";
 
 export const EditSongForm = ({
 	song
-}: {
-	song: SongEntity
-}) => {
+}: SongItemsProps) => {
 	const { data: user } = useUserQuery();
 	const { editSongMutation, form } = useEditSong();
 

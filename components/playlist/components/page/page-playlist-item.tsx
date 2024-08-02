@@ -15,29 +15,33 @@ import {
 	PlaylistItemPageRecommendationSongs
 } from "@/components/playlist/components/page/playlist-item-page-recommendation-songs";
 import dynamic from "next/dynamic";
-
-const SongItem = dynamic(() => import("@/components/song/song-item/song-item")
-	.then(mod => mod.SongItem));
+import { SongItem } from "@/components/song/song-item/song-item";
+import { PlaylistItemProps } from "@/components/playlist/types/playlist-types";
 
 const PlaylistToolsBar = dynamic(() => import("@/components/playlist/child/playlist-tools-bar/playlist-tools-bar")
 	.then(mod => mod.PlaylistToolsBar));
 
+type PagePlaylistItemProps = Pick<Pick<PlaylistItemProps, "playlist">["playlist"], "id">
+
 export const PagePlaylistItem = ({
-	playlistId
-}: {
-	playlistId: string
-}) => {
-	const [currentUserPlaylist, setCurrentUserPlaylist] = useState(false);
+	id: playlistId
+}: PagePlaylistItemProps) => {
+	const [currentUserPlaylist, setCurrentUserPlaylist] = useState<boolean | undefined>(
+		undefined
+	);
+
 	const { data: user } = useUserQuery();
 	const { data: playlist, isError } = usePlaylistQuery(playlistId);
 	const { data: cover, } = useLoadImage(playlist?.image_path!);
-	const { data: playlistSongs } = usePlaylistSongsQuery(playlistId);
+	const { data: playlistSongs, isLoading: loadingPlaylistSongs } = usePlaylistSongsQuery(playlistId);
+
+	const playlistSongsLength = playlistSongs?.length || 0;
 
 	useEffect(() => {
 		if (playlist?.user_id === user?.id) setCurrentUserPlaylist(true)
 	}, [playlist?.user_id, user?.id]);
 
-	if (!playlist || isError) return;
+	if (!playlist || isError || loadingPlaylistSongs || !currentUserPlaylist) return;
 
 	return (
 		<Wrapper variant="page">
@@ -50,7 +54,7 @@ export const PagePlaylistItem = ({
 					/>
 					<PlaylistItemPagePreview
 						playlist={playlist}
-						playlistSongsLength={playlistSongs?.length || 0}
+						playlistSongsLength={playlistSongsLength}
 					/>
 				</div>
 				<div className="flex flex-col bg-black/20 backdrop-filter backdrop-blur-md min-h-screen">
@@ -61,20 +65,22 @@ export const PagePlaylistItem = ({
 							playlistSongs={playlistSongs}
 						/>
 					)}
-					{playlistSongs?.length! >= 1 && (
-						<>
+					{playlistSongsLength >= 1 && (
+						<div className="flex flex-col p-6">
 							<SongListTableHead/>
-							<div className="flex flex-col gap-y-1 p-6 relative">
+							<div className="flex flex-col gap-y-1 relative">
 								{playlistSongs?.map((song,
 									idx) => (
 									<SongItem
 										key={song.id}
+										playlist={playlist}
 										song={song}
 										song_list={{ id: String(idx + 1), data: playlistSongs }}
 									/>
 								))}
 							</div>
-						</>
+							{playlistSongsLength > 3 && <hr className="border border-neutral-700 w-full mt-4 h-[1px]"/>}
+						</div>
 					)}
 					{currentUserPlaylist && (
 						<PlaylistItemPageRecommendationSongs

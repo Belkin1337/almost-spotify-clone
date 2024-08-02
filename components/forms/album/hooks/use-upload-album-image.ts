@@ -1,38 +1,34 @@
 import { useMutation } from "@tanstack/react-query";
-import { createClient } from "@/lib/utils/supabase/client/supabase-client";
-import uniqid from "uniqid";
 import { AlbumAttributes } from "@/components/forms/album/hooks/use-create-album";
-
-const supabase = createClient();
-const uniqueID = uniqid();
+import { uploadFileToBuckets } from "@/lib/utils/file/upload-file-to-buckets";
+import { MESSAGE_ERROR_FILE_UPLOAD } from "@/lib/constants/messages/messages";
+import { useToast } from "@/lib/hooks/ui/use-toast";
 
 export const useUploadAlbumImage = () => {
-	const uploadAlbumImage = useMutation({
-		mutationFn: async (
-			values: AlbumAttributes
-		) => {
+	const { toast } = useToast();
+
+	const uploadAlbumImageMutation = useMutation({
+		mutationFn: async (values: AlbumAttributes) => {
 			try {
-				const { data: imageData, error } = await supabase
-					.storage
-					.from("images")
-					.upload(`image-${values.title}-${uniqueID}`, values.image_url, {
-						upsert: true,
-						contentType: "fileBody",
-					});
+				const { fileData } = await uploadFileToBuckets({
+					bucket: "images",
+					file: values.image_url,
+					type: "album",
+					title: values.title
+				})
 
-				if (error) {
-					console.log(error.message)
-					throw error;
-				}
-
-				return imageData;
+				return fileData;
 			} catch (e) {
 				throw e;
 			}
 		},
+		onError: () => {
+			toast({
+				title: MESSAGE_ERROR_FILE_UPLOAD,
+				variant: "red"
+			})
+		}
 	});
 
-	return {
-		uploadAlbumImage
-	}
+	return { uploadAlbumImageMutation }
 }

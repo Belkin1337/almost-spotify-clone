@@ -24,12 +24,13 @@ import {
 	AddItemButton,
 	IFormFields
 } from "@/components/forms/song/components/create/components/create-song-form-fields";
+import { SongItemsProps } from "@/components/forms/song/types/song-types";
+
+type EditSongFormFieldsProps = SongItemsProps & IFormFields
 
 export const EditSongFormFields = ({
-	form,
-	isLoading,
-	song
-}: IFormFields) => {
+	form, isLoading, song
+}: EditSongFormFieldsProps) => {
 	const [creditsOpen, setCreditsOpen] = useState<boolean>(false);
 
 	const { data: user } = useUserQuery();

@@ -6,6 +6,31 @@ import { SingleEntity } from "@/types/single";
 
 const supabase = createClient();
 
+type CreateSingleQueryType = {
+	userId: string,
+	title: string,
+	imagePath: string
+}
+
+async function createSingleQuery({
+	imagePath,
+	title,
+	userId
+}: CreateSingleQueryType) {
+	const { data: newSingle, error: newSingleErr } = await supabase
+		.from("singles")
+		.insert({
+			user_id: userId,
+			title: title, // song title
+			image_url: imagePath,
+		})
+		.select()
+
+	if (newSingleErr) throw newSingleErr;
+
+	return { newSingle }
+}
+
 export const useCreateSingle = () => {
 	const { data: user } = useUserQuery();
 
@@ -19,47 +44,44 @@ export const useCreateSingle = () => {
 			imageData: { path: string },
 			values: SongAttributes
 		}) => {
-			try {
-				const { data: newSingle, error: singleSongError } = await supabase
-					.from("singles")
-					.insert({
-						user_id: user?.id,
+			if (user) {
+				try {
+					const { newSingle } = await createSingleQuery({
 						title: song.title,
-						image_url: imageData.path,
+						userId: user.id,
+						imagePath: imageData.path
 					})
-					.select()
 
-				if (singleSongError) return;
+					if (newSingle) {
+						if (values.artists) {
+							const single: SingleEntity = newSingle[0];
 
-				if (newSingle && !singleSongError) {
-					if (values.artists) {
-						const single: SingleEntity = newSingle[0];
-
-						const { error: singlesSongsError } = await supabase
-							.from("singles_songs")
-							.insert({
-								single_id: single.id,
-								song_id: song.id
-							})
-
-						if (singlesSongsError) return;
-						
-						for (let i = 0; i < values.artists?.length; i++) {
-							const artistId = values.artists ? values.artists[i] : 0;
-
-							const { error } = await supabase
-								.from("singles_artists")
+							const { error: singlesSongsError } = await supabase
+								.from("singles_songs")
 								.insert({
 									single_id: single.id,
-									artist_id: artistId
+									song_id: song.id
 								})
 
-							if (error) return;
+							if (singlesSongsError) return;
+
+							for (let i = 0; i < values.artists?.length; i++) {
+								const artistId = values.artists ? values.artists[i] : 0;
+
+								const { error } = await supabase
+									.from("singles_artists")
+									.insert({
+										single_id: single.id,
+										artist_id: artistId
+									})
+
+								if (error) return;
+							}
 						}
 					}
+				} catch (error) {
+					throw error;
 				}
-			} catch (error) {
-				throw error;
 			}
 		}
 	})

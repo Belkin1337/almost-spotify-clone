@@ -4,11 +4,13 @@ import Image from "next/image"
 import { Disc } from "lucide-react";
 import { FaCircle } from "react-icons/fa";
 
+type PreviewAlbumCardProps = {
+	preview: PreviewAlbumType
+}
+
 export const PreviewAlbumCard = ({
 	preview
-}: {
-	preview: PreviewAlbumType
-}) => {
+}: PreviewAlbumCardProps) => {
 	return (
 		<>
 			<div className="flex flex-col gap-4 w-fit">
@@ -22,9 +24,7 @@ export const PreviewAlbumCard = ({
 							className="object-cover w-full h-full"
 							loading="lazy"
 						/>
-					) : (
-						<Disc size={128} className="text-neutral-600"/>
-					)}
+					) : <Disc size={128} className="text-neutral-600"/>}
 				</div>
 				<div className="flex flex-col gap-y-2 max-w-[250px]">
 					<Typography className="truncate" size="large">
@@ -33,9 +33,7 @@ export const PreviewAlbumCard = ({
 					<Typography text_color="gray" size="large" className="truncate">
 						{preview.artists?.length! > 0 ? (
 							preview?.artists!.map(artist => artist?.name).join(', ')
-						) : (
-							'Неизвестен'
-						)}
+						) : 'Неизвестен'}
 					</Typography>
 					<div className="flex items-center gap-x-2">
 						<Typography text_color="gray" size="small" font="normal">
@@ -45,9 +43,7 @@ export const PreviewAlbumCard = ({
 						<Typography text_color="gray" size="small" font="normal">
 							{preview.artists?.length! > 0 ? (
 								preview?.artists![0].name
-							) : (
-								'Неизвестен'
-							)}
+							) : 'Неизвестен'}
 						</Typography>
 					</div>
 				</div>

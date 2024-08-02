@@ -1,10 +1,10 @@
 "use client"
 
 import { MainPopularLayout } from "@/components/sections/main/components/layout/main-popular-layout";
-import { useGridControl } from "@/lib/hooks/ui/use-grid-control";
+import { useGrid } from "@/lib/hooks/ui/use-grid";
 
 export const MainPopularAlbums = () => {
-	const { sliceSize } = useGridControl()
+	const { rows } = useGrid()
 
 	return (
 		<MainPopularLayout title="Popular Albums">

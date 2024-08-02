@@ -26,11 +26,7 @@ interface IArtistFormFields {
 }
 
 export const ArtistFormFields = ({
-	form,
-	isLoading,
-	refs,
-	type,
-	artist
+	form, isLoading, refs, type, artist
 }: IArtistFormFields) => {
 	const { data: avatar } = useLoadImage(artist?.avatar_path!);
 	const { data: cover_image } = useLoadImage(artist?.cover_image_path!)
@@ -107,15 +103,9 @@ export const ArtistFormFields = ({
 					control={form.control}
 					name="description"
 					render={({
-						field: {
-							onChange,
-							...field
-						}
+						field: { onChange, ...field }
 					}) => (
-						<FormFieldItem
-							label='Описание артиста'
-							{...field}
-						>
+						<FormFieldItem label='Описание артиста' {...field}>
 							<Input
 								placeholder='Описание'
 								name="artist_description"
@@ -133,16 +123,9 @@ export const ArtistFormFields = ({
 					control={form.control}
 					name="avatar"
 					render={({
-						field: {
-							ref,
-							onChange,
-							...field
-						}
+						field: { ref, onChange, ...field }
 					}) => (
-						<FormFieldItem
-							label="Аватарка артиста"
-							{...field}
-						>
+						<FormFieldItem label="Аватарка артиста"{...field}>
 							<Input
 								name="artist_avatar"
 								accept="image/*"
@@ -160,16 +143,9 @@ export const ArtistFormFields = ({
 					control={form.control}
 					name="cover_image"
 					render={({
-						field: {
-							ref,
-							onChange,
-							...field
-						}
+						field: { ref, onChange, ...field }
 					}) => (
-						<FormFieldItem
-							label="Фон артиста"
-							{...field}
-						>
+						<FormFieldItem label="Фон артиста"{...field}>
 							<Input
 								name="artist_cover_image"
 								accept="image/*"

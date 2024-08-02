@@ -26,9 +26,7 @@ export const SignInForm = () => {
 		defaultValues: { email: "", password: "" },
 	})
 
-	const onSubmit = useCallback(async (
-		values: zodSignInSchema
-	) => {
+	const onSubmit = useCallback(async (values: zodSignInSchema) => {
 		await signInMutation.mutateAsync({
 			values: values
 		});
@@ -40,9 +38,7 @@ export const SignInForm = () => {
 				<Typography>
 					Авторизация
 				</Typography>
-				{error && (
-					<FormMessage>{error}</FormMessage>
-				)}
+				{error && <FormMessage>{error}</FormMessage>}
 				<FormField
 					control={form.control}
 					name="email"

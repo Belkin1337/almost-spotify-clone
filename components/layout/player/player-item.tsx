@@ -6,12 +6,12 @@ import dynamic from "next/dynamic";
 const Player = dynamic(() => import('@/components/player/player')
 	.then(mod => mod.Player));
 
+type PlayerItemsProps = {
+	user: UserEntity
+}
+
 export const PlayerItem = ({
 	user
-}: {
-	user: UserEntity
-}) => {
-	return (
-		<Player user={user as UserEntity}/>
-	)
+}: PlayerItemsProps) => {
+	return <Player user={user as UserEntity}/>
 }

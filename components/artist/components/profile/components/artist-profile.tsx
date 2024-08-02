@@ -35,7 +35,7 @@ export const ArtistProfile = ({
 					<Overlay variant="black"/>
 					<div className="relative gap-y-2 z-20 flex flex-col justify-end h-full items-start">
 						<ArtistVerifyButton/>
-						<ArtistName artist={artist} variant="page"/>
+						<ArtistName artistId={artist.id} artistName={artist.name} variant="page"/>
 						<div className="flex items-center gap-x-1">
 							<ArtistListeners artist={artist} variant="page"/>
 							<Typography text_color="white" size="small" font="medium">
@@ -50,7 +50,7 @@ export const ArtistProfile = ({
 						<ArtistImage artist={artist} variant="profile"/>
 						<div className="relative gap-y-2 z-20 flex flex-col justify-end h-full items-start">
 							<ArtistVerifyButton/>
-							<ArtistName artist={artist} variant="page"/>
+							<ArtistName artistId={artist.id} artistName={artist.name} variant="page"/>
 							<div className="flex items-center gap-x-1">
 								<ArtistListeners artist={artist} variant="page"/>
 								<Typography text_color="white" size="small" font="medium">
@@ -70,7 +70,7 @@ export const ArtistProfile = ({
 					<ArtistUserLikedSongs artist={artist}/>
 				</div>
 				<div className="flex items-start w-full">
-					<ArtistDiscography artistId={artist.id}/>
+					<ArtistDiscography id={artist.id}/>
 				</div>
 				<ArtistAbout artist={artist}/>
 			</div>

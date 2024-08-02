@@ -1,6 +1,6 @@
 "use client"
 
-import { MouseEvent, useCallback, useEffect } from "react"
+import { MouseEvent, useEffect } from "react"
 import { SongShuffleButton } from "@/components/song/child/song-shuffle-button/components/song-shuffle-button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/ui/dropdown-menu"
 import { Radio, UserPlus, X } from 'lucide-react';
@@ -20,12 +20,10 @@ export const ArtistToolsBar = ({
 	const { data: artistSongsList } = useArtistSongListQuery(artistId)
 	const { followedArtist, followMutation } = useArtistFollow(artistId);
 
-	const handleFollow = useCallback(async (
-		e: MouseEvent<HTMLDivElement>
-	) => {
+	const handleFollow = (e: MouseEvent<HTMLDivElement>) => {
 		e.stopPropagation();
-		await followMutation.mutateAsync()
-	}, [followMutation])
+		followMutation.mutate()
+	}
 
 	useEffect(() => {
 		if (followMutation.isSuccess) {
@@ -52,10 +50,10 @@ export const ArtistToolsBar = ({
 	return (
 		<div className="flex items-center justify-between w-full">
 			<div className="flex gap-x-8 items-center">
-				<ArtistPlayButton song_list={artistSongsList || []}/>
+				<ArtistPlayButton songList={artistSongsList || []}/>
 				<div className="flex items-center gap-x-6">
 					<SongShuffleButton/>
-					<ArtistFollowButton artistId={artistId}/>
+					<ArtistFollowButton id={artistId}/>
 					<DropdownMenu>
 						<DropdownMenuTrigger>
 							<MoreIcon/>

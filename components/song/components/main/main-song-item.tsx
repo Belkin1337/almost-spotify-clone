@@ -5,8 +5,9 @@ import { ReactNode } from "react";
 import { SongPlayButton } from "@/components/song/child/song-play-button/components/song-play-button";
 import Image from "next/image";
 import { usePlayerStateQuery } from "@/lib/query/player/player-state-query";
-import { SongArtist } from "@/components/song/child/song-artist/song-artist";
+import { SongArtist } from "@/components/song/child/song-artist/components/song-artist";
 import { SongItemTitle } from "@/components/song/child/song-title/components/song-title";
+import { useSongArtistListQuery } from "@/lib/query/song/song-artist-list-query";
 
 export const SongItemMain = ({
   song,
@@ -17,6 +18,11 @@ export const SongItemMain = ({
 }) => {
   const { playerAttributes } = usePlayerStateQuery()
   const { onPlay } = usePlay()
+  const {
+    data: artists,
+    isLoading: artistIsLoading,
+    isSuccess
+  } = useSongArtistListQuery(song.id);
 
   const handlePlay = async () => {
     await onPlay({
@@ -26,6 +32,8 @@ export const SongItemMain = ({
   }
 
   const { data: image } = useLoadImage(song?.image_path);
+
+  if (!artists) return;
 
   return (
     <div onDoubleClick={handlePlay}
@@ -42,7 +50,9 @@ export const SongItemMain = ({
       <div className="flex flex-col items-start w-full gap-y-1 py-2">
         <SongItemTitle song={song} />
         <SongArtist
-          song={song} 
+          artists={artists.artists}
+          firstArtist={artists.firstArtist}
+          isLoading={artistIsLoading}
         />
       </div>
       <div className="absolute bottom-24 right-5">

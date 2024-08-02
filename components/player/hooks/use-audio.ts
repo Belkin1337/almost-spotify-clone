@@ -3,13 +3,13 @@ import { audioStateQueryKey } from "@/lib/querykeys/player-state";
 import { AudioAttributesType } from "@/lib/query/player/audio-state-query";
 
 export const useAudio = () => {
-	const queryClient = useQueryClient()
+	const qc = useQueryClient()
 
 	const setAudioAttributes = useMutation({
 		mutationFn: async (
 			newAttributes: AudioAttributesType
 		) => {
-			return queryClient.setQueryData<AudioAttributesType>(
+			return qc.setQueryData<AudioAttributesType>(
 				audioStateQueryKey,
 				(prev) => {
 					return { ...prev, ...newAttributes }
@@ -17,10 +17,9 @@ export const useAudio = () => {
 			)
 		},
 		onSuccess: async () => {
-			await queryClient.invalidateQueries({
-				queryKey: audioStateQueryKey
-			});
-		}
+			await qc.invalidateQueries({ queryKey: audioStateQueryKey });
+		},
+		onError: (e) => { throw new Error(e.message) }
 	})
 
 	return { setAudioAttributes }

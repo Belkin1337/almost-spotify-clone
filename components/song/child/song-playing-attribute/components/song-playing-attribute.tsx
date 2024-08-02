@@ -2,7 +2,7 @@ import { UserTips } from "@/components/tooltip/components/action";
 import { Typography } from "@/ui/typography";
 import { IoMdPlay } from "react-icons/io";
 import { MdPause } from "react-icons/md";
-import { ItemLoader } from "@/ui/item-loader";
+import { SongPlayingBar } from "@/ui/song-playing-bar";
 import { useSongArtistListQuery } from "@/lib/query/song/song-artist-list-query";
 import { usePlayerStateQuery } from "@/lib/query/player/player-state-query";
 import {
@@ -12,7 +12,7 @@ import { usePlay } from "@/lib/hooks/player/use-play";
 import { useCallback } from "react";
 
 export const SongPlayingAttribute = ({
-	list_id,
+	id,
 	song
 }: ISongPlayingAttribute) => {
 	const { data: songArtist } = useSongArtistListQuery(song.id);
@@ -31,11 +31,11 @@ export const SongPlayingAttribute = ({
 	}, [onPlay, playerAttributes.ids, song])
 
 	return (
-		<div className="px-4 relative overflow-hidden w-[46px]">
+		<div className="flex items-center justify-center px-2 relative overflow-hidden w-[46px]">
 			{activeSongId === song.id && activeIsPlaying ? (
 				<>
-					<ItemLoader variant="song"/>
-					<div onClick={handlePlay} className="group-hover:block hidden">
+					<SongPlayingBar variant="song"/>
+					<div onClick={handlePlay} className="group-hover:block hidden overflow-hidden">
 						<UserTips action="Pause">
 							<MdPause size={22} className="mr-2"/>
 						</UserTips>
@@ -43,15 +43,14 @@ export const SongPlayingAttribute = ({
 				</>
 			) : (
 				<>
-					<Typography
-						text_color="gray"
-						className="group-hover:hidden block"
-					>
-						{list_id}
-					</Typography>
+					<div className="h-[20px] w-[20px] overflow-hidden group-hover:hidden flex justify-center items-center">
+						<Typography text_color="gray">
+							{id}
+						</Typography>
+					</div>
 					<div onClick={handlePlay} className="group-hover:block hidden">
 						<UserTips action={actionText}>
-							<IoMdPlay size={20}/>
+							<IoMdPlay size={20} className="text-neutral-400"/>
 						</UserTips>
 					</div>
 				</>

@@ -1,6 +1,6 @@
 import { cva, VariantProps } from "class-variance-authority";
 import { HTMLAttributes } from "react";
-import { PlaylistEntity } from "@/types/playlist";
+import { PlaylistItemProps } from "@/components/playlist/types/playlist-types";
 
 export const playlistImageVariants = cva("flex justify-center items-center bg-black overflow-hidden", {
 	variants: {
@@ -17,6 +17,4 @@ export const playlistImageVariants = cva("flex justify-center items-center bg-bl
 
 export interface IPlaylistImage
 	extends HTMLAttributes<HTMLDivElement>,
-		VariantProps<typeof playlistImageVariants> {
-	playlist: PlaylistEntity
-}
+		VariantProps<typeof playlistImageVariants>, PlaylistItemProps {}

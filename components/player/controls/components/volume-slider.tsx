@@ -7,9 +7,7 @@ interface IVolumeSlider {
 }
 
 export const VolumeSlider = ({ 
-  defaultValue = 0, 
-  value,
-  onValueChange 
+  defaultValue = 0, value, onValueChange
 }: IVolumeSlider) => {
   return (
     <Slider

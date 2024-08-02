@@ -10,13 +10,14 @@ import { useSongArtistListQuery } from "@/lib/query/song/song-artist-list-query"
 import { ArtistFollowButton } from "@/components/artist/child/artist-follow-button/components/artist-follow-button";
 import { ArtistWidgetSongImage } from "@/components/artist/components/widget/main/components/artist-widget-song-image";
 
+type ArtistWidgetProps = {
+	song: SongEntity
+}
+
 export const ArtistWidget = ({
 	song
-}: {
-	song: SongEntity
-}) => {
+}: ArtistWidgetProps) => {
 	const { openDialog } = useDialog();
-
 	const { data: artist, isError } = useSongArtistListQuery(song.id)
 	const { data: image } = useLoadImage(artist?.firstArtist?.avatar_path!)
 
@@ -45,7 +46,7 @@ export const ArtistWidget = ({
 				</div>
 			</div>
 			<div className="flex flex-col items-start gap-y-2 max-h-[180px] w-full p-4 overflow-hidden">
-				<ArtistName artist={artist.firstArtist} type="link"/>
+				<ArtistName artistId={artist.firstArtist.id} artistName={artist.firstArtist.name} type="link"/>
 				<div className="flex items-center justify-between w-full">
 					<div className="flex items-center gap-x-1">
 						<Typography size="large" text_color="gray" font="medium">
@@ -55,7 +56,7 @@ export const ArtistWidget = ({
 							monthly listeners
 						</Typography>
 					</div>
-					<ArtistFollowButton artistId={artist.firstArtist.id}/>
+					<ArtistFollowButton id={artist.firstArtist.id}/>
 				</div>
 				<ArtistDescription artist={artist.firstArtist} variant="widget"/>
 			</div>

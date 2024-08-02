@@ -1,5 +1,4 @@
 import { SongPlayButton } from "@/components/song/child/song-play-button/components/song-play-button"
-import { SongShuffleButton } from "@/components/song/child/song-shuffle-button/components/song-shuffle-button"
 import { SongFollowButton } from "../../song-follow-button/components/song-follow-button"
 import { SongEntity } from "@/types/song"
 
@@ -12,7 +11,6 @@ export const SongToolsBar = ({
     <div className="flex items-center gap-x-10 px-6 py-4">
       <SongPlayButton variant="single_page" song={song}/>
       <div className="flex items-center gap-x-4">
-        <SongShuffleButton />
         <SongFollowButton
           songId={song.id}
           variant={{

@@ -1,17 +1,18 @@
 import { Typography } from "@/ui/typography";
 import { playlist_route } from "@/lib/constants/routes/routes";
-import { PlaylistEntity } from "@/types/playlist";
 import { PlaylistImage } from "@/components/playlist/child/playlist-image/components/playlist-image";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
+import { PlaylistItemProps } from "@/components/playlist/types/playlist-types";
+
+type PlaylistLibraryCardProps = PlaylistItemProps & {
+	isExpanded: boolean
+}
 
 export const PlaylistLibraryCard = ({
 	playlist,
 	isExpanded
-}: {
-	playlist: PlaylistEntity,
-	isExpanded: boolean
-}) => {
+}: PlaylistLibraryCardProps) => {
 	const { push } = useRouter();
 
 	const handlePushToPlaylist = useCallback(() => {

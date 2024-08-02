@@ -1,24 +1,20 @@
-import { ArtistEntity } from "@/types/artist"
 import { Form } from "@/ui/form"
 import { useCallback, useRef } from "react"
 import { ArtistFormFields } from "@/components/forms/artist/components/artist-form-fields";
 import { useEditArtist, zodEditSchema } from "@/components/forms/artist/hooks/use-edit-artist";
+import { ArtistItemProps } from "@/components/artist/types/artist-types";
 
 export const EditArtistForm = ({
 	artist
-}: {
-	artist: ArtistEntity
-}) => {
+}: ArtistItemProps) => {
 	const imageRef = useRef<HTMLInputElement>(null);
 	const coverImageRef = useRef<HTMLInputElement>(null);
 
-	const { editArtist, form } = useEditArtist({
+	const { editArtistMutation, form } = useEditArtist({
 		artist: artist
 	});
 
-	const onSubmit = useCallback(async (
-		values: zodEditSchema
-	) => {
+	const onSubmit = useCallback(async (values: zodEditSchema) => {
 		try {
 			if (!values || !imageRef.current || !coverImageRef.current) return;
 
@@ -26,20 +22,18 @@ export const EditArtistForm = ({
 			const coverImageFile = coverImageRef.current.files ? coverImageRef.current.files[0] : null;
 
 			if (imageFile && values) {
-				await editArtist.mutateAsync({
+				await editArtistMutation.mutateAsync({
 					id: artist.id,
 					name: values.name,
 					avatar: imageFile,
 					description: values.description,
 					cover_image: coverImageFile || undefined
 				})
-			} else {
-				return;
 			}
 		} catch (e) {
 			throw e;
 		}
-	}, [artist.id, editArtist])
+	}, [artist.id, editArtistMutation])
 
 	return (
 		<Form {...form}>
@@ -48,7 +42,7 @@ export const EditArtistForm = ({
 					form={form}
 					type="edit"
 					artist={artist!}
-					isLoading={editArtist.isPending}
+					isLoading={editArtistMutation.isPending}
 					refs={{ imageRef: imageRef, imageCoverRef: coverImageRef }}
 				/>
 			</form>

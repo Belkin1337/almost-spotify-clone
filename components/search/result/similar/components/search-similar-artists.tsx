@@ -4,11 +4,13 @@ import {
 } from "@/components/search/result/similar/components/list/search-similar-artists-list";
 import { ArtistEntity } from "@/types/artist";
 
+type SearchSimilarArtistsProps = Partial<{
+	searchedArtists: ArtistEntity[]
+}>
+
 export const SearchSimilarArtists = ({
 	searchedArtists
-}: {
-	searchedArtists: ArtistEntity[] | undefined
-}) => {
+}: SearchSimilarArtistsProps) => {
 	if (!searchedArtists?.length) return;
 
 	return (

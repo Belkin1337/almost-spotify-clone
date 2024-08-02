@@ -1,20 +1,24 @@
 import * as React from "react"
+import { InputHTMLAttributes } from "react"
 
 import { cva, VariantProps } from "class-variance-authority";
-import { InputHTMLAttributes } from "react";
 
-const inputVariants = cva(`flex w-full bg-neutral-800 border border-transparent text-md file:border-0 file:bg-transparent 
-  file:text-sm file:font-medium focus-within:border-neutral-300 placeholder:text-neutral-400 disabled:cursor-not-allowed
+const inputVariants = cva(`flex w-full border border-transparent file:border-0 file:bg-transparent 
+  file:text-sm file:font-normal focus-within:border-neutral-400 placeholder:text-neutral-400 disabled:cursor-not-allowed
   disabled:opacity-50 focus:outline-none`, {
   variants: {
     variant: {
-      default: "p-4",
-      search: "p-3"
+      default: "p-4 text-md bg-neutral-800",
+      global_search: "p-3",
+      local_search: "px-2 py-1 text-sm"
     },
     rounded: {
       none: "rounded-none",
       full: "rounded-full",
       medium: "rounded-md"
+    },
+    background: {
+      none: "bg-transparent",
     }
   },
   defaultVariants: {
@@ -33,12 +37,13 @@ const Input = React.forwardRef<HTMLInputElement, IInput>(
     variant,
     rounded,
     type,
+    background,
     ...props
   }, ref) => {
     return (
       <input
         type={type}
-        className={inputVariants(({ variant, rounded, className }))}
+        className={inputVariants(({ variant, background, rounded, className }))}
         ref={ref}
         {...props}
       />

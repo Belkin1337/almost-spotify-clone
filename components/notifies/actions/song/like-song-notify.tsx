@@ -1,14 +1,16 @@
 import { ToastAction } from "@/ui/toast";
 import Image from "next/image";
 
-export const LikeSongNotify = ({
-	variantToast
-}: {
+type LikeSongNotify = {
 	variantToast: {
 		message: string,
 		variant: "right" | "red"
 	}
-}) => {
+}
+
+export const LikeSongNotify = ({
+	variantToast
+}: LikeSongNotify) => {
 	return (
 		<ToastAction
 			altText={`${variantToast.message}`}

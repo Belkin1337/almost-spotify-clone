@@ -1,4 +1,3 @@
-import { ArtistEntity } from "@/types/artist";
 import { Typography } from "@/ui/typography";
 import { ArtistImage } from "@/components/artist/child/artist-image/components/artist-image";
 import { useWidget } from "@/lib/hooks/ui/use-widget";
@@ -7,12 +6,11 @@ import {
 } from "@/components/artist/components/profile/hooks/use-user-followed-songs-by-artist";
 import { artist_route_liked_songs } from "@/lib/constants/routes/routes";
 import Link from "next/link";
+import { ArtistItemProps } from "@/components/artist/types/artist-types";
 
 export const ArtistUserLikedSongs = ({
 	artist
-}: {
-	artist: ArtistEntity
-}) => {
+}: ArtistItemProps) => {
 	const { widgetState } = useWidget()
 	const { followedSongs } = useUserFollowedSongsByArtist(artist.id)
 

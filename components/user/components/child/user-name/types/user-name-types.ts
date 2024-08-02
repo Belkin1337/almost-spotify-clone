@@ -5,7 +5,7 @@ import { UserEntity } from "@/types/user";
 export const userNameVariants = cva("text-white", {
 	variants: {
 		variant: {
-			profile: "text-6xl font-bold",
+			profile: "text-7xl font-bold",
 			playlist: "text-small font-medium hover:underline underline-offset-2 cursor-pointer",
 		}
 	},

@@ -13,6 +13,30 @@ import { zodSongSchema } from "@/components/forms/song/components/create/types/c
 
 const supabase = createClient();
 
+type UpdateSongQueryType = {
+	userId: string,
+	values: SongAttributes
+}
+
+async function updateSongQuery({
+	userId,
+	values
+}: UpdateSongQueryType) {
+	const { data: updatedSong, error: updatedSongErr } = await supabase
+		.from("songs")
+		.update({
+			user_id: userId,
+			title: values.title,
+			artists: values.artists,
+		})
+		.eq("id", values.id)
+		.select()
+
+	if (updatedSongErr) throw updatedSongErr;
+
+	return { updatedSong }
+}
+
 export function useEditSong(
 	song?: SongEntity
 ) {
@@ -33,21 +57,14 @@ export function useEditSong(
 		mutationFn: async (
 			values: SongAttributes
 		) => {
-			if (values.image_path) {
+			if (values.image_path && user) {
 				try {
-					const { data: newSong, error: supabaseErr } = await supabase
-						.from("songs")
-						.update({
-							user_id: user?.id,
-							title: values.title,
-							artists: values.artists,
-						})
-						.eq("id", values.id)
-						.select()
+					const { updatedSong } = await updateSongQuery({
+						userId: user.id,
+						values: values
+					})
 
-					if (supabaseErr) return;
-
-					return newSong as SongEntity[]
+					return updatedSong as SongEntity[]
 				} catch (e) {
 					throw e;
 				}

@@ -1,13 +1,11 @@
 import { PlaylistEditFields } from "@/components/forms/playlist/components/edit-playlist-form-fields";
-import { PlaylistEntity } from "@/types/playlist";
 import { useUpdatePlaylist } from "@/components/forms/playlist/hooks/use-update-playlist";
 import { Form } from "@/ui/form";
+import { PlaylistItemProps } from "@/components/forms/playlist/types/playlist-types";
 
 export const PlaylistEditForm = ({
 	playlist
-}: {
-	playlist: PlaylistEntity
-}) => {
+}: PlaylistItemProps) => {
 	const {
 		updatePlaylistNameMutation,
 		updatePlaylistDescriptionMutation,

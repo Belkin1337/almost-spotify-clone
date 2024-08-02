@@ -11,6 +11,7 @@ import { getSongUrl } from "@/lib/queries/song/single/get-song-url";
 import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import { useStopPlayAudio } from "@/components/player/hooks/use-stop-play-audio";
 import { useSetActiveSongSongs } from "@/components/player/hooks/use-set-active-song-songs";
+import { usePlayerStateQuery } from "@/lib/query/player/player-state-query";
 
 const supabase = createClient();
 
@@ -21,6 +22,7 @@ type OnPlayType = {
 
 export const usePlay = () => {
 	const { data: user } = useUserQuery();
+	const { playerAttributes } = usePlayerStateQuery()
 	const { audioAttributes } = useAudioStateQuery()
 	const { setAudioAttributes } = useAudio();
 	const { setPlayerAttributes } = usePlayer()

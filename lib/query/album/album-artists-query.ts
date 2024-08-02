@@ -6,9 +6,7 @@ import { albumArtistsQueryKey } from "@/lib/querykeys/album";
 
 const supabase = createClient();
 
-export const useAlbumArtistsQuery = (
-	albumId: string
-) => {
+export const useAlbumArtistsQuery = (albumId: string) => {
 	return useQuery({
 		queryKey: albumArtistsQueryKey(albumId),
 		queryFn: async () => {
@@ -21,7 +19,6 @@ export const useAlbumArtistsQuery = (
 			return artists;
 		},
 		enabled: !!albumId,
-		retry: 1,
 		refetchOnWindowFocus: false,
 		refetchOnReconnect: false
 	})

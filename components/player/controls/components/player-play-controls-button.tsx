@@ -22,12 +22,10 @@ interface IPlayerPlayControlsButton
 	asChild?: boolean
 }
 
-const PlayerPlayControlsButton = forwardRef<HTMLButtonElement, IPlayerPlayControlsButton>(({
-	variant,
-	className,
-	type,
-	asChild = false,
-	...props
+const PlayerPlayControlsButton = forwardRef<
+	HTMLButtonElement, IPlayerPlayControlsButton
+>(({
+	variant, className, type, asChild = false, ...props
 },
 	ref
 ) => {
@@ -47,7 +45,7 @@ const PlayerPlayControlsButton = forwardRef<HTMLButtonElement, IPlayerPlayContro
 		</>
 	)
 });
-PlayerPlayControlsButton.displayName === 'PlayerPlayControlsButton';
+PlayerPlayControlsButton.displayName = 'PlayerPlayControlsButton';
 
 export {
 	PlayerPlayControlsButton,

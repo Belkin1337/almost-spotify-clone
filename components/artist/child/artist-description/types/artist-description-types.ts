@@ -1,6 +1,6 @@
 import { cva, VariantProps } from "class-variance-authority";
 import { HTMLAttributes } from "react";
-import { ArtistEntity } from "@/types/artist";
+import { ArtistItemProps } from "@/components/artist/types/artist-types";
 
 export const artistDescriptionVariants = cva("text-neutral-400", {
 	variants: {
@@ -13,6 +13,4 @@ export const artistDescriptionVariants = cva("text-neutral-400", {
 
 export interface IArtistDescription
 	extends HTMLAttributes<HTMLDivElement>,
-		VariantProps<typeof artistDescriptionVariants> {
-	artist: ArtistEntity
-}
+		VariantProps<typeof artistDescriptionVariants>, ArtistItemProps {}

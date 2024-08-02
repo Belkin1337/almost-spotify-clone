@@ -17,11 +17,13 @@ const SearchSimilarArtists = dynamic(() => import("@/components/search/result/si
 const SearchSimilarUsers = dynamic(() => import("@/components/search/result/similar/components/search-similar-users")
 	.then(mod => mod.SearchSimilarUsers));
 
+type NotFoundedResultsProps = {
+	title: string
+}
+
 const NotFoundedResults = ({
 	title
-}: {
-	title: string
-}) => {
+}: NotFoundedResultsProps) => {
 	return (
 		<div className="flex flex-col items-center justify-center gap-y-4">
 			<Typography>
@@ -37,9 +39,7 @@ const NotFoundedResults = ({
 
 export const SearchSimilarResults = ({
 	title
-}: {
-	title: string
-}) => {
+}: NotFoundedResultsProps) => {
 	const { data: searchedSongs } = useSongByTitleQuery(title, 4);
 	const { data: searchedArtists } = useArtistsByNameQuery(title, 8);
 	const { data: searchedUsers } = useUsersByTitleQuery(title);
@@ -53,16 +53,9 @@ export const SearchSimilarResults = ({
 	return (
 		<div className="flex flex-col gap-y-6 w-full h-full">
 			<SearchNavigationBar />
-			<SearchSimilarTracks
-				title={title}
-				searchedSongs={searchedSongs}
-			/>
-			<SearchSimilarArtists
-				searchedArtists={searchedArtists}
-			/>
-			<SearchSimilarUsers
-				searchedUsers={searchedUsers}
-			/>
+			<SearchSimilarTracks title={title} searchedSongs={searchedSongs}/>
+			<SearchSimilarArtists searchedArtists={searchedArtists}/>
+			<SearchSimilarUsers searchedUsers={searchedUsers}/>
 		</div>
 	)
 }

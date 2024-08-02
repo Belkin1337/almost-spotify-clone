@@ -11,9 +11,7 @@ interface IPlayerToggleVolume {
 }
 
 export const PlayerToggleVolume = ({
-  volume,
-  mute,
-  unmute
+  volume, mute, unmute
 }: IPlayerToggleVolume) => {
   const playerLocale = useScopedI18n('main-service.main-part.config')
 

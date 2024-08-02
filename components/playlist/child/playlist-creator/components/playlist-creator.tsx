@@ -1,16 +1,14 @@
 import { Typography } from "@/ui/typography";
-import { PlaylistEntity } from "@/types/playlist";
 import { useUserByIdQuery } from "@/lib/query/user/user-id-query";
 import Image from "next/image";
 import { useLoadImage } from "@/lib/hooks/image/use-load-image";
 import Link from "next/link";
 import { profile_route } from "@/lib/constants/routes/routes";
+import { PlaylistItemProps } from "@/components/playlist/types/playlist-types";
 
 export const PlaylistCreator = ({
 	playlist
-}: {
-	playlist: PlaylistEntity
-}) => {
+}: PlaylistItemProps) => {
 	const { data: playlistCreator } = useUserByIdQuery(playlist.user_id);
 	const { data: image } = useLoadImage(playlistCreator?.avatar_url, "users");
 

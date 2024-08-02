@@ -31,13 +31,13 @@ export const SongListTableHead = ({
 	const configLocale = useScopedI18n('main-service.main-part.config')
 
 	return (
-		<div className="flex flex-col gap-y-2 w-full h-[44px] p-6" {...props}>
+		<div className="flex flex-col gap-y-2 w-full h-[44px]" {...props}>
 			<div className="flex justify-between items-center gap-y-4 w-full">
 				<div className="flex flex-row items-center w-1/2">
 					<Typography variant="song_table_list_attribute" className="pl-6">
 						#
 					</Typography>
-					<Typography variant="song_table_list_attribute" className="pl-9">
+					<Typography variant="song_table_list_attribute" className="pl-7">
 						{configLocale('song-attributes.song-name')}
 					</Typography>
 				</div>

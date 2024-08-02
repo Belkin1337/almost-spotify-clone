@@ -18,6 +18,74 @@ import { zodSongSchema } from "@/components/forms/song/components/create/types/c
 
 const supabase = createClient();
 
+type CreateSongQueryType = {
+	userId: string,
+	values: SongAttributes,
+	imagePath: string,
+	songPath: string
+}
+
+type CreateSongArtistsQueryType = {
+	artistId: string,
+	songId: string
+}
+
+type CreateSongGenresQueryType = {
+	values: SongAttributes,
+	songId: string
+}
+
+async function createSongQuery({
+	userId,
+	songPath,
+	values,
+	imagePath
+}: CreateSongQueryType) {
+	const { data: newSong, error: supabaseError } = await supabase
+		.from("songs")
+		.insert({
+			user_id: userId,
+			title: values.title,
+			genre: values.genre,
+			image_path: imagePath,
+			song_path: songPath,
+		})
+		.select()
+
+	if (supabaseError) throw supabaseError;
+
+	return { newSong }
+}
+
+async function createSongArtistsQuery({
+	songId,
+	artistId
+}: CreateSongArtistsQueryType) {
+	const { error } = await supabase
+		.from("song_artists")
+		.insert({
+			song_id: songId,
+			artist_id: artistId
+		})
+
+	if (error) throw error;
+}
+
+async function createSongGenresQuery({
+	songId,
+	values
+}: CreateSongGenresQueryType) {
+	const { error: genreSongError } = await supabase
+		.from("song_genres")
+		.insert({
+			song_id: songId,
+			genre_id: values.genre
+		})
+
+	if (genreSongError) throw genreSongError;
+}
+
+
 export function useCreateSong() {
 	const queryClient = useQueryClient();
 
@@ -48,62 +116,45 @@ export function useCreateSong() {
 		) => {
 			if (user) {
 				try {
-					const [
-						songData,
-						imageData
-					] = await Promise.all([
+					const [songData, imageData] = await Promise.all([
 						createSongFileMutation.mutateAsync(values),
 						createSongImageMutation.mutateAsync(values),
 					]);
 
 					if (!songData || !imageData) return;
 
-					const { data: newSong, error: supabaseError } = await supabase
-						.from("songs")
-						.insert({
-							user_id: user?.id,
-							title: values.title,
-							genre: values.genre,
-							image_path: imageData?.path,
-							song_path: songData?.path,
+					const { newSong } = await createSongQuery({
+						userId: user.id,
+						imagePath: imageData.path,
+						songPath: songData.path,
+						values: values
+					})
+
+					if (newSong && values.artists) {
+						setArtistId(values.artists[0]);
+
+						const song: SongEntity = newSong[0];
+
+						for (let i = 0; i < values.artists?.length; i++) {
+							const artistId = values.artists ? values.artists[i] : 0;
+
+							await createSongArtistsQuery({
+								artistId: artistId.toString(),
+								songId: song.id,
+							})
+						}
+
+						await createSongGenresQuery({
+							songId: song.id,
+							values: values
 						})
-						.select()
 
-					if (newSong && !supabaseError) {
-						if (values.artists) {
-							setArtistId(values.artists[0]);
-
-							const song: SongEntity = newSong[0];
-
-							for (let i = 0; i < values.artists?.length; i++) {
-								const artistId = values.artists ? values.artists[i] : 0;
-
-								const { error } = await supabase
-									.from("song_artists")
-									.insert({
-										song_id: song.id,
-										artist_id: artistId
-									})
-
-								if (error) return;
-							}
-
-							const { error: genreSongError } = await supabase
-								.from("song_genres")
-								.insert({
-									song_id: song.id,
-									genre_id: values.genre
-								})
-
-							if (genreSongError) return;
-
-							if (values.single === true) {
-								await createSingleMutation.mutateAsync({
-									song: song,
-									values: values,
-									imageData: imageData
-								})
-							}
+						if (values.single === true) {
+							await createSingleMutation.mutateAsync({
+								song: song,
+								values: values,
+								imageData: imageData
+							})
 						}
 
 						return newSong as SongEntity[]

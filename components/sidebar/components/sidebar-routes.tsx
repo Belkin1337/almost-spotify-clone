@@ -3,6 +3,7 @@ import { usePathname } from "next/navigation";
 import { BiSearch } from "react-icons/bi";
 import { HiHome } from "react-icons/hi";
 import { SidebarItem } from "./sidebar-item";
+import { home_route, search_route } from "@/lib/constants/routes/routes";
 
 export const SidebarRoutes = () => {
   const locale = useCurrentLocale();
@@ -14,23 +15,20 @@ export const SidebarRoutes = () => {
       icon: HiHome,
       label: sidebarLocale('main-route'),
       active: pathname === `/${locale}/home`,
-      href: '/home',
+      href: home_route,
     },
     {
       icon: BiSearch,
       label: sidebarLocale('search-route'),
-      active: pathname === `/${locale}/home/search`,
-      href: '/home/search',
+      active: pathname === `/${locale}/search`,
+      href: search_route,
     },
   ]
 
   return (
     <div className="flex flex-col gap-y-4 p-4 bg-DARK_SECONDARY_BACKGROUND rounded-md">
       {routes.map((item) => (
-        <SidebarItem
-          key={item.label}
-          {...item}
-        />
+        <SidebarItem key={item.label} {...item}/>
       ))}
     </div>
   )

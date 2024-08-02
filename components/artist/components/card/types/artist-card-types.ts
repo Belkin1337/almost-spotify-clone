@@ -11,10 +11,12 @@ export const artistCardVariants = cva("flex p-4 hover:bg-neutral-800 gap-y-4 ove
 	}
 })
 
-export interface IArtistCard
-	extends HTMLAttributes<HTMLDivElement>,
-		VariantProps<typeof artistCardVariants> {
+type ArtistCard = {
 	artist: ArtistEntity,
 	children?: ReactNode,
 	isLoading?: boolean
 }
+
+export interface IArtistCard
+	extends HTMLAttributes<HTMLDivElement>, VariantProps<typeof artistCardVariants>,
+		ArtistCard {}

@@ -1,6 +1,6 @@
 import { cva, VariantProps } from "class-variance-authority";
-import React from "react";
-import { AlbumEntity } from "@/types/album";
+import { HTMLAttributes } from "react";
+import { AlbumItemProps } from "@/components/album/types/album-types";
 
 export const albumArtistVariants = cva("text-white truncate", {
 	variants: {
@@ -18,8 +18,5 @@ export const albumArtistVariants = cva("text-white truncate", {
 	}
 })
 
-export interface IAlbumArtist
-	extends React.HTMLAttributes<HTMLParagraphElement>,
-		VariantProps<typeof albumArtistVariants> {
-	album: AlbumEntity
-}
+export interface IAlbumArtist extends HTMLAttributes<HTMLParagraphElement>,
+	VariantProps<typeof albumArtistVariants>, AlbumItemProps {}

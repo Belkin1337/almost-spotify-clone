@@ -1,53 +1,45 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUserQuery } from "@/lib/query/user/user-query"
 import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import { useCallback } from "react";
-import { getFollowArtist } from "@/lib/queries/artist/single/get-follow-artist";
 import { followedArtistQueryKey, userFollowedArtistsQueryKey } from "@/lib/querykeys/artist";
 import { useToast } from "@/lib/hooks/ui/use-toast";
+import { useFollowedArtistQuery } from "@/components/artist/child/artist-follow-button/hooks/use-followed-artist-query";
 
 const supabase = createClient();
 
 export function useArtistFollow(artistId: string) {
-	const queryClient = useQueryClient()
+	const qc = useQueryClient()
 	const { toast } = useToast();
 	const { data: user } = useUserQuery();
-
-	const getFollowedArtist = useCallback(async () => {
-		if (user && artistId) {
-			return await getFollowArtist(supabase, user.id, artistId);
-		}
-	}, [artistId, user])
-
-	const { data: followedArtist } = useQuery({
-		queryKey: followedArtistQueryKey(artistId),
-		queryFn: getFollowedArtist,
-		enabled: !!user && !!artistId
+	
+	const { data: followedArtist } = useFollowedArtistQuery({
+		artistId, userId: user?.id
 	})
-
-	const unFollow = useCallback(async () => {
+	
+	const unFollow = useCallback(async() => {
 		const { error } = await supabase
-			.from("followed_artists")
-			.delete()
-			.eq("user_id", user?.id)
-			.eq("artist_id", artistId)
-
+		.from("followed_artists")
+		.delete()
+		.eq("user_id", user?.id)
+		.eq("artist_id", artistId)
+		
 		if (error) throw error;
-	}, [artistId, user?.id])
-
-	const follow = useCallback(async () => {
+	}, [ artistId, user?.id ])
+	
+	const follow = useCallback(async() => {
 		const { error } = await supabase
-			.from("followed_artists")
-			.insert({
-				artist_id: artistId,
-				user_id: user?.id
-			})
-
+		.from("followed_artists")
+		.insert({
+			artist_id: artistId,
+			user_id: user?.id
+		})
+		
 		if (error) throw error;
-	}, [artistId, user?.id])
-
+	}, [ artistId, user?.id ])
+	
 	const followMutation = useMutation({
-		mutationFn: async () => {
+		mutationFn: async() => {
 			if (followedArtist?.data?.artist_id === artistId) {
 				await unFollow()
 				return 'unfollowed';
@@ -56,7 +48,7 @@ export function useArtistFollow(artistId: string) {
 				return 'followed';
 			}
 		},
-		onSuccess: async (data) => {
+		onSuccess: async(data) => {
 			if (data) {
 				const variantToast = {
 					message: (data === 'unfollowed')
@@ -74,20 +66,15 @@ export function useArtistFollow(artistId: string) {
 					title: variantToast.message,
 					variant: variantToast.variant,
 				})
-
-				await queryClient.invalidateQueries({
-					queryKey: followedArtistQueryKey(artistId)
-				})
-
-				await queryClient.invalidateQueries({
-					queryKey: userFollowedArtistsQueryKey(user?.id!)
-				})
+				
+				await Promise.all([
+					qc.invalidateQueries({ queryKey: followedArtistQueryKey(artistId) }),
+					qc.invalidateQueries({ queryKey: userFollowedArtistsQueryKey(user?.id!) })
+				])
 			}
 		},
-		onError: (error: Error) => {
-			throw error;
-		}
+		onError: (error: Error) => { throw new Error(error.message) }
 	})
-
+	
 	return { followedArtist, followMutation }
 }

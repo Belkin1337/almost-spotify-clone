@@ -11,19 +11,24 @@ import { useControlResizablePanels } from "@/lib/hooks/ui/use-control-resizable-
 import { useResizePanelsQuery } from "@/lib/query/ui/resize-panels-query";
 import { ResizablePanel } from "@/ui/resizable";
 import dynamic from "next/dynamic";
+import { MAX_SIZE_SIDEBAR, MIN_SIZE_SIDEBAR, THRESHOLD_SIZE_SIDEBAR } from "@/lib/constants/ui/panels-sizes";
 
 const SidebarLibrary = dynamic(() => import("@/components/sidebar/components/library/sidebar-library")
 	.then(mod => mod.SidebarLibrary))
 
+interface ISidebar {
+	user: UserEntity,
+	defaultSize: number | undefined;
+}
+
 export const Sidebar = memo(({
-	user
-}: {
-	user: UserEntity
-}) => {
+	user,
+	defaultSize
+}: ISidebar) => {
 	const { data: resizeState } = useResizePanelsQuery()
-	const [size, setSize] = useState<number>(resizeState.sidebarPanel.size || 18);
 	const ref = useRef<ImperativePanelHandle>(null);
 
+	const [size, setSize] = useState<number>(defaultSize || 15);
 	const { playerAttributes } = usePlayerStateQuery()
 	const { updatePanelSizeMutation } = useControlResizablePanels()
 
@@ -31,9 +36,11 @@ export const Sidebar = memo(({
 		const panel = ref.current;
 
 		if (panel) {
-			if (size < 18 && size !== 0) {
+			const size = panel.getSize();
+
+			if (size < THRESHOLD_SIZE_SIDEBAR && size !== 0) {
 				panel.collapse();
-			} else if (size === 18) {
+			} else if (size === THRESHOLD_SIZE_SIDEBAR) {
 				panel.expand();
 			}
 
@@ -66,16 +73,14 @@ export const Sidebar = memo(({
 		<ResizablePanel
 			id="sidebar"
 			className="hidden md:block relative min-w-[64px] max-w-[620px]"
-			collapsedSize={user ? 4 : 18}
+			collapsedSize={user ? MIN_SIZE_SIDEBAR : THRESHOLD_SIZE_SIDEBAR}
 			collapsible={!!user}
 			order={0}
 			ref={ref}
-			minSize={user ? 4 : 18}
-			maxSize={33}
-			defaultSize={270}
-			onResize={(size: number) => {
-				setSize(size)
-			}}
+			minSize={user ? MIN_SIZE_SIDEBAR : THRESHOLD_SIZE_SIDEBAR}
+			maxSize={MAX_SIZE_SIDEBAR}
+			defaultSize={defaultSize}
+			onResize={(value: number) => setSize((prev) => value)}
 		>
 			<div className={`flex flex-col overflow-y-auto gap-y-2 rounded-lg panel	${activePlayer}`}>
 				<SidebarRoutes/>

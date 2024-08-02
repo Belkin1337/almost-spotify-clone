@@ -18,7 +18,7 @@ export const userPlaylistsQueryKey = (userId?: string, show_hidden_playlists?: b
 	return ["user_playlists", userId, show_hidden_playlists, count]
 }
 
-export const userAvatarQueryKey = (userId: string): QueryKey => {
+export const userAvatarQueryKey = (userId?: string): QueryKey => {
 	return ["user_avatar", userId]
 }
 

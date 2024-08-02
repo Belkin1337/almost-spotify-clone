@@ -64,7 +64,7 @@ export const ProfileUser = ({
 						<UserFollowButton userId={userById.id}/>
 					)}
 					<UserPublicPlaylists userId={userById.id}/>
-					<UserSubsList/>
+					<UserSubsList userId={userById.id}/>
 					<UserFollowedArtists user={userById}/>
 				</div>
 			</div>

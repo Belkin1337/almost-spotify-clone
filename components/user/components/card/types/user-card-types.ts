@@ -1,5 +1,5 @@
 import { cva, VariantProps } from "class-variance-authority";
-import React from "react";
+import { HTMLAttributes } from "react";
 
 export const userCardVariants = cva("flex overflow-hidden min-w-[220px] w-fit", {
 	variants: {
@@ -10,7 +10,6 @@ export const userCardVariants = cva("flex overflow-hidden min-w-[220px] w-fit", 
 })
 
 export interface IUserCard
-	extends React.HTMLAttributes<HTMLDivElement>,
-		VariantProps<typeof userCardVariants> {
+	extends HTMLAttributes<HTMLDivElement>, VariantProps<typeof userCardVariants> {
 	followed_songs_length?: number
 }

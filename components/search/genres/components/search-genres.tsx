@@ -11,8 +11,8 @@ export const SearchGenres = () => {
 
   return (
     <div className="flex flex-col gap-y-4 w-full py-6">
-      <Typography className="text-3xl" font="bold">
-        Поиск по жанрам
+      <Typography size="xl" font="bold">
+        Browse all
       </Typography>
       <SearchGenresList genres={genres}/>
     </div>

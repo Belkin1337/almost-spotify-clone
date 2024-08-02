@@ -7,7 +7,7 @@ type AddPlaylistCollaboratosType = {
 }
 
 export const useAddPlaylistCollaborators = () => {
-	const queryClient = useQueryClient();
+	const qc = useQueryClient();
 
 	const { data: user } = useUserQuery();
 
@@ -19,7 +19,7 @@ export const useAddPlaylistCollaborators = () => {
 
 		},
 		onSuccess: async (data) => {
-
+		
 		}
 	})
 

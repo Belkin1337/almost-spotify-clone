@@ -7,13 +7,15 @@ import { useInView } from "react-intersection-observer";
 import { usePlayerStateQuery } from "@/lib/query/player/player-state-query";
 import { ResizablePanel } from "@/ui/resizable";
 
-export const MainPanel = ({
-	user,
-	children
-}: {
+interface IMainPanel {
 	user: UserEntity,
-	children: ReactNode
-}) => {
+	children: ReactNode,
+	defaultSize: number | undefined,
+}
+
+export const MainPanel = ({
+	user, children, defaultSize
+}: IMainPanel) => {
 	const { playerAttributes } = usePlayerStateQuery()
 
 	const { ref, inView } = useInView({
@@ -23,7 +25,7 @@ export const MainPanel = ({
 	return (
 		<ResizablePanel
 			id="main_content"
-			defaultSize={1260}
+			defaultSize={defaultSize}
 			order={1}
 			className="relative md:w-[1280px] md:min-w-[980px] panel"
 		>

@@ -8,11 +8,15 @@ export const PreviewSongCard = () => {
 	const { songPreviewState } = useSongPreviewState({
 		song: undefined
 	});
-
+	
 	const artist = songPreviewState.artists?.length! > 0 ? (songPreviewState?.artists![0].name) : ('Неизвестен')
-	const artistsList = songPreviewState.artists?.length! > 0 ? (songPreviewState?.artists!.map(artist => artist?.name).join(', ')) : ('Неизвестен')
+	
+	const artistsList = songPreviewState.artists?.length! > 0 ? (songPreviewState?.artists!.map(
+		artist => artist?.name
+	).join(', ')) : ('Неизвестен')
+	
 	const songTitle = songPreviewState?.title || 'Без названия'
-
+	
 	return (
 		<>
 			<div className="flex flex-col gap-4 w-fit">
@@ -26,9 +30,7 @@ export const PreviewSongCard = () => {
 							className="object-cover w-full h-full"
 							loading="lazy"
 						/>
-					) : (
-						<Disc size={128} className="text-neutral-600"/>
-					)}
+					) : <Disc size={128} className="text-neutral-600"/>}
 				</div>
 				<div className="flex flex-col gap-y-2 max-w-[250px]">
 					<Typography className="truncate" size="large">

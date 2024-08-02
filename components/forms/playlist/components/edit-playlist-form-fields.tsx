@@ -1,7 +1,6 @@
 "use client"
 
 import { Typography } from "@/ui/typography";
-import { PlaylistEntity } from "@/types/playlist";
 import { FormFieldItem } from "@/ui/form-field";
 import { Input } from "@/ui/input";
 import { FormField } from "@/ui/form";
@@ -10,14 +9,15 @@ import { UseFormReturn } from "react-hook-form";
 import { useRef } from "react";
 import Image from "next/image";
 import { Button } from "@/ui/button";
+import { PlaylistItemProps } from "@/components/forms/playlist/types/playlist-types";
+
+type PlaylistEditFieldsProps = PlaylistItemProps & {
+	form: UseFormReturn<zodPlaylistSchema>
+}
 
 export const PlaylistEditFields = ({
-	playlist,
-	form
-}: {
-	playlist: PlaylistEntity,
-	form: UseFormReturn<zodPlaylistSchema>
-}) => {
+	playlist, form
+}: PlaylistEditFieldsProps) => {
 	const imageRef = useRef(null);
 
 	return (
