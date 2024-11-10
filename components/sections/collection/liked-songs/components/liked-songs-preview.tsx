@@ -5,13 +5,16 @@ import Image from "next/image"
 import { Typography } from "@/ui/typography";
 import { useScopedI18n } from "@/locales/client";
 import { useFollowedSongsQuery } from "@/lib/query/user/followed-songs-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
+import { useQueryClient } from "@tanstack/react-query"
+import { UserEntity } from "@/types/user";
 
-export const LikedSongsPreview = ({
-  userId
-}: {
-  userId: string
-}) => {
-  const { data: followedSongs, isError } = useFollowedSongsQuery(userId);
+export const LikedSongsPreview = () => {
+  const qc = useQueryClient()
+  const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
+  if (!user) return null;
+  
+  const { data: followedSongs, isError } = useFollowedSongsQuery(user.id);
   const likedPageLocale = useScopedI18n('main-service.pages.liked-content.navbar')
 
   if (!followedSongs?.songs || isError) return;

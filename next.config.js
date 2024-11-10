@@ -2,7 +2,7 @@
 const withBundleAnalyzer = require('@next/bundle-analyzer')()
 
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   images: {
     remotePatterns: [
       {
@@ -30,6 +30,11 @@ const nextConfig = {
       ],
     },
   ],
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '15mb',
+    },
+  },
 }
 
 module.exports = process.env.ANALYZE === 'true' ? withBundleAnalyzer(nextConfig) : nextConfig

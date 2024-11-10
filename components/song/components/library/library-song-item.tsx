@@ -22,10 +22,7 @@ export const LibrarySongItem = ({
 		isLoading: artistIsLoading,
 		isSuccess
 	} = useSongArtistListQuery(song.id);
-	const {
-		data: album,
-		isLoading: albumIsLoading
-	} = useAlbumBySong(song.id, isSuccess);
+	const { data: album, isLoading: albumIsLoading } = useAlbumBySong(song.id, isSuccess);
 	const { onPlay } = usePlay();
 	const { playerAttributes } = usePlayerStateQuery()
 

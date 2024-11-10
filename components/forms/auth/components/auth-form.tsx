@@ -5,11 +5,16 @@ import { useDialog } from "@/lib/hooks/ui/use-dialog"
 import { SignUpForm } from "./sign-up-form"
 import { ReactElement, useCallback } from "react"
 import { Typography } from "@/ui/typography"
-import { useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import Image from "next/image";
+import { UserEntity } from "@/types/user";
+import { useQueryClient } from "@tanstack/react-query"
 
 export const AuthForm = () => {
-	const { data: user } = useUserQuery();
+	const qc = useQueryClient()
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
+	if (!user) return null;
+	
 	const { openDialog } = useDialog()
 
 	const handleDialogForm = useCallback((element: ReactElement) => {

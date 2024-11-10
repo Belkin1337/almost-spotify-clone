@@ -3,32 +3,31 @@ import { AlbumAttributes } from "@/components/forms/album/hooks/use-create-album
 import { uploadFileToBuckets } from "@/lib/utils/file/upload-file-to-buckets";
 import { MESSAGE_ERROR_FILE_UPLOAD } from "@/lib/constants/messages/messages";
 import { useToast } from "@/lib/hooks/ui/use-toast";
+import { getArrayBuffer } from "@/components/forms/artist/hooks/use-create-artist-image";
+import { encode } from "base64-arraybuffer"
 
 export const useUploadAlbumImage = () => {
 	const { toast } = useToast();
-
+	
 	const uploadAlbumImageMutation = useMutation({
-		mutationFn: async (values: AlbumAttributes) => {
-			try {
-				const { fileData } = await uploadFileToBuckets({
-					bucket: "images",
-					file: values.image_url,
-					type: "album",
-					title: values.title
-				})
-
-				return fileData;
-			} catch (e) {
-				throw e;
-			}
+		mutationFn: async(values: AlbumAttributes) => {
+			const fileName = `album-${values.title}`;
+			
+			const base64File = await getArrayBuffer(values.image_url)
+			const encodedFile = encode(base64File)
+			
+			return uploadFileToBuckets({
+				bucket: "images", file: encodedFile, fileName, contentType: "image/png"
+			})
 		},
-		onError: () => {
-			toast({
+		onSuccess: (data) => {
+			if (!data) return toast({
 				title: MESSAGE_ERROR_FILE_UPLOAD,
 				variant: "red"
 			})
-		}
+		},
+		onError: e => {throw new Error(e.message)}
 	});
-
+	
 	return { uploadAlbumImageMutation }
 }

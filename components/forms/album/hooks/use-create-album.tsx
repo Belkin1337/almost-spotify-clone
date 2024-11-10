@@ -1,10 +1,12 @@
 import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import { useMutation } from "@tanstack/react-query";
-import { useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { AlbumEntity } from "@/types/album";
 import { useUploadAlbumImage } from "@/components/forms/album/hooks/use-upload-album-image";
 import { AlbumCreateNotify } from "@/components/notifies/actions/album/album-create-notify";
 import { useToast } from "@/lib/hooks/ui/use-toast";
+import { UserEntity } from "@/types/user";
+import { useQueryClient } from "@tanstack/react-query"
 
 const supabase = createClient();
 
@@ -65,14 +67,14 @@ async function createAlbumSongsQuery({ songId, albumId }: CreateAlbumSongsQueryT
 }
 
 export function useCreateAlbum() {
-	const { data: user } = useUserQuery();
+	const qc = useQueryClient()
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
+	
 	const { uploadAlbumImageMutation } = useUploadAlbumImage();
 	const { toast } = useToast();
 
 	const createAlbumMutation = useMutation({
-		mutationFn: async (
-			values: AlbumAttributes
-		) => {
+		mutationFn: async (values: AlbumAttributes) => {
 			if (user) {
 				try {
 					const [imageData] = await Promise.all([

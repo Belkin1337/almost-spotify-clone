@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { SongAttributes, SongEntity } from "@/types/song";
 import { useUploadSongImage } from "./use-upload-song-image";
 import { useUploadSongFile } from "./use-upload-song-file";
@@ -15,6 +15,7 @@ import { useToast } from "@/lib/hooks/ui/use-toast";
 import { songPreviewQueryKey } from "@/lib/querykeys/song";
 import { useCreateSingle } from "@/components/forms/single/hooks/use-create-single";
 import { zodSongSchema } from "@/components/forms/song/components/create/types/create-form-types";
+import { UserEntity } from "@/types/user";
 
 const supabase = createClient();
 
@@ -88,12 +89,11 @@ async function createSongGenresQuery({
 
 export function useCreateSong() {
 	const queryClient = useQueryClient();
-
 	const [artistId, setArtistId] = useState('')
-
 	const { toast } = useToast();
-
-	const { data: user } = useUserQuery();
+	const qc = useQueryClient()
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
+	
 	const { createSongImageMutation } = useUploadSongImage();
 	const { createSongFileMutation } = useUploadSongFile();
 	const { createSingleMutation } = useCreateSingle();

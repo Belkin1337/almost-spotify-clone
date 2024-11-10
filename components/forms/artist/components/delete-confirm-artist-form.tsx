@@ -3,15 +3,18 @@ import { SongPlayingBar } from "@/ui/song-playing-bar";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
 import { useCallback } from "react";
 import { useDeleteArtist } from "@/components/forms/artist/hooks/use-delete-artist";
-import { useUserQuery } from "@/lib/query/user/user-query";
 import { useToast } from "@/lib/hooks/ui/use-toast";
 import { Typography } from "@/ui/typography";
 import { ArtistItemProps } from "@/components/artist/types/artist-types";
+import { UserEntity } from "@/types/user";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
+import { useQueryClient } from "@tanstack/react-query"
 
 export const DeleteConfirmArtistForm = ({
 	artist
 }: ArtistItemProps) => {
-	const { data: user } = useUserQuery();
+	const qc = useQueryClient()
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
 	const { toast } = useToast();
 	const { closeDialog } = useDialog();
 	const { deleteArtistMutation } = useDeleteArtist();

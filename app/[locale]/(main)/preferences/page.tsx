@@ -1,23 +1,21 @@
 import { getScopedI18n } from "@/locales/server";
 import { setStaticParamsLocale } from "next-international/server";
-import { cookies } from "next/headers";
-import { createClient } from "@/lib/utils/supabase/server/supabase-server";
-import { redirect } from "next/navigation";
 import { Wrapper } from "@/ui/wrapper";
 import { Preferences } from "@/components/sections/preferences/preferences";
+import { getUser } from "@/lib/helpers/get-user";
+
+type PreferencesPageProps = {
+  params: Promise<{ locale: string }>
+}
 
 export default async function PreferencesPage({ 
-  params: { locale } 
-}: { 
-  params: { locale: string } 
-}) {
-  const supabase = createClient(cookies())
-  const { data: { user }, error } = await supabase.auth.getUser()
-
+  params
+}: PreferencesPageProps) {
+  const { locale } = await params;
+  await getUser()
+  
   setStaticParamsLocale(locale);
   const settingsLocale = await getScopedI18n('main-service.pages.settings-content.navbar')
-
-  if (error || !user) redirect('/home')
 
   return (
     <Wrapper variant="page">

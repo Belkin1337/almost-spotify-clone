@@ -1,36 +1,31 @@
-import { createClient } from "@/lib/utils/supabase/client/supabase-client";
-import uniqid from "uniqid";
+"use server"
 
-const supabase = createClient();
-const uniqueID = uniqid();
+import { createClient } from "@/lib/utils/supabase/server/supabase-server";
+import { decode } from "base64-arraybuffer"
 
-export type UploadFileType = "song" | "album" | "artists" | "cover_image" | "user" | "playlist";
 export type UploadFileBucketsType = "songs" | "users" | "artists" | "images";
 
 interface IUploadFile {
 	bucket: UploadFileBucketsType,
-	title: string,
-	file: File,
-	type: UploadFileType
+	fileName: string,
+	file: string,
+	contentType: "image/png" | "audio/mp4"
 }
 
 export async function uploadFileToBuckets({
-	bucket,
-	file,
-	type,
-	title
+	bucket, file, fileName, contentType
 }: IUploadFile) {
-	const fileName = [type, title, uniqueID].join('-');
-
-	const { data: fileData, error: fileErr } = await supabase
+	const supabase = await createClient()
+	const decodedFile = decode(file)
+	
+	const { data: fileData, error } = await supabase
 		.storage
 		.from(bucket)
-		.upload(fileName, file, {
-			upsert: true,
-			contentType: "fileBody"
-		});
+		.upload(fileName, decodedFile, {
+			upsert: true, contentType: contentType
+		})
+	
+	if (error) throw new Error(error.message);
 
-	if (fileErr) throw fileErr;
-
-	return { fileData }
+	return fileData
 }

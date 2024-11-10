@@ -1,12 +1,15 @@
 import { useFollowedSongsQuery } from "@/lib/query/user/followed-songs-query";
 import { useArtistSongListQuery } from "@/lib/query/artist/artists-songs-list-query";
 import { useCallback } from "react";
-import { useUserQuery } from "@/lib/query/user/user-query";
+import { useQueryClient } from "@tanstack/react-query"
+import { UserEntity } from "@/types/user";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 
 export const useUserFollowedSongsByArtist = (
 	artistId: string
 ) => {
-	const { data: user } = useUserQuery();
+	const qc = useQueryClient();
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
 	const { data: userFollowedSongs } = useFollowedSongsQuery(user?.id!);
 	const { data: artistSongs, isLoading } = useArtistSongListQuery(artistId);
 

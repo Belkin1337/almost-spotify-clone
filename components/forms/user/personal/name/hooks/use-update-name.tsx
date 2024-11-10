@@ -6,7 +6,7 @@ import { userQueryKey } from "@/lib/querykeys/user";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateNameSchema } from "@/components/forms/user/personal/name/schemas/schema-update-name";
-import { useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY, useUserQuery } from "@/lib/query/user/user-query";
 import { Typography } from "@/ui/typography";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
 import { useRouter } from "next/navigation";
@@ -36,9 +36,8 @@ async function updateUserNameQuery({
 }
 
 export const useUpdateName = () => {
-	const queryClient = useQueryClient()
-
-	const { data: user } = useUserQuery();
+	const qc = useQueryClient();
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
 
 	const { toast } = useToast();
 	const { closeDialog } = useDialog()
@@ -81,7 +80,7 @@ export const useUpdateName = () => {
 				closeDialog();
 				refresh();
 
-				return queryClient.invalidateQueries({
+				return qc.invalidateQueries({
 					queryKey: userQueryKey
 				})
 			}

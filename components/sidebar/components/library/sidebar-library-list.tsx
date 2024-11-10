@@ -1,7 +1,7 @@
 import {
 	FollowTrackRouteButton
 } from "@/components/static/button/components/follow-tracks-button/components/follow-tracks-button";
-import { useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { useFollowedArtistsQuery } from "@/lib/query/user/followed-artists-query";
 import { usePlaylistsListByUser } from "@/lib/query/playlist/playlists-by-user-query";
 import { useResizePanelsQuery } from "@/lib/query/ui/resize-panels-query";
@@ -9,9 +9,14 @@ import { memo } from "react";
 import { useSortSidebarLibraryQuery } from "@/lib/query/ui/sidebar-sort-query";
 import { ArtistLibraryCard } from "@/components/artist/components/library/artist-library-card";
 import { PlaylistLibraryCard } from "@/components/playlist/library/playlist-library-card";
+import { UserEntity } from "@/types/user";
+import { useQueryClient} from "@tanstack/react-query"
 
 export const SidebarLibraryList = memo(() => {
-	const { data: user } = useUserQuery();
+	const qc = useQueryClient()
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
+	if (!user) return null;
+	
 	const { data: followedArtist } = useFollowedArtistsQuery(user?.id)
 	const { data: createdPlaylists } = usePlaylistsListByUser(user?.id, true)
 	const { data: resizeState } = useResizePanelsQuery()

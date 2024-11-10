@@ -1,4 +1,4 @@
-import { useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
 import { useRouter } from "next/navigation"
 import { useCallback } from "react";
@@ -6,6 +6,8 @@ import { IconType } from 'react-icons';
 import { AuthForm } from "../../forms/auth/components/auth-form";
 import { Typography } from "@/ui/typography";
 import { useResizePanelsQuery } from "@/lib/query/ui/resize-panels-query";
+import { UserEntity } from "@/types/user";
+import { useQueryClient } from "@tanstack/react-query"
 
 interface ISidebarItem {
   icon: IconType,
@@ -20,7 +22,10 @@ export const SidebarItem = ({
   active,
   href
 }: ISidebarItem) => {
-  const { data: user } = useUserQuery();
+  const qc = useQueryClient()
+  const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
+  if (!user) return null;
+  
   const { data: resizeState } = useResizePanelsQuery()
   const { openDialog } = useDialog();
   const { push } = useRouter();

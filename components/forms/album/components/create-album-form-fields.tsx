@@ -13,12 +13,14 @@ import { ArtistCardSelect } from "@/components/artist/components/select/componen
 import { SongCardSelect } from "@/components/song/components/select/song-card-select";
 import { useUserArtistListQuery } from "@/lib/query/user/user-artists-list-query";
 import { useUserSongsQuery } from "@/lib/query/user/user-songs-query";
-import { useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { handleChangeImage } from "@/lib/utils/form/handle-change-image";
 import { usePreviewAlbum } from "@/components/forms/album/hooks/use-preview-album";
 import { removeArtist } from "@/lib/utils/form/remove-artist";
 import { zodAlbumSchema } from "@/components/forms/album/components/create-album-form";
 import { usePreviewAlbumStateQuery } from "@/components/forms/album/hooks/use-album-preview-query";
+import { UserEntity } from "@/types/user";
+import { useQueryClient } from "@tanstack/react-query"
 
 interface IAlbumFormFields {
 	form: UseFormReturn<zodAlbumSchema>,
@@ -31,7 +33,10 @@ export const AlbumFormFields = ({
 	isLoading,
 	refs
 }: IAlbumFormFields) => {
-	const { data: user } = useUserQuery();
+	const qc = useQueryClient()
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
+	if (!user) return null;
+	
 	const { data: userArtists } = useUserArtistListQuery(user?.id!);
 	const { data: songs } = useUserSongsQuery(user?.id!)
 	const { setAlbumPreviewAttributes } = usePreviewAlbum();

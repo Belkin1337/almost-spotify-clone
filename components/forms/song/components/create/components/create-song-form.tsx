@@ -3,18 +3,22 @@
 import { Form } from "@/ui/form";
 import { useCreateSong } from "@/components/forms/song/components/create/hooks/use-create-song";
 import { useCallback, useRef } from "react";
-import { useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { SongFormPreview } from "@/components/forms/song/components/song-form-preview";
 import { zodSongSchema } from "@/components/forms/song/components/create/types/create-form-types";
 import { CreateSongFormFields } from "@/components/forms/song/components/create/components/create-song-form-fields";
+import { UserEntity } from "@/types/user";
+import { useQueryClient } from "@tanstack/react-query"
 
 export const CreateSongForm = () => {
 	const [imageRef, songRef] = [
 		useRef<HTMLInputElement>(null),
 		useRef<HTMLInputElement>(null)
 	];
-
-	const { data: user } = useUserQuery();
+	
+	const qc = useQueryClient()
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
+	if (!user) return null;
 	const { createSongMutation, form } = useCreateSong();
 
 	const onSubmit = useCallback(async (

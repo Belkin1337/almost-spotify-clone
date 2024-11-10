@@ -1,18 +1,10 @@
-import { createClient } from "@/lib/utils/supabase/server/supabase-server";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { ReactNode } from "react";
+import { getUser } from "@/lib/helpers/get-user";
 
 export default async function ProfileStatsLayout({
 	children
-}: {
-	children: ReactNode
-}) {
-	const supabase = createClient(cookies());
-
-	const { data: { user }, error } = await supabase.auth.getUser();
-
-	if (!user || error) redirect('/home')
+}: { children: ReactNode }) {
+	await getUser()
 
 	return (
 		<>

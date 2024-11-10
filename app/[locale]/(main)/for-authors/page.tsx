@@ -1,6 +1,3 @@
-import { cookies } from "next/headers";
-import { createClient } from "@/lib/utils/supabase/server/supabase-server";
-import { redirect } from "next/navigation";
 import { Wrapper } from "@/ui/wrapper";
 import { Typography } from "@/ui/typography";
 import { ForAuthorsModule } from "@/ui/for-authors-block";
@@ -12,14 +9,12 @@ import {
 	for_authors_route_create_song,
 	for_authors_route_tracks
 } from "@/lib/constants/routes/routes";
+import { getUser } from "@/lib/helpers/get-user";
 
 export default async function ForAuthorsPage() {
-	const supabase = createClient(cookies());
-
-	const { data: { user }, error } = await supabase.auth.getUser()
-
-	if (error || !user) redirect('/home');
-
+	const user = await getUser()
+	if (!user) return null;
+	
 	return (
 		<Wrapper variant="page">
 			<div className="flex flex-col p-4 gap-y-12">

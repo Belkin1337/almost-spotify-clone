@@ -1,11 +1,12 @@
 import { Wrapper } from "@/ui/wrapper";
 import { Typography } from "@/ui/typography";
+import { PageTypes } from "@/types/page-convention";
 
 export default async function ProfileFollowersListPage({
 	params
-}: {
-	params: { id: string }
-}) {
+}: PageTypes) {
+	const { id } = await params;
+	
 	return (
 		<Wrapper variant="page">
 			<div className="flex flex-col gap-y-6">

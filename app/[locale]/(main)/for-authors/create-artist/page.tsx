@@ -1,15 +1,10 @@
-import { cookies } from "next/headers";
-import { createClient } from "@/lib/utils/supabase/server/supabase-server";
-import { redirect } from "next/navigation";
 import { Wrapper } from "@/ui/wrapper";
 import { Typography } from "@/ui/typography";
 import { CreateArtistForm } from "@/components/forms/artist/components/create-artist-form";
+import { getUser } from "@/lib/helpers/get-user";
 
 export default async function ForAuthorsCreateArtistPage() {
-	const supabase = createClient(cookies())
-	const { data: { user }, error } = await supabase.auth.getUser()
-
-	if (error || !user) redirect('/home')
+	await getUser()
 
 	return (
 		<Wrapper variant="page">

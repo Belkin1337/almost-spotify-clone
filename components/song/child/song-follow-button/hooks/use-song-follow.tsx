@@ -3,10 +3,11 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tansta
 import { getFollowSong } from "@/lib/queries/song/single/get-follow-song";
 import { useCallback } from "react";
 import { followedSongQueryKey, followedSongsQueryKey } from "@/lib/querykeys/song";
-import { useUserQuery } from "@/lib/query/user/user-query";
 import { useScopedI18n } from "@/locales/client";
 import { useToast } from "@/lib/hooks/ui/use-toast";
 import { LikeSongNotify } from "@/components/notifies/actions/song/like-song-notify";
+import { UserEntity } from "@/types/user";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 
 const supabase = createClient();
 
@@ -18,7 +19,8 @@ export type FollowedSongType = {
 
 export function useSongFollow(songId: string) {
 	const { toast } = useToast();
-	const { data: user } = useUserQuery();
+	const qc = useQueryClient();
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
 
 	const queryClient = useQueryClient();
 	const likeButtonLocale = useScopedI18n('main-service.main-part.config')

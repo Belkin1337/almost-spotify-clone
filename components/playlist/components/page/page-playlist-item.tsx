@@ -10,27 +10,34 @@ import { Wrapper } from "@/ui/wrapper";
 import { useEffect, useState } from "react";
 import { usePlaylistSongsQuery } from "@/lib/query/playlist/playlist-songs-query";
 import { SongListTableHead } from "@/ui/song-list-table-head";
-import { useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import {
 	PlaylistItemPageRecommendationSongs
 } from "@/components/playlist/components/page/playlist-item-page-recommendation-songs";
 import dynamic from "next/dynamic";
 import { SongItem } from "@/components/song/song-item/song-item";
 import { PlaylistItemProps } from "@/components/playlist/types/playlist-types";
+import { UserEntity } from "@/types/user";
+import { useQueryClient } from "@tanstack/react-query"
 
-const PlaylistToolsBar = dynamic(() => import("@/components/playlist/child/playlist-tools-bar/playlist-tools-bar")
-	.then(mod => mod.PlaylistToolsBar));
+const PlaylistToolsBar = dynamic(() =>
+	import("@/components/playlist/child/playlist-tools-bar/playlist-tools-bar")
+	.then(mod => mod.PlaylistToolsBar)
+);
 
 type PagePlaylistItemProps = Pick<Pick<PlaylistItemProps, "playlist">["playlist"], "id">
 
 export const PagePlaylistItem = ({
 	id: playlistId
 }: PagePlaylistItemProps) => {
+	const qc = useQueryClient()
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
+	if (!user) return null;
+	
 	const [currentUserPlaylist, setCurrentUserPlaylist] = useState<boolean | undefined>(
 		undefined
 	);
-
-	const { data: user } = useUserQuery();
+	
 	const { data: playlist, isError } = usePlaylistQuery(playlistId);
 	const { data: cover, } = useLoadImage(playlist?.image_path!);
 	const { data: playlistSongs, isLoading: loadingPlaylistSongs } = usePlaylistSongsQuery(playlistId);

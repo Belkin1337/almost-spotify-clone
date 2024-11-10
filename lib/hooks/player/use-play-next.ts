@@ -1,4 +1,3 @@
-import { useUserQuery } from "@/lib/query/user/user-query";
 import { usePlayerStateQuery } from "@/lib/query/player/player-state-query";
 import { useCallback } from "react";
 import { useFollowedSongsQuery } from "@/lib/query/user/followed-songs-query";
@@ -8,11 +7,15 @@ import { getSongsByGenre } from "@/lib/queries/song/multiple/get-songs-by-genre"
 import { getSongsByArtist } from "@/lib/queries/song/multiple/get-songs-by-artist";
 import { useSongArtistListQuery } from "@/lib/query/song/song-artist-list-query";
 import { useSetSongAttributes } from "@/lib/hooks/player/use-set-song-attributes";
+import { useQueryClient } from "@tanstack/react-query"
+import { UserEntity } from "@/types/user";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 
 const supabase = createClient();
 
 export const usePlayNext = () => {
-	const { data: user } = useUserQuery();
+	const qc = useQueryClient();
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
 	const { playerAttributes } = usePlayerStateQuery()
 	const { data: followedSongs } = useFollowedSongsQuery(user?.id!);
 	const { setNewSongAttributes } = useSetSongAttributes()

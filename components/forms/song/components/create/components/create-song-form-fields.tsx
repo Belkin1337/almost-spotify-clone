@@ -18,11 +18,13 @@ import { Button } from "@/ui/button";
 import { useScopedI18n } from "@/locales/client";
 import { zodSongSchema } from "@/components/forms/song/components/create/types/create-form-types";
 import { useAddFieldsValue } from "@/components/forms/song/hooks/use-add-fields-value";
-import { useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { useUserArtistListQuery } from "@/lib/query/user/user-artists-list-query";
 import { useGenresQuery } from "@/lib/query/genre/genres-query";
 import { useSongPreviewState } from "@/components/forms/song/hooks/use-song-preview-state";
 import { UseFormReturn } from "react-hook-form";
+import { UserEntity } from "@/types/user";
+import { useQueryClient } from "@tanstack/react-query"
 
 export const AddItemButton = () => {
 	return (
@@ -47,7 +49,10 @@ export const CreateSongFormFields = ({
 	isLoading
 }: IFormFields) => {
 	const [creditsOpen, setCreditsOpen] = useState<boolean>(false);
-	const { data: user } = useUserQuery();
+	const qc = useQueryClient()
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
+	if (!user) return null;
+	
 	const { data: userArtists } = useUserArtistListQuery(user?.id!);
 	const { data: genres } = useGenresQuery();
 

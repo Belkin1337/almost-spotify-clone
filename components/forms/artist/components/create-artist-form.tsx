@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { Form } from "@/ui/form";
-import { useCallback, useRef } from "react";
+import { useRef } from "react";
 import { useCreateArtist } from "@/components/forms/artist/hooks/use-create-artist";
 import { createArtistSchema } from "@/components/forms/artist/schemas/schema-artist";
 import { ArtistFormFields } from "./artist-form-fields";
@@ -17,16 +17,14 @@ export const CreateArtistForm = () => {
 
 	const { createArtistMutation, form } = useCreateArtist()
 
-	const onSubmit = useCallback(async (
-		values: zodArtistSchema
-	) => {
+	const onSubmit = (values: zodArtistSchema) => {
 		try {
 			if (!values || !imageRef.current) return;
 
 			const imageCoverFile = imageCoverRef?.current?.files ? imageCoverRef.current.files[0] : null;
 			const imageFile = imageRef.current.files ? imageRef.current.files[0] : null;
 
-			if (imageFile && values) await createArtistMutation.mutateAsync({
+			if (imageFile && values) return createArtistMutation.mutate({
 				name: values.name,
 				avatar: imageFile,
 				cover_image: imageCoverFile || undefined,
@@ -35,7 +33,7 @@ export const CreateArtistForm = () => {
 		} catch (error) {
 			throw error;
 		}
-	}, [createArtistMutation, imageCoverRef, imageRef])
+	}
 
 	return (
 		<Form {...form}>

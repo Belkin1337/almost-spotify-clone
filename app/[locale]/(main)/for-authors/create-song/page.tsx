@@ -1,16 +1,10 @@
-import { cookies } from "next/headers";
-import { createClient } from "@/lib/utils/supabase/server/supabase-server";
-import { redirect } from "next/navigation";
 import { Wrapper } from "@/ui/wrapper";
 import { CreateSongForm } from "@/components/forms/song/components/create/components/create-song-form";
 import { Typography } from "@/ui/typography";
+import { getUser } from "@/lib/helpers/get-user";
 
 export default async function ForAuthorsCreateSongPage() {
-	const supabase = createClient(cookies())
-
-	const { data: { user }, error } = await supabase.auth.getUser()
-
-	if (error || !user) redirect('/home')
+	await getUser()
 
 	return (
 		<Wrapper variant="page">

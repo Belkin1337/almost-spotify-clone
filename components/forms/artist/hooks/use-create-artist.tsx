@@ -1,7 +1,5 @@
-import { useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createClient } from "@/lib/utils/supabase/client/supabase-client";
-import { ArtistEntity } from "@/types/artist";
 import { useCreateArtistImage } from "@/components/forms/artist/hooks/use-create-artist-image";
 import { useCreateArtistCoverImage } from "@/components/forms/artist/hooks/use-create-artist-cover-image";
 import { useForm } from "react-hook-form";
@@ -11,8 +9,8 @@ import { zodArtistSchema } from "@/components/forms/artist/components/create-art
 import { userArtistsQueryKey } from "@/lib/querykeys/user";
 import { ArtistCreatedNotify } from "@/components/notifies/actions/artist/artist-created-notify";
 import { useToast } from "@/lib/hooks/ui/use-toast";
-
-const supabase = createClient();
+import { UserEntity } from "@/types/user";
+import { createArtist } from "@/components/forms/artist/queries/create-artist";
 
 export type ArtistAttributesType = {
 	id?: string,
@@ -24,45 +22,14 @@ export type ArtistAttributesType = {
 	cover_image_path?: string
 }
 
-type CreateArtistQueryType = {
-	userId: string,
-	values: ArtistAttributesType,
-	imagePath: string,
-	imageCoverPath?: string
-}
-
-async function createArtistQuery({
-	imageCoverPath,
-	values,
-	userId,
-	imagePath
-}: CreateArtistQueryType) {
-	const imageCover = imageCoverPath ? imageCoverPath : null;
-
-	const { data: createdArtist, error } = await supabase
-		.from("artists")
-		.insert({
-			user_id: userId,
-			name: values.name,
-			description: values.description,
-			avatar_path: imagePath,
-			cover_image_path: imageCover
-		})
-		.select()
-
-	if (error) throw error;
-
-	return { createdArtist }
-}
-
 export function useCreateArtist() {
-	const queryClient = useQueryClient();
-
 	const { toast } = useToast();
-	const { data: user } = useUserQuery();
+	const qc = useQueryClient()
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
+	
 	const { uploadArtistImageMutation } = useCreateArtistImage();
 	const { uploadArtistCoverImageMutation } = useCreateArtistCoverImage();
-
+	
 	const form = useForm<zodArtistSchema>({
 		resolver: zodResolver(createArtistSchema),
 		defaultValues: {
@@ -72,55 +39,45 @@ export function useCreateArtist() {
 			avatar: null
 		}
 	});
-
+	
 	const createArtistMutation = useMutation({
-		mutationFn: async (
-			values: ArtistAttributesType
-		) => {
-			if (user) {
-				const [imageData, imageCoverData] = await Promise.all([
-					uploadArtistImageMutation.mutateAsync(values),
-					uploadArtistCoverImageMutation.mutateAsync(values)
-				])
-
-				if (!imageData) return;
-
-				const { createdArtist } = await createArtistQuery({
-					imageCoverPath: imageCoverData?.path,
-					imagePath: imageData.path,
-					userId: user.id,
-					values: values
-				})
-
-				if (createdArtist) return createdArtist as ArtistEntity[];
-			}
+		mutationFn: async(values: ArtistAttributesType) => {
+			if (!user) return;
+			
+			const [ imageData, imageCoverData ] = await Promise.all([
+				uploadArtistImageMutation.mutateAsync(values),
+				uploadArtistCoverImageMutation.mutateAsync(values)
+			])
+			
+			if (!imageData) return;
+			
+			return createArtist({
+				imageCoverPath: imageCoverData?.path, imagePath: imageData.path, userId: user.id, values: values
+			})
 		},
-		onSuccess: async (data) => {
-			if (data) {
-				const artist = data[0];
-
-				form.reset();
-
-				toast({
-					title: "Артист создан",
-					variant: "right",
-					description: (
-						<ArtistCreatedNotify artist={artist}/>
-					)
-				})
-			}
-
-			await queryClient.invalidateQueries({
+		onSuccess: async(data) => {
+			if (!data) return toast({
+				title: "Ошибка создания артиста. Повторите попытку позже!", variant: "red"
+			})
+			
+			const artistId = data.id;
+			
+			form.reset();
+			
+			toast({
+				title: "Артист создан",
+				variant: "right",
+				description: (
+					<ArtistCreatedNotify artistId={artistId}/>
+				)
+			})
+			
+			return qc.invalidateQueries({
 				queryKey: userArtistsQueryKey(user?.id!)
 			})
 		},
-		onError: () => {
-			toast({
-				title: "Ошибка создания артиста. Повторите попытку позже!",
-				variant: "red"
-			})
-		}
+		onError: e => {throw new Error(e.message)}
 	})
-
+	
 	return { form, createArtistMutation }
 }

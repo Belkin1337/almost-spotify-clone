@@ -1,21 +1,15 @@
 import { UserTracks } from "@/components/user/components/for-authors/user-tracks/components/user-tracks";
 import { Typography } from "@/ui/typography";
 import { Wrapper } from "@/ui/wrapper";
-import { cookies } from "next/headers";
-import { createClient } from "@/lib/utils/supabase/server/supabase-server";
-import { redirect } from "next/navigation";
+import { PageTypes } from "@/types/page-convention";
+import { getUser } from "@/lib/helpers/get-user";
 
 export default async function ProfileListTracksPage({
 	params
-}: {
-	params: { id: string }
-}) {
-	const supabase = createClient(cookies());
-
-	const { data: { user }, error } = await supabase.auth.getUser();
-
-	if (!user || error) redirect('/home')
-
+}: PageTypes) {
+	const { id } = await params;
+	await getUser()
+	
 	return (
 		<Wrapper variant="page">
 			<div className="flex flex-col gap-y-8 p-4">
@@ -31,7 +25,7 @@ export default async function ProfileListTracksPage({
 						</li>
 					</ul>
 				</div>
-				<UserTracks userId={params.id}/>
+				<UserTracks userId={id}/>
 			</div>
 		</Wrapper>
 	)

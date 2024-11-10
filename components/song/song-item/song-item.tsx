@@ -19,24 +19,10 @@ import { SongTitle } from "@/ui/song-title";
 import { useSongArtistListQuery } from "@/lib/query/song/song-artist-list-query";
 
 export const SongItem = ({
-	variant,
-	type,
-	className,
-	song_list,
-	song,
-	playlist,
-	queryOptions,
-	children
+	variant, type, className, song_list, song, playlist, queryOptions, children
 }: ISongItem) => {
-	const {
-		data: artists,
-		isLoading: artistIsLoading,
-		isSuccess
-	} = useSongArtistListQuery(song.id);
-	const {
-		data: album,
-		isLoading: albumIsLoading
-	} = useAlbumBySong(song.id, isSuccess);
+	const { data: artists, isLoading: artistIsLoading, isSuccess } = useSongArtistListQuery(song.id);
+	const { data: album, isLoading: albumIsLoading } = useAlbumBySong(song.id, isSuccess);
 
 	const { playerAttributes } = usePlayerStateQuery();
 	const { onPlay } = usePlay();

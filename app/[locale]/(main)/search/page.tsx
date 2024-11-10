@@ -1,31 +1,28 @@
-import { cookies } from "next/headers";
-import { createClient } from "@/lib/utils/supabase/server/supabase-server";
-import { redirect } from "next/navigation";
 import { Wrapper } from "@/ui/wrapper";
 import { SearchRecentArtistsList } from "@/components/search/recent/artists/search-recent-artists-list";
 import { SearchGenres } from "@/components/search/genres/components/search-genres";
 import { SearchSimilarResults } from "@/components/search/result/similar/components/search-similar-results";
+import { getUser } from "@/lib/helpers/get-user";
+
+type SearchPageProps = {
+	searchParams: Promise<{ title: string }>
+}
 
 export default async function SearchPage({
 	searchParams
-}: {
-	searchParams: { title: string }
-}) {
-	const supabase = createClient(cookies())
-	const { data: { user }, error } = await supabase.auth.getUser()
-
-	if (error || !user) redirect('/home')
-
+}: SearchPageProps) {
+	const { title } = await searchParams;
+	await getUser()
+	
 	return (
 		<Wrapper variant="page">
 			<div className="p-6 w-full h-full">
-				{!searchParams.title ? (
+				{!title ? (
 					<div className="flex flex-col w-full gap-y-2">
 						<SearchRecentArtistsList type="sliced"/>
 						<SearchGenres/>
 					</div>
-				) : <SearchSimilarResults title={searchParams.title}/>
-				}
+				) : <SearchSimilarResults title={title}/>}
 			</div>
 		</Wrapper>
 	)

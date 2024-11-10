@@ -1,23 +1,17 @@
 import { Wrapper } from "@/ui/wrapper";
-import { createClient } from "@/lib/utils/supabase/server/supabase-server";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { SingleItemPage } from "@/components/single/page/single-item-page";
+import { PageTypes } from "@/types/page-convention";
+import { getUser } from "@/lib/helpers/get-user";
 
 export default async function SinglePage({
 	params
-}: {
-	params: { id: string }
-}) {
-	const supabase = createClient(cookies());
-
-	const { data: { user }, error } = await supabase.auth.getUser();
-
-	if (!user || error) redirect('/home');
+}: PageTypes) {
+	const { id } = await params;
+	await getUser()
 
 	return (
 		<Wrapper variant="page">
-			<SingleItemPage singleId={params.id}/>
+			<SingleItemPage singleId={id}/>
 		</Wrapper>
 	)
 }

@@ -1,25 +1,22 @@
-import { createClient } from "@/lib/utils/supabase/server/supabase-server";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { PageAlbumItem } from "@/components/album/components/page/page-album-item";
 import { Wrapper } from "@/ui/wrapper";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import { getUser } from "@/lib/helpers/get-user";
 
 export default async function AlbumPage({
 	params
 }: {
 	params: {
-    id: string
-  }
+		id: string
+	}
 }) {
-	const queryClient = new QueryClient();
-	const supabase = createClient(cookies())
-	const { data: { user } } = await supabase.auth.getUser()
-
-	if (!user) redirect('/home');
-
+	await getUser()
+	
+	const qc = new QueryClient();
+	const dehydratedState = dehydrate(qc)
+	
 	return (
-		<HydrationBoundary state={dehydrate(queryClient)}>
+		<HydrationBoundary state={dehydratedState}>
 			<Wrapper variant="page">
 				<PageAlbumItem albumId={params.id}/>
 			</Wrapper>

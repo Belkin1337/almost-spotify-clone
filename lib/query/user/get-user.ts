@@ -1,18 +1,19 @@
 "use server"
 
-import { GenreType } from "@/lib/constants/shared/genres-list";
 import { createClient } from "@/lib/utils/supabase/server/supabase-server";
 
-export async function getGenreList(): Promise<GenreType[]> {
+export async function getUserById(id: string) {
 	const supabase = await createClient();
 	
 	const { data, error } = await supabase
-		.from("genres")
-		.select()
+		.from("users")
+		.select("*")
+		.eq("id", id)
+		.single()
 	
 	if (error) {
 		throw new Error(error.message)
 	}
 	
-	return data
+	return data;
 }

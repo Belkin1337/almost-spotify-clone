@@ -1,5 +1,5 @@
-import { useUserQuery } from "@/lib/query/user/user-query";
-import { useMutation } from "@tanstack/react-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArtistAttributesType } from "@/components/forms/artist/hooks/use-create-artist";
 import { useDeleteArtistCoverImage } from "@/components/forms/artist/hooks/use-delete-artist-cover-image";
 import { useDeleteArtistImage } from "@/components/forms/artist/hooks/use-delete-artist-image";
@@ -11,6 +11,7 @@ import { Typography } from "@/ui/typography";
 import { useRouter } from "next/navigation";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
 import { MESSAGE_ERROR_SOMETHING, MESSAGE_SUCCESS_ARTIST_DELETE } from "@/lib/constants/messages/messages";
+import { UserEntity } from "@/types/user";
 
 const supabase = createClient();
 
@@ -33,6 +34,9 @@ async function deleteArtistQuery({
 }
 
 export function useDeleteArtist() {
+	const qc = useQueryClient()
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
+	
 	const { toast } = useToast();
 	const { refresh } = useRouter();
 	const { closeDialog } = useDialog();
@@ -40,7 +44,6 @@ export function useDeleteArtist() {
 	const { deleteArtistImageMutation } = useDeleteArtistImage()
 	const { deleteSongMutation } = useDeleteSong()
 	const { deleteArtistCoverImageMutation } = useDeleteArtistCoverImage()
-	const { data: user } = useUserQuery();
 
 	const deleteArtistMutation = useMutation({
 		mutationFn: async (

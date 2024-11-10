@@ -6,9 +6,11 @@ import { Typography } from "@/ui/typography";
 import { PlaylistToolsBar } from "@/components/sections/collection/liked-songs/components/liked-songs-tools-bar";
 import { SongItem } from "@/components/song/song-item/song-item";
 import { useInView } from "react-intersection-observer"
-import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import { useFollowedSongsQuery } from "@/lib/query/user/followed-songs-query";
 import { SongListWrapper } from "@/components/wrappers/song-list-wrapper";
+import { UserEntity } from "@/types/user";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
+import { useQueryClient } from "@tanstack/react-query"
 
 export const DEFAULT_LIMIT = 10;
 
@@ -32,41 +34,21 @@ const SomethingWrongError = () => {
 	)
 }
 
-// const supabase = createClient();
-
-export const LikedSongsList = memo(({
-	userId
-}: {
-	userId: string
-}) => {
-	// const queryClient = useQueryClient();
-
+export const LikedSongsList = memo(() => {
+	const qc = useQueryClient()
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
+	if (!user) return null;
+	
 	const [limit, setLimit] = useState<number>(DEFAULT_LIMIT);
-	// const cachedData = queryClient.getQueryData<FollowedSongs>(followedSongsQueryKey(userId, limit));
-
-	const { ref, inView, entry } = useInView({
-		rootMargin: '50%',
-		threshold: 1
+	
+	const { ref, inView } = useInView({
+		rootMargin: '50%', threshold: 1
 	})
 
-	const {
-		data: followedSongs,
-		isError,
-		isLoading: followedSongsLoading,
-		refetch,
-		isFetching
-	} = useFollowedSongsQuery(userId, limit);
-
-	// const getCachedSongs = useCallback(() => {
-	// 	if (cachedData) {
-	// 		return cachedData?.songs
-	// 	}
-	// }, [cachedData])
+	const { data: followedSongs, isError, isLoading: followedSongsLoading, refetch } = useFollowedSongsQuery(user.id, limit);
 
 	useEffect(() => {
 		if (inView) {
-			// const cachedSongs = getCachedSongs();
-
 			refetch();
 			setLimit((limit) => limit + 10);
 		}

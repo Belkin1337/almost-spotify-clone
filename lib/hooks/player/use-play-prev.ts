@@ -1,12 +1,15 @@
 import { useCallback } from "react";
-import { useUserQuery } from "@/lib/query/user/user-query";
 import { usePlayerStateQuery } from "@/lib/query/player/player-state-query";
 import { useSetSongAttributes } from "@/lib/hooks/player/use-set-song-attributes";
 import { usePlayer } from "@/components/player/hooks/use-player";
+import { useQueryClient } from "@tanstack/react-query"
+import { UserEntity } from "@/types/user";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 
 export const usePlayPrev = () => {
   const { playerAttributes } = usePlayerStateQuery();
-  const { data: user } = useUserQuery();
+  const qc = useQueryClient();
+  const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
   const { setNewSongAttributes  } = useSetSongAttributes()
   const {setPlayerAttributes} = usePlayer()
 

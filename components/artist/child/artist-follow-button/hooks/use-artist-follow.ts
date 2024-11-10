@@ -1,17 +1,19 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useUserQuery } from "@/lib/query/user/user-query"
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query"
 import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import { useCallback } from "react";
 import { followedArtistQueryKey, userFollowedArtistsQueryKey } from "@/lib/querykeys/artist";
 import { useToast } from "@/lib/hooks/ui/use-toast";
 import { useFollowedArtistQuery } from "@/components/artist/child/artist-follow-button/hooks/use-followed-artist-query";
+import { UserEntity } from "@/types/user";
 
 const supabase = createClient();
 
 export function useArtistFollow(artistId: string) {
 	const qc = useQueryClient()
 	const { toast } = useToast();
-	const { data: user } = useUserQuery();
+	
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
 	
 	const { data: followedArtist } = useFollowedArtistQuery({
 		artistId, userId: user?.id

@@ -5,16 +5,16 @@ import { Typography } from "@/ui/typography";
 import { useWidget } from "@/lib/hooks/ui/use-widget";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/ui/accordion";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query"
 import { useAudioStateQuery } from "@/lib/query/player/audio-state-query";
 import { usePlayerStateQuery } from "@/lib/query/player/player-state-query";
 import { useVolumeStateQuery } from "@/lib/query/player/volume-state-query";
-import { User } from "@supabase/supabase-js";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
+import { UserEntity } from "@/types/user";
 
-export const Debug = ({
-	user
-}: {
-	user: User
-}) => {
+export const Debug = () => {
+	const qc = useQueryClient()
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
 	const [open, setOpen] = useState(false);
 	const { widgetState } = useWidget()
 	const { playerAttributes } = usePlayerStateQuery();

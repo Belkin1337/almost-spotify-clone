@@ -4,19 +4,17 @@ import { setStaticParamsLocale } from "next-international/server";
 import { about, widgets } from "@/content/lang/pages";
 import { IntroBrand } from "@/components/static/widget/components/intro-brand";
 import { WidgetCard } from "@/ui/widget-card";
+import { PageTypes } from "@/types/page-convention";
 
 export default async function BrandPage({ 
-  params: { locale } 
-}: { 
-  params: { locale: string } 
-}) {
+  params
+}: PageTypes) {
+  const { locale } = await params;
   setStaticParamsLocale(locale);
 
   const brandLocale = await getScopedI18n('brand.main');
   const widgetsLocale = widgets(brandLocale);
-
   const a_lang = await getScopedI18n('brand.about');
-
   const aboutLang = about(a_lang);
 
   return (
@@ -35,7 +33,8 @@ export default async function BrandPage({
       </div>
       <div className="w-[95%] mx-auto">
         <div className="flex flex-col items-center justify-center mt-6">
-          <p className="text-WHITE text-[1.6rem] xl:text-[3rem]">{brandLocale('content.intro.main-title')}
+          <p className="text-WHITE text-[1.6rem] xl:text-[3rem]">
+            {brandLocale('content.intro.main-title')}
             <span className="text-neutral-400 text-[1.5rem] xl:text-[2.4rem]">
               &nbsp;{brandLocale('content.intro.main-subtitle')}
             </span>

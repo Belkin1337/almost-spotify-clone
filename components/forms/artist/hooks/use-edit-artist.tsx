@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import { useCreateArtistImage } from "@/components/forms/artist/hooks/use-create-artist-image";
-import { useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { ArtistAttributesType } from "@/components/forms/artist/hooks/use-create-artist";
 import { useMutation } from "@tanstack/react-query";
 import { ArtistEntity } from "@/types/artist";
@@ -10,6 +10,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createArtistSchema } from "@/components/forms/artist/schemas/schema-artist";
 import { z } from "zod";
+import { UserEntity } from "@/types/user";
+import { useQueryClient } from "@tanstack/react-query"
 
 const supabase = createClient();
 
@@ -25,19 +27,19 @@ async function updateArtistQuery({
 	values
 }: UpdateArtistQueryType) {
 	const { data: updatedArtist, error: updatedArtistErr } = await supabase
-		.from("artists")
-		.update({
-			user_id: userId,
-			title: values.name,
-			description: values.description,
-			avatar_path: values.avatar_path,
-			cover_image_path: values.cover_image_path,
-		})
-		.eq('id', values.id)
-		.select();
-
+	.from("artists")
+	.update({
+		user_id: userId,
+		title: values.name,
+		description: values.description,
+		avatar_path: values.avatar_path,
+		cover_image_path: values.cover_image_path,
+	})
+	.eq('id', values.id)
+	.select();
+	
 	if (updatedArtistErr) throw updatedArtistErr;
-
+	
 	return { updatedArtist }
 }
 
@@ -46,11 +48,12 @@ export const useEditArtist = ({
 }: {
 	artist: ArtistEntity
 }) => {
-	const { data: user } = useUserQuery();
+	const qc = useQueryClient()
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
 	const { toast } = useToast();
-
+	
 	const { uploadArtistImageMutation } = useCreateArtistImage();
-
+	
 	const form = useForm<zodEditSchema>({
 		resolver: zodResolver(createArtistSchema),
 		defaultValues: {
@@ -60,44 +63,40 @@ export const useEditArtist = ({
 			avatar: undefined
 		}
 	})
-
+	
 	const editArtistMutation = useMutation({
-		mutationFn: async (
-			values: ArtistAttributesType
-		) => {
-			if (user && values) {
-				const [imageData] = await Promise.all([
-					uploadArtistImageMutation.mutateAsync(values)
-				])
-
-				if (!imageData) return;
-
-				const { updatedArtist } = await updateArtistQuery({
-					userId: user.id,
-					values: values
-				})
-
-				return updatedArtist as ArtistEntity[];
-			}
+		mutationFn: async(values: ArtistAttributesType) => {
+			if (!user || !values) return;
+			
+			const [ imageData ] = await Promise.all([
+				uploadArtistImageMutation.mutateAsync(values)
+			])
+			
+			if (!imageData) return;
+			
+			const { updatedArtist } = await updateArtistQuery({
+				userId: user.id,
+				values: values
+			})
+			
+			return updatedArtist as ArtistEntity[];
 		},
-		onSuccess: async (data) => {
-			if (data) {
-				form.reset();
-
-				toast({
-					title: "Данные артиста изменены",
-					description: (<ArtistEditedNotify artist={data[0]}/>),
-					variant: "right"
-				})
-			}
-		},
-		onError: () => {
-			toast({
+		onSuccess: async(data) => {
+			if (!data) return toast({
 				title: "Ошибка изменения артиста. Повторите попытку позже!",
 				variant: "red"
 			})
-		}
+			
+			form.reset();
+			
+			toast({
+				title: "Данные артиста изменены",
+				description: (<ArtistEditedNotify artist={data[0]}/>),
+				variant: "right"
+			})
+		},
+		onError: e => {throw new Error(e.message)}
 	})
-
+	
 	return { editArtistMutation, form }
 }

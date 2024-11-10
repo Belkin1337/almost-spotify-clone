@@ -1,8 +1,9 @@
 import { createClient } from "@/lib/utils/supabase/client/supabase-client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SongAttributes, SongEntity } from "@/types/song";
-import { useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { SingleEntity } from "@/types/single";
+import { UserEntity } from "@/types/user";
 
 const supabase = createClient();
 
@@ -31,19 +32,20 @@ async function createSingleQuery({
 	return { newSingle }
 }
 
+type CreateSingle = {
+	song: SongEntity,
+	imageData: { path: string },
+	values: SongAttributes
+}
+
 export const useCreateSingle = () => {
-	const { data: user } = useUserQuery();
+	const qc = useQueryClient()
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
 
 	const createSingleMutation = useMutation({
 		mutationFn: async ({
-			song,
-			imageData,
-			values
-		}: {
-			song: SongEntity,
-			imageData: { path: string },
-			values: SongAttributes
-		}) => {
+			song, imageData, values
+		}: CreateSingle) => {
 			if (user) {
 				try {
 					const { newSingle } = await createSingleQuery({

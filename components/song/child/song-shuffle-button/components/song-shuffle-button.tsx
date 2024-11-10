@@ -1,12 +1,15 @@
 import { Button } from "@/ui/button"
 import { ShuffleButtonType } from "@/components/song/child/song-shuffle-button/types/song-shuffle-button-types";
-import { useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { ShuffleIcon } from "@/ui/icons/shuffle-icon";
+import { UserEntity } from "@/types/user";
+import { useQueryClient } from "@tanstack/react-query"
 
 export const SongShuffleButton = ({
   song_list
 }: ShuffleButtonType) => {
-  const { data: user } = useUserQuery();
+  const qc = useQueryClient()
+  const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
 
   return (
     <Button size="md" align="centered">

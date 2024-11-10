@@ -1,13 +1,22 @@
-import { PostgrestSingleResponse, SupabaseClient } from "@supabase/supabase-js";
+"use server"
+
 import { SongEntity } from "@/types/song";
+import { createClient } from "@/lib/utils/supabase/server/supabase-server";
 
 export async function getSongById(
-  client: SupabaseClient,
   songId: string
-): Promise<PostgrestSingleResponse<SongEntity>> {
-  return client
+): Promise<SongEntity> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
     .from('songs')
     .select('*')
     .eq('id', songId)
-    .single();
+    .single()
+
+  if (error) {
+    throw new Error(error.message)
+  }
+  
+  return data;
 }

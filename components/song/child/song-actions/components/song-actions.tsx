@@ -10,7 +10,7 @@ import { ChevronRight, Copy, ListMinus, Radio, SquareCode, Upload } from "lucide
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/ui/hover-card";
 import { Input } from "@/ui/input";
 import { usePlaylistsListByUser } from "@/lib/query/playlist/playlists-by-user-query";
-import { useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY, useUserQuery } from "@/lib/query/user/user-query";
 import { useFollowedSongsQuery } from "@/lib/query/user/followed-songs-query";
 import { useCallback } from "react"
 import { SongEntity } from "@/types/song";
@@ -30,6 +30,7 @@ import { UserCheckedIcon } from "@/ui/icons/user-icon";
 import { TrashIcon } from "@/ui/icons/trash-icon";
 import { SearchIcon } from "@/ui/icons/search-icon";
 import { ChevronRightIcon } from "@/ui/icons/chevrons-icon";
+import { UserEntity } from "@/types/user";
 
 interface ISongActions {
 	song: SongEntity,
@@ -40,41 +41,38 @@ export const SongActions = ({
 	song,
 	playlist
 }: ISongActions) => {
-	const queryClient = useQueryClient()
-
+	const qc = useQueryClient()
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
 	const { push } = useRouter();
- 	const { data: user } = useUserQuery();
 	const { data: followedSongs } = useFollowedSongsQuery(user?.id)
 	const { data: userPlaylists } = usePlaylistsListByUser(user?.id, true, 6)
-
-	const songArtists = queryClient.getQueryData<ArtistBySong>(
+	
+	const songArtists = qc.getQueryData<ArtistBySong>(
 		songArtistsQueryKey(song.id)
 	)
-
+	
 	const songArtist = songArtists?.artists[0];
-
+	
 	const checkSongFollowStatus = useCallback((
 		songId: string
 	) => {
 		if (followedSongs) return followedSongs.songs!.some(item => item.id === songId);
-
+		
 		return false;
-	}, [followedSongs])
-
-	const checkSongInPlaylist = useCallback((
-		songId: string
-	) => {
-		if (playlist) {
-			const playlistSongs = queryClient.getQueryData<SongEntity[]>(
-				playlistSongsQueryKey(playlist.id)
-			);
-
-			if (playlistSongs) return playlistSongs.some(playlistSong => playlistSong.id === songId);
-
-			return false;
-		}
-	}, [playlist, queryClient])
-
+	}, [ followedSongs ])
+	
+	const checkSongInPlaylist = (songId: string) => {
+		if (!playlist) return
+		
+		const playlistSongs = qc.getQueryData<SongEntity[]>(
+			playlistSongsQueryKey(playlist.id)
+		);
+		
+		if (playlistSongs) return playlistSongs.some(playlistSong => playlistSong.id === songId);
+		
+		return false;
+	}
+	
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger className="w-min">

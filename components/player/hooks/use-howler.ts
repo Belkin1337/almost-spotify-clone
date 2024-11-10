@@ -4,10 +4,13 @@ import { useAudio } from "@/components/player/hooks/use-audio";
 import { useAudioStateQuery } from "@/lib/query/player/audio-state-query";
 import { usePlayer } from "@/components/player/hooks/use-player";
 import { usePlayerStateQuery } from "@/lib/query/player/player-state-query";
-import { useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
+import { UserEntity } from "@/types/user";
+import { useQueryClient } from "@tanstack/react-query"
 
 export const useHowler = () => {
-	const { data: user } = useUserQuery()
+	const qc = useQueryClient();
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
 	const { setAudioAttributes } = useAudio()
 	const { setPlayerAttributes } = usePlayer()
 	const { audioAttributes } = useAudioStateQuery()

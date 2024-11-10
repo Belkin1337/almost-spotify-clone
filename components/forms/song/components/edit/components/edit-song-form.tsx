@@ -1,15 +1,18 @@
 import { Form } from "@/ui/form";
 import { useCallback, useRef } from "react";
-import { useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { useEditSong } from "@/components/forms/song/components/edit/hooks/use-edit-song";
 import { zodSongSchema } from "@/components/forms/song/components/create/types/create-form-types";
 import { EditSongFormFields } from "@/components/forms/song/components/edit/components/edit-song-form-fields";
 import { SongItemsProps } from "@/components/forms/song/types/song-types";
+import { UserEntity } from "@/types/user";
+import { useQueryClient } from "@tanstack/react-query"
 
 export const EditSongForm = ({
 	song
 }: SongItemsProps) => {
-	const { data: user } = useUserQuery();
+	const qc = useQueryClient()
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
 	const { editSongMutation, form } = useEditSong();
 
 	const imageRef = useRef<HTMLInputElement>(null)

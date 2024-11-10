@@ -1,14 +1,8 @@
-import { createClient } from "@/lib/utils/supabase/server/supabase-server";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { Wrapper } from "@/ui/wrapper";
+import { getUser } from "@/lib/helpers/get-user";
 
 export default async function ForAuthorsCreateSinglePage() {
-	const supabase = createClient(cookies());
-
-	const { data: { user }, error } = await supabase.auth.getUser();
-
-	if (error || !user) redirect('/home');
+	await getUser()
 
 	return (
 		<Wrapper variant="page">

@@ -1,29 +1,14 @@
 "use client"
 
-import { createClient } from "@/lib/utils/supabase/client/supabase-client";
+import { useQuery, QueryKey } from "@tanstack/react-query";
+import { getUserById } from "@/lib/query/user/get-user";
 import { UserEntity } from "@/types/user";
-import { useQuery } from "@tanstack/react-query";
-import { userQueryKey } from "@/lib/querykeys/user";
 
-const supabase = createClient();
+export const USER_QUERY_KEY: QueryKey = [ "user" ]
 
-export const useUserQuery = () => {
-  return useQuery({
-    queryKey: userQueryKey,
-    queryFn: async () => {
-      const { data: userSession, error } = await supabase.auth.getUser();
-
-      if (userSession.user && !error) {
-        const { data } = await supabase
-          .from("users")
-          .select("*")
-          .eq("id", userSession.user?.id)
-          .single();
-
-        const user = data as UserEntity;
-
-        return user
-      }
-    },
-  })
-};
+export const useUserQuery = (id: string) => useQuery<UserEntity>({
+	queryKey: USER_QUERY_KEY,
+	queryFn: async() => getUserById(id),
+	retry: 1,
+	refetchOnWindowFocus: false
+})

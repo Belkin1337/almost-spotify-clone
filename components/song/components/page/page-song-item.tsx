@@ -13,8 +13,9 @@ import dynamic from "next/dynamic";
 import { PageSongRecommendations } from "@/components/song/components/page/components/page-song-recommendations";
 import { PageSongArtistsTracks } from "@/components/song/components/page/components/page-song-artists-tracks";
 
-const PageSongMore = dynamic(() => import("@/components/song/components/page/components/page-song-more")
-  .then(mod => mod.PageSongMore))
+const PageSongMore = dynamic(() =>
+  import("@/components/song/components/page/components/page-song-more").then(mod => mod.PageSongMore)
+)
 
 export const SongItemPage = ({
   songId
@@ -22,7 +23,7 @@ export const SongItemPage = ({
   songId: string
 }) => {
   const { data, isLoading, isError } = useSongQuery(songId);
-  const song = data?.data;
+  const song = data;
 
   const { data: songArtists } = useSongArtistListQuery(song?.id!);
   const { data: artist } = useArtistQuery(songArtists?.firstArtist.id!)

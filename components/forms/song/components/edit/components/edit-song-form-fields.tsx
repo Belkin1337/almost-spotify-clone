@@ -1,5 +1,5 @@
 import { ChangeEvent, MouseEvent, useState } from "react";
-import { useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { useUserArtistListQuery } from "@/lib/query/user/user-artists-list-query";
 import { useGenresQuery } from "@/lib/query/genre/genres-query";
 import { useAddFieldsValue } from "@/components/forms/song/hooks/use-add-fields-value";
@@ -25,6 +25,8 @@ import {
 	IFormFields
 } from "@/components/forms/song/components/create/components/create-song-form-fields";
 import { SongItemsProps } from "@/components/forms/song/types/song-types";
+import { UserEntity } from "@/types/user";
+import { useQueryClient } from "@tanstack/react-query"
 
 type EditSongFormFieldsProps = SongItemsProps & IFormFields
 
@@ -32,8 +34,8 @@ export const EditSongFormFields = ({
 	form, isLoading, song
 }: EditSongFormFieldsProps) => {
 	const [creditsOpen, setCreditsOpen] = useState<boolean>(false);
-
-	const { data: user } = useUserQuery();
+	const qc = useQueryClient()
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
 	const { data: userArtists } = useUserArtistListQuery(user?.id!);
 	const { data: genres } = useGenresQuery();
 	const { changeInputValues, handleRemoveArtist } = useAddFieldsValue();
