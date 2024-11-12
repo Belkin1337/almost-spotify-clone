@@ -1,38 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import { SongEntity } from "@/types/song";
 import { PlaylistEntity } from "@/types/playlist";
 import { playlistSongsQueryKey } from "@/lib/querykeys/playlist";
 import { useUploadPlaylistImage } from "@/components/forms/playlist/hooks/use-upload-playlist-image";
 import { useToast } from "@/lib/hooks/ui/use-toast";
 import { userPlaylistsQueryKey } from "@/lib/querykeys/user";
-import { USER_QUERY_KEY, useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { MESSAGE_ERROR_PLAYLIST_DONT_PERMISSION, MESSAGE_ERROR_SOMETHING } from "@/lib/constants/messages/messages";
 import { UserEntity } from "@/types/user";
-
-const supabase = createClient();
-
-type AddSongToPlaylistQueryType = {
-	songId: string,
-	playlistId: string
-}
-
-async function addSongToPlaylistQuery({
-	songId,
-	playlistId,
-}: AddSongToPlaylistQueryType) {
-	const { data: addedSong, error: addedSongErr } = await supabase
-	.from("song_playlists")
-	.insert({
-		song_id: songId,
-		playlist_id: playlistId
-	})
-	.select()
-	
-	if (addedSongErr) throw addedSongErr;
-	
-	return { addedSong }
-}
+import { addSongToPlaylist } from "@/components/forms/playlist/queries/add-song-to-playlist";
 
 export const useAddSongsToPlaylist = () => {
 	const qc = useQueryClient()
@@ -42,24 +18,21 @@ export const useAddSongsToPlaylist = () => {
 	
 	const addSongsMutation = useMutation({
 		mutationFn: async({ song, playlist }: { song: SongEntity, playlist: PlaylistEntity }) => {
-			if (playlist.user_id === user?.id) {
-				const { addedSong } = await addSongToPlaylistQuery({
-					songId: song.id,
-					playlistId: playlist.id
-				})
-				
-				return addedSong as SongEntity[]
-			} else {
+			if (playlist.user_id !== user?.id) {
 				toast({
 					title: MESSAGE_ERROR_PLAYLIST_DONT_PERMISSION,
 					variant: "red"
 				})
-				
 				return;
 			}
+			
+			return addSongToPlaylist({
+				songId: song.id,
+				playlistId: playlist.id
+			})
 		},
 		onSuccess: async(data, variables,) => {
-			if (!data) return	toast({
+			if (!data) return toast({
 				title: MESSAGE_ERROR_SOMETHING,
 				variant: "red"
 			});
@@ -76,17 +49,16 @@ export const useAddSongsToPlaylist = () => {
 				variant: "right"
 			})
 			
-			await qc.invalidateQueries({
-				queryKey: playlistSongsQueryKey(variables.playlist.id)
-			})
-			
-			await qc.invalidateQueries({
-				queryKey: userPlaylistsQueryKey(user?.id!)
-			})
+			await Promise.all([
+				qc.invalidateQueries({
+					queryKey: playlistSongsQueryKey(variables.playlist.id)
+				}),
+				qc.invalidateQueries({
+					queryKey: userPlaylistsQueryKey(user?.id!)
+				})
+			])
 		},
-		onError: e => {
-			throw new Error(e.message)
-		}
+		onError: e => {throw new Error(e.message)}
 	})
 	
 	return { addSongsMutation }

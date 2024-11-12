@@ -6,17 +6,15 @@ import { IBackgroundStateQuery } from "@/lib/query/ui/background-state-query";
 import { DEFAULT_BACKGROUND_COLOR, LIKED_SONGS_COLOR } from "@/lib/constants/ui/background-colors";
 
 export const useControlBackgroundState = () => {
-	const queryClient = useQueryClient();
+	const qc = useQueryClient();
 
 	const setBackgroundStateAttributes = useMutation({
-		mutationFn: async (
-			newValues: IBackgroundStateQuery
-		) => {
-			queryClient.setQueryData<IBackgroundStateQuery>(
+		mutationFn: async (newValues: IBackgroundStateQuery) => {
+			return qc.setQueryData<IBackgroundStateQuery>(
 				backgroundColorSampleQueryKey,
 				(prev) => {
 					let imageUrl = newValues.imageUrl;
-
+					
 					if (newValues.type) {
 						if (newValues.type === 'liked_songs') imageUrl = LIKED_SONGS_COLOR;
 					}
@@ -28,23 +26,16 @@ export const useControlBackgroundState = () => {
 	})
 
 	const getBackgroundSampleImage = useCallback(async ({
-		imageUrl,
-		type
+		imageUrl, type
 	}: IBackgroundStateQuery) => {
 		if (imageUrl) {
 			const output = await getColorAverage(imageUrl);
 
-			if (output) setBackgroundStateAttributes.mutate({
-				imageUrl: output
-			})
+			if (output) return setBackgroundStateAttributes.mutate({ imageUrl: output })
 		} else if (!imageUrl && type) {
-			setBackgroundStateAttributes.mutate({
-				type: type
-			})
+			return setBackgroundStateAttributes.mutate({ type })
 		} else if (!imageUrl && !type) {
-			setBackgroundStateAttributes.mutate({
-				imageUrl: DEFAULT_BACKGROUND_COLOR
-			})
+			return setBackgroundStateAttributes.mutate({ imageUrl: DEFAULT_BACKGROUND_COLOR })
 		}
 	}, [setBackgroundStateAttributes])
 

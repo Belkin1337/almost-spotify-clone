@@ -15,29 +15,19 @@ export const DeleteConfirmArtistForm = ({
 }: ArtistItemProps) => {
 	const qc = useQueryClient()
 	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
-	const { toast } = useToast();
 	const { closeDialog } = useDialog();
 	const { deleteArtistMutation } = useDeleteArtist();
-
-	const onSubmit = useCallback(async () => {
-		try {
-			if (artist && user) {
-				await deleteArtistMutation.mutateAsync({
-					id: artist.id,
-					cover_image_path: artist.cover_image_path,
-					avatar_path: artist.avatar_path
-				})
-			} else {
-				toast({
-					title: "Что-то пошло не так...",
-					variant: "red"
-				})
-			}
-		} catch (e) {
-			throw e;
-		}
-	}, [deleteArtistMutation, artist, toast, user])
-
+	
+	const onSubmit = () => {
+		if (!artist || !user) return;
+		
+		const { id, cover_image_path, avatar_path } = artist;
+		
+		return deleteArtistMutation.mutate({
+			id, cover_image_path, avatar_path
+		})
+	}
+	
 	return (
 		<div className="flex flex-col items-center gap-4 p-6 min-w-[600px]">
 			<Typography className="text-lg !font-bold">

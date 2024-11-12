@@ -1,5 +1,4 @@
-import { USER_QUERY_KEY, useUserQuery } from "@/lib/query/user/user-query";
-import { createClient } from "@/lib/utils/supabase/client/supabase-client";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { usePlaylistsListByUser } from "@/lib/query/playlist/playlists-by-user-query";
 import { PlaylistEntity } from "@/types/playlist";
@@ -9,49 +8,8 @@ import { playlist_route } from "@/lib/constants/routes/routes";
 import { userPlaylistsQueryKey } from "@/lib/querykeys/user";
 import { MESSAGE_ERROR_PLAYLIST_CREATE } from "@/lib/constants/messages/messages";
 import { UserEntity } from "@/types/user";
-
-const supabase = createClient();
-
-type CreatePlaylistQueryType = {
-	userId: string,
-	title: string
-}
-
-type CreatePlaylistUsersQueryType = {
-	playlistId: string,
-	userId: string
-}
-
-async function createPlaylistQuery({
-	userId,
-	title
-}: CreatePlaylistQueryType) {
-	const { data: newPlaylist, error: newPlaylistErr } = await supabase
-	.from("playlists")
-	.insert({
-		user_id: userId,
-		title: title
-	})
-	.select();
-	
-	if (newPlaylistErr) throw newPlaylistErr;
-	
-	return { newPlaylist }
-}
-
-async function createPlaylistUsersQuery({
-	userId,
-	playlistId
-}: CreatePlaylistUsersQueryType) {
-	const { error } = await supabase
-	.from("playlists_users")
-	.insert({
-		playlist_id: playlistId,
-		user_id: userId
-	})
-	
-	if (error) throw error;
-}
+import { createPlaylist } from "@/components/forms/playlist/queries/create-playlist";
+import { createPlaylistUsers } from "@/components/forms/playlist/queries/create-playlist-users";
 
 export const useCreatePlaylist = () => {
 	const { toast } = useToast()
@@ -67,24 +25,18 @@ export const useCreatePlaylist = () => {
 		mutationFn: async() => {
 			if (!user) return;
 			
-			try {
-				const { newPlaylist } = await createPlaylistQuery({
-					userId: user.id,
-					title: defaultPlaylistTitle
+			const newPlaylist = await createPlaylist({
+				userId: user.id, title: defaultPlaylistTitle
+			})
+			
+			if (newPlaylist) {
+				const playlistId = newPlaylist[0].id;
+				
+				await createPlaylistUsers({
+					userId: user.id, playlistId
 				})
 				
-				if (newPlaylist) {
-					const playlistId = newPlaylist[0].id;
-					
-					await createPlaylistUsersQuery({
-						userId: user.id,
-						playlistId: playlistId
-					})
-					
-					return newPlaylist as PlaylistEntity[]
-				}
-			} catch (e) {
-				throw e;
+				return newPlaylist as PlaylistEntity[]
 			}
 		},
 		onSuccess: async(data) => {
@@ -97,7 +49,7 @@ export const useCreatePlaylist = () => {
 			
 			push(playlist_route(playlist.id));
 			
-			await qc.invalidateQueries({
+			return qc.invalidateQueries({
 				queryKey: userPlaylistsQueryKey(user?.id!)
 			})
 		},

@@ -1,4 +1,4 @@
-import React, { MouseEvent, useCallback } from "react"
+import React, { MouseEvent } from "react"
 import { Typography } from "@/ui/typography"
 import { useRouter } from "next/navigation"
 import { profile_route } from "@/lib/constants/routes/routes"
@@ -13,23 +13,20 @@ export const UserCard = ({
 }) => {
 	const { push } = useRouter();
 	const { data: avatar } = useUserAvatar(user.id)
-
-	const handlePushUser = useCallback((e: MouseEvent<HTMLDivElement>) => {
+	
+	if (!user) return null;
+	
+	const handlePushUser = (e: MouseEvent<HTMLDivElement>) => {
 		e.stopPropagation()
 		push(profile_route(user?.id))
-	}, [user?.id, push])
-
-	if (!user) return;
+	}
 	
 	return (
 		<div
 			onClick={handlePushUser}
 			className="flex flex-col w-[220px] p-4 hover:bg-neutral-800 gap-y-4 overflow-hidden cursor-pointer rounded-md"
 		>
-			<Avatar
-				rounded="full"
-				user={user}
-			/>
+			<Avatar rounded="full" user={user}/>
 			<div className="flex flex-col">
 				<Typography size="medium" font="medium">
 					{user.full_name}

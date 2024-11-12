@@ -26,9 +26,7 @@ export async function createArtist({
 	})
 	.select("id")
 	.single()
-	
-	console.log(data)
-	
+
 	if (error) throw new Error(error.message)
 	
 	return data

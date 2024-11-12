@@ -6,7 +6,7 @@ import { userQueryKey } from "@/lib/querykeys/user";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateNameSchema } from "@/components/forms/user/personal/name/schemas/schema-update-name";
-import { USER_QUERY_KEY, useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { Typography } from "@/ui/typography";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
 import { useRouter } from "next/navigation";

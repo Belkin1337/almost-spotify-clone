@@ -3,7 +3,7 @@ import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import { SongAttributes, SongEntity } from "@/types/song";
 import { useDeleteSongFile } from "@/components/forms/song/components/delete/hooks/use-delete-song-file";
 import { useDeleteSongImage } from "@/components/forms/song/components/delete/hooks/use-delete-song-image";
-import { USER_QUERY_KEY, useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { userSongsQueryKey } from "@/lib/querykeys/user";
 import { useToast } from "@/lib/hooks/ui/use-toast";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";

@@ -19,7 +19,7 @@ export const PlaylistEditFields = ({
 	playlist, form
 }: PlaylistEditFieldsProps) => {
 	const imageRef = useRef(null);
-
+	
 	return (
 		<div className="flex flex-col p-6 bg-neutral-800 gap-y-4 rounded-xl overflow-hidden w-full">
 			<Typography size="xl" font="semibold">
@@ -41,12 +41,7 @@ export const PlaylistEditFields = ({
 						<FormField
 							control={form.control}
 							name="image"
-							render={({
-								field: {
-									onChange,
-									...field
-								}
-							}) => (
+							render={({ field: { onChange, ...field } }) => (
 								<FormFieldItem {...field}>
 									<Input
 										name="playlist_image"
@@ -63,12 +58,7 @@ export const PlaylistEditFields = ({
 					<FormField
 						control={form.control}
 						name="title"
-						render={({
-							field: {
-								onChange,
-								...field
-							}
-						}) => (
+						render={({ field: { onChange, ...field } }) => (
 							<FormFieldItem {...field}>
 								<Input
 									placeholder='Name...'
@@ -84,12 +74,7 @@ export const PlaylistEditFields = ({
 						<FormField
 							control={form.control}
 							name="description"
-							render={({
-								field: {
-									onChange,
-									...field
-								}
-							}) => (
+							render={({ field: { onChange, ...field } }) => (
 								<FormFieldItem {...field}>
 									<Input
 										placeholder='Add an optional description'
@@ -106,9 +91,7 @@ export const PlaylistEditFields = ({
 			</div>
 			<div className="flex justify-end w-full">
 				<Button rounded="full" align="centered" className="bg-white px-10 py-3">
-					<Typography size="large" font="semibold" text_color="black">
-						Save
-					</Typography>
+					<Typography size="large" font="semibold" text_color="black">Save</Typography>
 				</Button>
 			</div>
 			<Typography size="super_small" font="semibold">

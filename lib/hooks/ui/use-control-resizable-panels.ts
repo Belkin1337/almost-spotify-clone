@@ -12,24 +12,18 @@ export interface IPanelState {
 
 export const useControlResizablePanels = () => {
 	const queryClient = useQueryClient();
-
+	
 	const updatePanelSizeMutation = useMutation({
-		mutationFn: async (
-			newValues: IPanelState
-		) => {
-			queryClient.setQueryData<IPanelState>(
+		mutationFn: async(newValues: IPanelState) => {
+			return queryClient.setQueryData<IPanelState>(
 				resizeStateQueryKey,
 				(prev) => {
 					return { ...prev, ...newValues }
 				}
 			)
 		},
-		onSuccess: async () => {
-			await queryClient.invalidateQueries({
-				queryKey: resizeStateQueryKey
-			})
-		}
+		onSuccess: () => queryClient.invalidateQueries({ queryKey: resizeStateQueryKey })
 	})
-
+	
 	return { updatePanelSizeMutation }
 }

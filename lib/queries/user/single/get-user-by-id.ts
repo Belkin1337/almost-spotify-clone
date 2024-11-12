@@ -1,13 +1,20 @@
-import { UserEntity } from "@/types/user";
-import { PostgrestSingleResponse, SupabaseClient } from "@supabase/supabase-js";
+"use server"
 
-export async function getUserById(
-  client: SupabaseClient, 
-  userId: string
-): Promise<PostgrestSingleResponse<UserEntity>> {
-  return client
+import { UserEntity } from "@/types/user";
+import { createClient } from "@/lib/utils/supabase/server/supabase-server";
+
+export async function getUserById(userId: string): Promise<UserEntity> {
+  const supabase = await createClient();
+  
+  const { data, error } = await supabase
     .from("users")
     .select("*")
     .eq('id', userId)
     .single()
+  
+  if (error) {
+    throw new Error(error.message)
+  }
+  
+  return data;
 }

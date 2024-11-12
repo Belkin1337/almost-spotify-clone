@@ -8,7 +8,6 @@ import { Button } from "@/ui/button";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
 import { signUpSchema } from "@/components/forms/auth/schemas/schema-sign-up";
 import { FormFieldItem } from "@/ui/form-field";
-import { useCallback } from "react";
 import { Typography } from "@/ui/typography";
 import { FaUserTag } from "react-icons/fa";
 import { SignInForm } from "./sign-in-form";
@@ -24,24 +23,21 @@ export const SignUpForm = () => {
 	const form = useForm<zodSignUpSchema>({
 		resolver: zodResolver(signUpSchema),
 		defaultValues: {
-			full_name: "",
-			email: "",
-			password: ""
+			full_name: "", email: "", password: ""
 		},
 	})
 
-	const onSubmit = useCallback(async (values: zodSignUpSchema) => {
-		await signUpMutation.mutateAsync({
-			values: values
-		});
-	}, [signUpMutation])
+	const onSubmit = (values: zodSignUpSchema) => {
+		return signUpMutation.mutate(values);
+	}
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className={`w-[440px] space-y-6 p-8 bg-neutral-900 rounded-xl ${error && 'border border-red-500'}`}>
-				<Typography>
-					Регистрация
-				</Typography>
+			<form
+				onSubmit={form.handleSubmit(onSubmit)}
+				className={`w-[440px] space-y-6 p-8 bg-neutral-900 rounded-xl ${error && 'border border-red-500'}`}
+			>
+				<Typography>Регистрация</Typography>
 				{error && <FormMessage>{error}</FormMessage>}
 				<FormField
 					control={form.control}
@@ -81,9 +77,7 @@ export const SignUpForm = () => {
 					)}
 				/>
 				<Button type="submit" variant="form" align="centered" background_color="default" rounded="medium">
-					<Typography className="relative z-20">
-						Зарегистрироваться
-					</Typography>
+					<Typography className="relative z-20">Зарегистрироваться</Typography>
 				</Button>
 				<div
 					className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full"/>
@@ -92,9 +86,7 @@ export const SignUpForm = () => {
 					className="flex items-center gap-x-2 cursor-pointer"
 				>
 					<FaUserTag size={18} className="text-neutral-400"/>
-					<Typography variant="link">
-						Авторизация
-					</Typography>
+					<Typography variant="link">Авторизация</Typography>
 				</div>
 			</form>
 		</Form>

@@ -8,39 +8,33 @@ import { useState } from "react";
 const supabase = createClient();
 
 export function useSignIn() {
-	const [error, setError] = useState<string>('');
+	const [ error, setError ] = useState<string>('');
 	const { closeDialog } = useDialog();
 	const { refresh } = useRouter();
-
+	
 	const signInMutation = useMutation({
-		mutationFn: async ({
-			values
-		}: {
-			values: zodSignInSchema
-		}) => {
+		mutationFn: async(values: zodSignInSchema) => {
 			const { data, error } = await supabase.auth.signInWithPassword({
 				email: values.email,
 				password: values.password,
 			})
-
+			
 			if (error) return error;
-
+			
 			if (data && !error) return data
 		},
-		onSuccess: async (data) => {
-			if (data) {
-				if ('user' in data) {
-					closeDialog();
-					refresh();
-				} else {
-					setError(data.toString());
-				}
+		onSuccess: async(data) => {
+			if (!data) return;
+			
+			if ('user' in data) {
+				closeDialog();
+				refresh();
+			} else {
+				setError(data.toString());
 			}
 		},
-		onError: (error: Error) => {
-			throw error;
-		}
+		onError: e => {throw new Error(e.message);}
 	})
-
+	
 	return { signInMutation, error }
 }

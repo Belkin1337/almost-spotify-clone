@@ -5,40 +5,24 @@ type WidgetType = {
 	isOpen: boolean
 }
 
-const initial: WidgetType = {
-	isOpen: false
-}
+const initial: WidgetType = { isOpen: false }
 
 export const useWidget = () => {
 	const queryClient = useQueryClient();
-
+	
 	const widgetState = useQuery<WidgetType, Error>({
-		queryKey: widgetQueryKey,
-		initialData: initial
+		queryKey: widgetQueryKey, initialData: initial
 	})
-
+	
 	const handleWidget = useMutation({
-		mutationFn: async () => {
-			return queryClient.setQueryData<WidgetType>(
+		mutationFn: async() => {
+			return queryClient.setQueryData<WidgetType | undefined>(
 				widgetQueryKey,
-				(prev) => {
-				if (!prev) return initial;
-
-				return {
-					...prev,
-					isOpen: !prev.isOpen
-				}
-			})
+				(prev) => ({ ...prev, isOpen: !prev?.isOpen ?? false })
+			)
 		},
-		onSuccess: () => {
-			return queryClient.invalidateQueries({
-				queryKey: widgetQueryKey
-			});
-		}
+		onSuccess: () => queryClient.invalidateQueries({ queryKey: widgetQueryKey })
 	})
-
-	return {
-		handleWidget,
-		widgetState
-	}
+	
+	return { handleWidget, widgetState }
 }

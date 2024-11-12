@@ -23,76 +23,69 @@ async function deleteArtistQuery({
 	values
 }: DeleteArtistQueryType) {
 	const { data: deletedArtist, error: deletedArtistError } = await supabase
-		.from("artists")
-		.delete()
-		.eq('id', values.id)
-		.select();
-
+	.from("artists")
+	.delete()
+	.eq('id', values.id)
+	.select();
+	
 	if (deletedArtistError) throw deletedArtistError;
-
+	
 	return { deletedArtist }
 }
 
 export function useDeleteArtist() {
 	const qc = useQueryClient()
 	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
-	
 	const { toast } = useToast();
 	const { refresh } = useRouter();
 	const { closeDialog } = useDialog();
-
 	const { deleteArtistImageMutation } = useDeleteArtistImage()
 	const { deleteSongMutation } = useDeleteSong()
 	const { deleteArtistCoverImageMutation } = useDeleteArtistCoverImage()
-
+	
 	const deleteArtistMutation = useMutation({
-		mutationFn: async (
-			values: ArtistAttributesType
-		) => {
-			if (user && values) {
-				const [deletedAvatarFile, deletedCoverImageFile] = await Promise.all([
-					deleteArtistImageMutation.mutateAsync(values),
-					deleteArtistCoverImageMutation.mutateAsync(values)
-				])
-
-				const { deletedArtist } = await deleteArtistQuery({
-					values: values
-				})
-
-				if (deletedArtist) {
-					await deleteSongMutation.mutateAsync({
-						artists: [values.id!]
-					})
-				}
-
-				return deletedArtist as ArtistEntity[]
-			}
+		mutationFn: async(values: ArtistAttributesType) => {
+			if (!user || !values) return;
+			
+			const [ deletedAvatarFile, deletedCoverImageFile ] = await Promise.all([
+				deleteArtistImageMutation.mutateAsync(values.avatar_path),
+				deleteArtistCoverImageMutation.mutateAsync(values.cover_image_path)
+			])
+			
+			const { deletedArtist } = await deleteArtistQuery({ values })
+			
+			if (!deletedArtist) return;
+			
+			await deleteSongMutation.mutateAsync({
+				artists: [ values.id! ]
+			})
+			
+			return deletedArtist as ArtistEntity[]
 		},
-		onSuccess: async (data) => {
-			if (data) {
-				const artist = data[0];
-
-				closeDialog();
-				refresh();
-
-				toast({
-					title: MESSAGE_SUCCESS_ARTIST_DELETE,
-					variant: "right",
-					description: (
-						<Typography className="!text-black !font-bold underline">
-							Удаленный артист: {artist.name}
-						</Typography>
-					),
-				})
-			}
-		},
-		onError: () => {
-			toast({
+		onSuccess: async(data) => {
+			if (!data) return toast({
 				title: MESSAGE_ERROR_SOMETHING,
 				variant: "red"
 			})
-		}
+			
+			const artist = data[0];
+			
+			closeDialog();
+			
+			toast({
+				title: MESSAGE_SUCCESS_ARTIST_DELETE,
+				variant: "right",
+				description: (
+					<Typography className="!text-black !font-bold underline">
+						Удаленный артист: {artist.name}
+					</Typography>
+				),
+			})
+			
+			return refresh();
+		},
+		onError: e => {throw new Error(e.message)}
 	})
-
+	
 	return { deleteArtistMutation }
 }

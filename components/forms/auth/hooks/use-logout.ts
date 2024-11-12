@@ -9,8 +9,7 @@ import { auth_route } from "@/lib/constants/routes/routes";
 const supabase = createClient();
 
 export function useLogout() {
-	const queryClient = useQueryClient();
-
+	const qc = useQueryClient();
 	const { audioAttributes } = useAudioStateQuery()
 	const { toast } = useToast();
 	const { push, refresh } = useRouter()
@@ -20,29 +19,21 @@ export function useLogout() {
 	const navbarLocale = useScopedI18n("main-service.main-part.config");
 
 	const logoutMutation = useMutation({
-		mutationFn: async () => {
-			const { error } = await supabase.auth.signOut();
-
-			if (error) throw error;
-		},
+		mutationFn: () => supabase.auth.signOut(),
 		onSuccess: async () => {
 			toast({
 				title: navbarLocale("toast.log-out"),
 				variant: "right"
 			});
-
+			
 			push(auth_route);
-			refresh();
+			qc.clear();
 
 			if (howl) howl.unload() // Unload and destroy a Howl object.
 
-			queryClient.clear();
+			return refresh();
 		},
-		onError: (e: Error) => {
-			push(auth_route);
-
-			throw e;
-		}
+		onError: e => {throw new Error(e.message)}
 	});
 
 	return { logoutMutation }

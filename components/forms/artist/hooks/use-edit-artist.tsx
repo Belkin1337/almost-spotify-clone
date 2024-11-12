@@ -1,4 +1,3 @@
-import { createClient } from "@/lib/utils/supabase/client/supabase-client";
 import { useCreateArtistImage } from "@/components/forms/artist/hooks/use-create-artist-image";
 import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { ArtistAttributesType } from "@/components/forms/artist/hooks/use-create-artist";
@@ -12,36 +11,9 @@ import { createArtistSchema } from "@/components/forms/artist/schemas/schema-art
 import { z } from "zod";
 import { UserEntity } from "@/types/user";
 import { useQueryClient } from "@tanstack/react-query"
-
-const supabase = createClient();
+import { updateArtist } from "@/components/forms/artist/queries/edit-artist";
 
 export type zodEditSchema = z.infer<typeof createArtistSchema>
-
-type UpdateArtistQueryType = {
-	userId: string,
-	values: ArtistAttributesType
-}
-
-async function updateArtistQuery({
-	userId,
-	values
-}: UpdateArtistQueryType) {
-	const { data: updatedArtist, error: updatedArtistErr } = await supabase
-	.from("artists")
-	.update({
-		user_id: userId,
-		title: values.name,
-		description: values.description,
-		avatar_path: values.avatar_path,
-		cover_image_path: values.cover_image_path,
-	})
-	.eq('id', values.id)
-	.select();
-	
-	if (updatedArtistErr) throw updatedArtistErr;
-	
-	return { updatedArtist }
-}
 
 export const useEditArtist = ({
 	artist
@@ -51,7 +23,6 @@ export const useEditArtist = ({
 	const qc = useQueryClient()
 	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
 	const { toast } = useToast();
-	
 	const { uploadArtistImageMutation } = useCreateArtistImage();
 	
 	const form = useForm<zodEditSchema>({
@@ -74,9 +45,8 @@ export const useEditArtist = ({
 			
 			if (!imageData) return;
 			
-			const { updatedArtist } = await updateArtistQuery({
-				userId: user.id,
-				values: values
+			const updatedArtist = await updateArtist({
+				userId: user.id, values
 			})
 			
 			return updatedArtist as ArtistEntity[];

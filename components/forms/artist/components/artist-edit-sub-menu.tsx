@@ -28,7 +28,9 @@ export const ArtistEditSubMenu = ({
 				rounded="medium"
 				onClick={(e: MouseEvent<HTMLButtonElement>) => {
 					e.stopPropagation();
-					openDialog({ dialogChildren: <DeleteConfirmArtistForm artist={artist}/> })
+					openDialog({
+						dialogChildren: <DeleteConfirmArtistForm artist={artist}/>
+					})
 				}}
 			>
 				Удалить

@@ -1,21 +1,14 @@
-import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { updatePlaylistSchema } from "@/components/forms/playlist/schemas/schema-playlist";
-import { PlaylistEntity } from "@/types/playlist";
 import { useLoadImage } from "@/lib/hooks/image/use-load-image";
+import { PlaylistItemProps } from "@/components/forms/playlist/types/playlist-types";
 
 export type zodPlaylistSchema = z.infer<typeof updatePlaylistSchema>;
 
-async function updatePlaylistQuery() {
-
-}
-
 export const useUpdatePlaylist = ({
 	playlist
-}: {
-	playlist: PlaylistEntity | undefined
-}) => {
+}: PlaylistItemProps) => {
 	const { data: image } = useLoadImage(playlist?.image_path || '');
 
 	const form = useForm<zodPlaylistSchema>({
@@ -26,58 +19,5 @@ export const useUpdatePlaylist = ({
 		}
 	})
 
-	const updatePlaylistNameMutation = useMutation({
-		mutationFn: async () => {
-			try {
-
-			} catch (e) {
-				throw e;
-			}
-		},
-		onSuccess: async () => {
-
-		},
-		onError: () => {
-
-		}
-	})
-
-	const updatePlaylistDescriptionMutation = useMutation({
-		mutationFn: async () => {
-			try {
-
-			} catch (e) {
-				throw e;
-			}
-		},
-		onSuccess: async () => {
-
-		},
-		onError: () => {
-
-		}
-	})
-
-	const updatePlaylistImageMutation = useMutation({
-		mutationFn: async () => {
-			try {
-
-			} catch (e) {
-				throw e;
-			}
-		},
-		onSuccess: async () => {
-
-		},
-		onError: () => {
-
-		}
-	})
-
-	return {
-		updatePlaylistNameMutation,
-		updatePlaylistDescriptionMutation,
-		updatePlaylistImageMutation,
-		form
-	}
+	return { form }
 }

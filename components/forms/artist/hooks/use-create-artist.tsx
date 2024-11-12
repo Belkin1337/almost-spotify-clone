@@ -23,20 +23,16 @@ export type ArtistAttributesType = {
 }
 
 export function useCreateArtist() {
-	const { toast } = useToast();
 	const qc = useQueryClient()
 	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
-	
+	const { toast } = useToast();
 	const { uploadArtistImageMutation } = useCreateArtistImage();
 	const { uploadArtistCoverImageMutation } = useCreateArtistCoverImage();
 	
 	const form = useForm<zodArtistSchema>({
 		resolver: zodResolver(createArtistSchema),
 		defaultValues: {
-			name: '',
-			description: '',
-			cover_image: null,
-			avatar: null
+			name: '', description: '', cover_image: null, avatar: null
 		}
 	});
 	
@@ -57,7 +53,8 @@ export function useCreateArtist() {
 		},
 		onSuccess: async(data) => {
 			if (!data) return toast({
-				title: "Ошибка создания артиста. Повторите попытку позже!", variant: "red"
+				title: "Ошибка создания артиста. Повторите попытку позже!",
+				variant: "red"
 			})
 			
 			const artistId = data.id;

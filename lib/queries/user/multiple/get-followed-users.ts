@@ -1,38 +1,46 @@
-import { PostgrestResponse, PostgrestSingleResponse, SupabaseClient } from "@supabase/supabase-js";
+"use server"
+
 import { UserEntity } from "@/types/user";
-
-type FollowedUserType = {
-	userId: string,
-	users: Array<UserEntity>
-}
-
-type FollowedUserCountType = {
-	count: number
-}
+import { createClient } from "@/lib/utils/supabase/server/supabase-server";
 
 export async function getFollowedUsers(
-	client: SupabaseClient,
-	userId: string,
-	count?: number,
-): Promise<PostgrestSingleResponse<FollowedUserType[]>> {
-	let query = client
-		.from("followed_users")
-		.select("*, users(*)")
-		.eq("initiator_id", userId)
-
-	if (count) return query.limit(count)
-
-	return query;
+	userId: string, count?: number,
+): Promise<Array<UserEntity>> {
+	const supabase = await createClient();
+	
+	let query = supabase
+	.from("followed_users")
+	.select("*, users(*)")
+	.eq("initiator_id", userId)
+	
+	if (count) {
+		query.limit(count)
+	}
+	
+	const { data, error } = await query;
+	
+	if (error) {
+		throw new Error(error.message)
+	}
+	
+	return data.map(item => item.users);
 }
 
 export async function getFollowedUsersCount(
-	client: SupabaseClient,
 	userId: string,
-): Promise<PostgrestResponse<FollowedUserCountType>> {
-	let query = client
-		.from("followed_users")
-		.select("*", { count: "exact", head: true })
-		.eq("initiator_id", userId)
-
-	return query;
+): Promise<number> {
+	const supabase = await createClient();
+	
+	let query = supabase
+	.from("followed_users")
+	.select("*", { count: "exact", head: true })
+	.eq("initiator_id", userId)
+	
+	const { count, error } = await query;
+	
+	if (error) {
+		throw new Error(error.message)
+	}
+	
+	return count ?? 0;
 }

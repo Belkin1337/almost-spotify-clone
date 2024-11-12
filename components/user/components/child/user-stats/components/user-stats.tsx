@@ -26,12 +26,12 @@ export const UserStats = ({
 
 	const { data: followers } = useQuery({
 		queryKey: userFollowers(user.id),
-		queryFn: async () => await getFollowedUsersCount(supabase, user.id)
+		queryFn: () => getFollowedUsersCount(user.id)
 	})
 
 	const publicPlaylistsLength = publicPlaylists?.length;
 	const followedArtistsLength = followedArtists?.length;
-	const followersLength = followers?.count || 0;
+	const followersLength = followers || 0;
 
 	return (
 		<div className="flex items-center gap-2 overflow-hidden">

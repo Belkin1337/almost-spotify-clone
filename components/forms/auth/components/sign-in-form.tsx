@@ -9,7 +9,6 @@ import { signInSchema } from "@/components/forms/auth/schemas/schema-sign-in";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
 import { FormFieldItem } from "@/ui/form-field";
 import { Typography } from "@/ui/typography";
-import { useCallback } from "react";
 import { FiUserPlus } from "react-icons/fi";
 import { SignUpForm } from "./sign-up-form";
 import { Input } from "@/ui/input";
@@ -26,18 +25,17 @@ export const SignInForm = () => {
 		defaultValues: { email: "", password: "" },
 	})
 
-	const onSubmit = useCallback(async (values: zodSignInSchema) => {
-		await signInMutation.mutateAsync({
-			values: values
-		});
-	}, [signInMutation])
+	const onSubmit = (values: zodSignInSchema) => {
+		return signInMutation.mutate(values);
+	}
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className={`w-[460px] space-y-6 p-8 bg-neutral-900 rounded-xl ${error && 'border border-red-500'}`}>
-				<Typography>
-					Авторизация
-				</Typography>
+			<form
+				onSubmit={form.handleSubmit(onSubmit)}
+				className={`w-[460px] space-y-6 p-8 bg-neutral-900 rounded-xl ${error && 'border border-red-500'}`}
+			>
+				<Typography>Авторизация</Typography>
 				{error && <FormMessage>{error}</FormMessage>}
 				<FormField
 					control={form.control}
@@ -62,12 +60,9 @@ export const SignInForm = () => {
 					)}
 				/>
 				<Button type="submit" variant="form" align="centered" background_color="default" rounded="medium">
-					<Typography className="relative z-20">
-						Войти
-					</Typography>
+					<Typography className="relative z-20">Войти</Typography>
 				</Button>
-				<div
-					className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full"/>
+				<div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full"/>
 				<div
 					onClick={() => openDialog({ dialogChildren: <SignUpForm/> })}
 					className="flex items-center gap-x-2 cursor-pointer"

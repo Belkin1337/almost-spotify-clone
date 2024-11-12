@@ -17,11 +17,9 @@ export const AuthForm = () => {
 	
 	const { openDialog } = useDialog()
 
-	const handleDialogForm = useCallback((element: ReactElement) => {
-		if (!user) {
-			openDialog({ dialogChildren: element })
-		}
-	}, [openDialog, user])
+	const handleDialogForm = (element: ReactElement) => {
+		if (!user) openDialog({ dialogChildren: element })
+	}
 
 	return (
 		<div className="flex flex-col gap-y-12 p-8 w-[500px] h-fit bg-neutral-900 rounded-xl">
@@ -33,9 +31,7 @@ export const AuthForm = () => {
 					alt="Smotify"
 					title="Smotify"
 				/>
-				<Typography font="bold" className="text-3xl">
-					Smotify
-				</Typography>
+				<Typography font="bold" className="text-3xl">Smotify</Typography>
 			</div>
 			<div className="flex flex-col items-center justify-center gap-x-1 w-full">
 				<Typography font="bold" className="text-2xl">

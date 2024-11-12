@@ -10,7 +10,7 @@ import { ChevronRight, Copy, ListMinus, Radio, SquareCode, Upload } from "lucide
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/ui/hover-card";
 import { Input } from "@/ui/input";
 import { usePlaylistsListByUser } from "@/lib/query/playlist/playlists-by-user-query";
-import { USER_QUERY_KEY, useUserQuery } from "@/lib/query/user/user-query";
+import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { useFollowedSongsQuery } from "@/lib/query/user/followed-songs-query";
 import { useCallback } from "react"
 import { SongEntity } from "@/types/song";
