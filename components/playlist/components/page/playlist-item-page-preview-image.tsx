@@ -1,4 +1,3 @@
-import { PlaylistEntity } from "@/types/playlist";
 import { useLoadImage } from "@/lib/hooks/image/use-load-image";
 import Image from "next/image";
 import { SkeletonPlaylistImage } from "@/components/skeletons/playlist/skeleton-playlist-image/skeleton-playlist-image";
@@ -19,9 +18,7 @@ export const PlaylistItemPagePreviewImage = ({
 	const { openDialog } = useDialog();
 
 	if (isLoading || !image?.url) return <SkeletonPlaylistImage/>
-
-	if (!playlist) return;
-
+	
 	return (
 		<div className="flex relative group overflow-hidden h-[224px] w-[224px] rounded-md">
 			<Image
@@ -34,8 +31,11 @@ export const PlaylistItemPagePreviewImage = ({
 			/>
 			{currentUserPlaylist && (
 				<div
-					onClick={() => openDialog({ dialogChildren: <PlaylistEditForm playlist={playlist}/> })}
-					className="group-hover:flex flex-col gap-y-4 cursor-pointer items-center justify-center hidden w-full top-0 bg-black/60 right-0 left-0 bottom-0 absolute h-full"
+					onClick={() => openDialog({
+						dialogChildren: <PlaylistEditForm playlist={playlist}/>
+					})}
+					className="group-hover:flex flex-col gap-y-4 cursor-pointer items-center justify-center hidden w-full
+					 top-0 bg-black/60 right-0 left-0 bottom-0 absolute h-full"
 				>
 					<FaPen size={46}/>
 					<Typography font="semibold">

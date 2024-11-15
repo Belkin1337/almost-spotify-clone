@@ -4,14 +4,16 @@ import { Typography } from "@/ui/typography";
 import { usePlaylistsListByUser } from "@/lib/query/playlist/playlists-by-user-query";
 import { PlaylistCard } from "@/components/playlist/components/card/playlist-card";
 
+type UserPublicPlaylistsProps = {
+	userId: string
+}
+
 export const UserPublicPlaylists = ({
 	userId
-}: {
-	userId: string
-}) => {
-	const { data: userPlaylists, isLoading } = usePlaylistsListByUser(userId);
+}: UserPublicPlaylistsProps) => {
+	const { data: userPlaylists } = usePlaylistsListByUser({ userId });
 
-	if (userPlaylists?.length === 0) return;
+	if (!userPlaylists || !userPlaylists.length) return;
 
 	return (
 		<div className="flex relative flex-col gap-y-4">

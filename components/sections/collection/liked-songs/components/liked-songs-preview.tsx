@@ -17,7 +17,7 @@ export const LikedSongsPreview = () => {
   const { data: followedSongs, isError } = useFollowedSongsQuery(user.id);
   const likedPageLocale = useScopedI18n('main-service.pages.liked-content.navbar')
 
-  if (!followedSongs?.songs || isError) return;
+  if (!followedSongs || isError) return;
 
   return (
     <div className="flex z-20 relative flex-col md:flex-row items-end gap-x-5 py-16 p-6">
@@ -40,7 +40,7 @@ export const LikedSongsPreview = () => {
         <div className="flex items-center justify-start">
           <UserCollectionCard
             variant="miniauture"
-            followed_songs_length={followedSongs.songs?.length}
+            followed_songs_length={followedSongs.length}
           />
         </div>
       </div>

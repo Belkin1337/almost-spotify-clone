@@ -24,7 +24,6 @@ export const NavbarSearch = () => {
       push(pathname + '?' + createQueryString('title', value))
      else
       push(pathname);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [push, value])
 
   return (

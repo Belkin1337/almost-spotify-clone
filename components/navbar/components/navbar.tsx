@@ -16,8 +16,9 @@ import { INavbar, navbarVariants } from "@/components/navbar/types/navbar-types"
 import dynamic from "next/dynamic"
 import { search_route } from "@/lib/constants/routes/routes";
 
-const SearchInput = dynamic(() => import("@/components/navbar/components/navbar-search")
-	.then(mod => mod.NavbarSearch))
+const SearchInput = dynamic(() =>
+	import("@/components/navbar/components/navbar-search").then(mod => mod.NavbarSearch)
+)
 
 export const Navbar = memo(({
 	user, inView, type, className

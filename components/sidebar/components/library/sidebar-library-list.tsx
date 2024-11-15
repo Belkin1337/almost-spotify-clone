@@ -18,7 +18,9 @@ export const SidebarLibraryList = memo(() => {
 	if (!user) return null;
 	
 	const { data: followedArtist } = useFollowedArtistsQuery(user?.id)
-	const { data: createdPlaylists } = usePlaylistsListByUser(user?.id, true)
+	const { data: createdPlaylists } = usePlaylistsListByUser({
+		userId: user.id, show_hidden_playlists: true
+	})
 	const { data: resizeState } = useResizePanelsQuery()
 	const { data: sidebarSort } = useSortSidebarLibraryQuery();
 

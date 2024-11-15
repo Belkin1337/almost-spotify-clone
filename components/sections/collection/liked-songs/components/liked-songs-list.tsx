@@ -55,25 +55,25 @@ export const LikedSongsList = memo(() => {
 	}, [inView]);
 
 	const getRandomFollowedSong = useCallback(() => {
-		if (followedSongs?.songs) {
-			return Math.floor(Math.random() * followedSongs?.songs.length);
+		if (followedSongs) {
+			return Math.floor(Math.random() * followedSongs.length);
 		} else return 1
-	}, [followedSongs?.songs])
+	}, [followedSongs])
 
 	const randomFollowedSong = getRandomFollowedSong();
 
-	if (isError && !followedSongs?.songs) return <SomethingWrongError/>
+	if (isError && !followedSongs) return <SomethingWrongError/>
 
 	return (
 		followedSongs && (
-			followedSongs.songs?.length === 0 ? <CollectionTracksNotFounded/> : (
+			followedSongs?.length === 0 ? <CollectionTracksNotFounded/> : (
 				<>
 					<PlaylistToolsBar
-						song={followedSongs.songs[randomFollowedSong]}
-						song_list={followedSongs.songs}
+						song={followedSongs[randomFollowedSong]}
+						song_list={followedSongs}
 					/>
 					<SongListWrapper ref={ref}>
-						{followedSongs?.songs.map((song,
+						{followedSongs.map((song,
 							idx) => (
 							<SongItem
 								type="follow"
@@ -83,7 +83,7 @@ export const LikedSongsList = memo(() => {
 								song_list={{
 									id: String(idx + 1),
 									created_at: song.created_at_by_list || '1',
-									data: followedSongs.songs
+									data: followedSongs
 								}}
 							/>
 						))}

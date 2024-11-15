@@ -2,24 +2,12 @@ import { Badge } from "@/ui/badge";
 import { Typography } from "@/ui/typography";
 
 const NAVIGATION_TYPES_LIST = [
-	{
-		name: "All"
-	},
-	{
-		name: "Songs"
-	},
-	{
-		name: "Albums"
-	},
-	{
-		name: "Artists"
-	},
-	{
-		name: "Playlists"
-	},
-	{
-		name: "Profiles"
-	}
+	{ name: "All" },
+	{ name: "Songs" },
+	{ name: "Albums" },
+	{ name: "Artists" },
+	{ name: "Playlists" },
+	{ name: "Profiles" }
 ]
 
 export const SearchNavigationBar = () => {

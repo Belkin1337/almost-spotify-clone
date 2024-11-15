@@ -19,9 +19,7 @@ interface IUpdateAvatarFormFields {
 }
 
 export const UpdateAvatarFormFields = ({
-	form,
-	refs,
-	isLoading
+	form, refs, isLoading
 }: IUpdateAvatarFormFields) => {
 	return (
 		<>

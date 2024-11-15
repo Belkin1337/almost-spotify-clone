@@ -26,15 +26,15 @@ export const usePlayNext = () => {
 	const { data: artistBySong } = useSongArtistListQuery(currentSong?.id || "")
 
 	const setRandomFollowedSong = useCallback(async () => {
-		if (followedSongs && followedSongs?.songs!.length >= 2) {
-			const _randomIdxFollowedSongs = Math.floor(Math.random() * followedSongs?.songs?.length!);
+		if (followedSongs && followedSongs.length >= 2) {
+			const _randomIdxFollowedSongs = Math.floor(Math.random() * followedSongs.length!);
 
-			const nextSong = followedSongs.songs![_randomIdxFollowedSongs];
+			const nextSong = followedSongs[_randomIdxFollowedSongs];
 
 			if (currentSong !== nextSong) {
 				await setNewSongAttributes({
 					nextSong: nextSong,
-					nextSongArray: followedSongs.songs!
+					nextSongArray: followedSongs
 				})
 
 			} else {

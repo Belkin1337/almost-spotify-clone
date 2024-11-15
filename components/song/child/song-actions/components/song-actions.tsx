@@ -43,9 +43,13 @@ export const SongActions = ({
 }: ISongActions) => {
 	const qc = useQueryClient()
 	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
+	if (!user) return null;
+	
 	const { push } = useRouter();
-	const { data: followedSongs } = useFollowedSongsQuery(user?.id)
-	const { data: userPlaylists } = usePlaylistsListByUser(user?.id, true, 6)
+	const { data: followedSongs } = useFollowedSongsQuery(user.id)
+	const { data: userPlaylists } = usePlaylistsListByUser({
+		userId: user.id, show_hidden_playlists: true, count: 6
+	})
 	
 	const songArtists = qc.getQueryData<ArtistBySong>(
 		songArtistsQueryKey(song.id)
@@ -56,7 +60,7 @@ export const SongActions = ({
 	const checkSongFollowStatus = useCallback((
 		songId: string
 	) => {
-		if (followedSongs) return followedSongs.songs!.some(item => item.id === songId);
+		if (followedSongs) return followedSongs.some(item => item.id === songId);
 		
 		return false;
 	}, [ followedSongs ])

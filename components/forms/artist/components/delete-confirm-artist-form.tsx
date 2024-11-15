@@ -1,9 +1,7 @@
 import { Button } from "@/ui/button";
 import { SongPlayingBar } from "@/ui/song-playing-bar";
 import { useDialog } from "@/lib/hooks/ui/use-dialog";
-import { useCallback } from "react";
 import { useDeleteArtist } from "@/components/forms/artist/hooks/use-delete-artist";
-import { useToast } from "@/lib/hooks/ui/use-toast";
 import { Typography } from "@/ui/typography";
 import { ArtistItemProps } from "@/components/artist/types/artist-types";
 import { UserEntity } from "@/types/user";

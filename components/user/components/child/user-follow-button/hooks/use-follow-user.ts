@@ -20,7 +20,7 @@ export const useFollowUser = (
 
 	const getFollowed = useCallback(async () => {
 		if (user && responder_id) {
-			return await getFollowedUser(supabase, user?.id, responder_id)
+			return getFollowedUser(supabase, user?.id, responder_id)
 		}
 	}, [responder_id, user])
 

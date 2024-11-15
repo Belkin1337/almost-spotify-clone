@@ -11,40 +11,35 @@ import { UserEntity } from "@/types/user";
 import { useQueryClient } from "@tanstack/react-query"
 
 export const CreateSongForm = () => {
-	const [imageRef, songRef] = [
+	const qc = useQueryClient()
+	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
+	if (!user) return null;
+	
+	const [ imageRef, songRef ] = [
 		useRef<HTMLInputElement>(null),
 		useRef<HTMLInputElement>(null)
 	];
 	
-	const qc = useQueryClient()
-	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
-	if (!user) return null;
 	const { createSongMutation, form } = useCreateSong();
-
-	const onSubmit = useCallback(async (
-		values: zodSongSchema
-	) => {
-		try {
-			if (!values || !songRef.current || !imageRef.current) return;
-
-			const songFile = songRef.current.files ? songRef.current.files[0] : null;
-			const imageFile = imageRef.current.files ? imageRef.current.files[0] : null;
-
-			if (songFile && imageFile && values) await createSongMutation.mutateAsync({
+	
+	const onSubmit = (values: zodSongSchema) => {
+		if (!values || !songRef.current || !imageRef.current) return;
+		
+		const songFile = songRef.current.files ? songRef.current.files[0] : null;
+		const imageFile = imageRef.current.files ? imageRef.current.files[0] : null;
+		
+		if (songFile && imageFile && values) {
+			return createSongMutation.mutate({
 				title: values.title,
 				artists: values.artists,
 				genre: values.genre,
 				song: songFile,
 				image: imageFile,
 				single: !!values.single
-			});
-		} catch (error) {
-			throw error;
+			})
 		}
-	}, [createSongMutation, songRef, imageRef])
-
-	if (!user) return;
-
+	}
+	
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-6">

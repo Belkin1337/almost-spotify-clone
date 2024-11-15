@@ -39,25 +39,12 @@ export const EditSongFormFields = ({
 	const { data: userArtists } = useUserArtistListQuery(user?.id!);
 	const { data: genres } = useGenresQuery();
 	const { changeInputValues, handleRemoveArtist } = useAddFieldsValue();
-
-	const { songPreviewState, setSongPreviewAttributes } = useSongPreviewState({
-		song: song
-	});
-
+	const { songPreviewState, setSongPreviewAttributes } = useSongPreviewState({ song });
 	const uploadModalLocale = useScopedI18n('main-service.main-part.config')
 
-	const handleInputValues = (
-		key: keyof zodSongSchema,
-		value: string
-	) => {
+	const handleInputValues = (key: keyof zodSongSchema, value: string) => {
 		return changeInputValues({
-			form: form,
-			key: key,
-			genres: genres,
-			userArtists: userArtists,
-			value: value,
-			songPreviewState: songPreviewState,
-			setSongPreviewAttributes: setSongPreviewAttributes
+			form, key, genres, userArtists, value, songPreviewState, setSongPreviewAttributes
 		})
 	}
 

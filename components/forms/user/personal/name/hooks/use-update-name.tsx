@@ -21,77 +21,66 @@ type UpdateUserNameQueryType = {
 }
 
 async function updateUserNameQuery({
-	fullName,
-	userId
+	fullName, userId
 }: UpdateUserNameQueryType) {
 	const { data: updatedUserName, error: updatedUserNameErr } = await supabase
-		.from("users")
-		.update({ full_name: fullName })
-		.eq("id", userId)
-		.select()
-
-	if (updatedUserNameErr) throw updatedUserNameErr;
-
+	.from("users")
+	.update({ full_name: fullName })
+	.eq("id", userId)
+	.select()
+	
+	if (updatedUserNameErr) throw new Error(updatedUserNameErr.message);
+	
 	return { updatedUserName }
 }
 
 export const useUpdateName = () => {
 	const qc = useQueryClient();
 	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
-
 	const { toast } = useToast();
 	const { closeDialog } = useDialog()
 	const { refresh } = useRouter()
-
+	
 	const form = useForm<zodNameSchema>({
 		resolver: zodResolver(updateNameSchema),
-		defaultValues: {
-			full_name: user?.full_name
-		}
+		defaultValues: { fullName: user?.full_name }
 	})
-
+	
 	const uploadUserNameMutation = useMutation({
-		mutationFn: async (
-			{ full_name, userId }: UpdateAttributesType
-		) => {
-			if (full_name && userId) {
-				const { updatedUserName } = await updateUserNameQuery({
-					fullName: full_name,
-					userId: userId
-				})
-
-				return updatedUserName as UserEntity[];
-			}
+		mutationFn: async({ fullName, userId }: UpdateAttributesType) => {
+			if (!fullName || !userId) return;
+			
+			const { updatedUserName } = await updateUserNameQuery({
+				fullName: fullName, userId
+			})
+			
+			return updatedUserName as UserEntity[];
 		},
-		onSuccess: async (data) => {
-			if (data) {
-				const user = data[0];
-
-				toast({
-					title: MESSAGE_SUCCESS_USER_UPDATE_NAME,
-					variant: "right",
-					description: (
-						<Typography className="!text-black">
-							Изменения &gt; {user.full_name}
-						</Typography>
-					),
-				})
-
-				closeDialog();
-				refresh();
-
-				return qc.invalidateQueries({
-					queryKey: userQueryKey
-				})
-			}
-		},
-		onError: () => {
-			toast({
+		onSuccess: async(data) => {
+			if (!data) return toast({
 				title: MESSAGE_ERROR_USER_UPDATE_ROW,
 				variant: "red"
 			})
-		}
+			
+			const user = data[0];
+			
+			toast({
+				title: MESSAGE_SUCCESS_USER_UPDATE_NAME,
+				variant: "right",
+				description: (
+					<Typography className="!text-black">
+						Изменения &gt; {user.full_name}
+					</Typography>
+				),
+			})
+			
+			closeDialog();
+			refresh();
+			
+			return qc.invalidateQueries({ queryKey: userQueryKey })
+		},
+		onError: e => {throw new Error(e.message)}
 	})
-
+	
 	return { form, uploadUserNameMutation, }
 }

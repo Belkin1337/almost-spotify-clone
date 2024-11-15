@@ -34,9 +34,7 @@ export const PagePlaylistItem = ({
 	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
 	if (!user) return null;
 	
-	const [currentUserPlaylist, setCurrentUserPlaylist] = useState<boolean | undefined>(
-		undefined
-	);
+	const [currentUserPlaylist, setCurrentUserPlaylist] = useState<boolean | undefined>(undefined);
 	
 	const { data: playlist, isError } = usePlaylistQuery(playlistId);
 	const { data: cover, } = useLoadImage(playlist?.image_path!);

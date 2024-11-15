@@ -14,11 +14,7 @@ export const PlaylistCard = ({
 	const { push } = useRouter()
 	const { data: image } = useLoadImage(playlist.image_path!);
 
-	const targetToPlaylist = (id: string) => {
-		push(playlist_route(id))
-	}
-
-	if (!playlist) return;
+	const targetToPlaylist = (id: string) => push(playlist_route(id))
 
 	return (
 		<AlbumItem onClick={() => targetToPlaylist(playlist.id)}>

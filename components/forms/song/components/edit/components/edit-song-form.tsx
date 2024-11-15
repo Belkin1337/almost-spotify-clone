@@ -17,18 +17,15 @@ export const EditSongForm = ({
 
 	const imageRef = useRef<HTMLInputElement>(null)
 
-	const onSubmit = useCallback(async (
-		values: zodSongSchema
-	) => {
+	const onSubmit = (values: zodSongSchema) => {
 		if (!values) return;
 
-		await editSongMutation.mutateAsync({
-			id: song?.id,
-			title: values.title,
-			artists: values.artists,
-			genre: values.genre
+		const { song, title, artists, genre } = values;
+		
+		return editSongMutation.mutate({
+			id: song?.id, title, artists, genre
 		})
-	}, [editSongMutation, song?.id])
+	}
 
 	if (!user || !song) return;
 

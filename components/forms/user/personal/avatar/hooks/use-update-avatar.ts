@@ -24,8 +24,7 @@ type UpdateUserAvatarQueryType = {
 }
 
 async function updateUserAvatarQuery({
-	imagePath,
-	userId
+	imagePath, userId
 }: UpdateUserAvatarQueryType) {
 	const { data: updatedUserAvatar, error: updatedUserAvatarErr } = await supabase
 	.from("users")
@@ -33,7 +32,7 @@ async function updateUserAvatarQuery({
 	.eq("id", userId)
 	.select();
 	
-	if (updatedUserAvatarErr) throw updatedUserAvatarErr;
+	if (updatedUserAvatarErr) throw new Error(updatedUserAvatarErr.message);
 	
 	return { updatedUserAvatar }
 }
@@ -45,13 +44,9 @@ export const useUpdateAvatar = () => {
 	const { toast } = useToast()
 	const { refresh } = useRouter();
 	
-	const queryClient = useQueryClient();
-	
 	const form = useForm<zodAvatarSchema>({
 		resolver: zodResolver(updateAvatarSchema),
-		defaultValues: {
-			avatar: null,
-		}
+		defaultValues: { avatar: null }
 	})
 	
 	const uploadFileMutation = useMutation({
@@ -72,19 +67,19 @@ export const useUpdateAvatar = () => {
 	
 	const uploadAvatarMutation = useMutation({
 		mutationFn: async(values: UpdateAttributesType) => {
-			if (values && user) {
-				const [ userData ] = await Promise.all([
-					uploadFileMutation.mutateAsync(values),
-				]);
+			if (!values || !user) return;
+			
+			const [ userData ] = await Promise.all([
+				uploadFileMutation.mutateAsync(values),
+			]);
+			
+			if (userData && values.userId) {
+				const { updatedUserAvatar } = await updateUserAvatarQuery({
+					imagePath: userData.path,
+					userId: values.userId
+				})
 				
-				if (userData && values.userId) {
-					const { updatedUserAvatar } = await updateUserAvatarQuery({
-						imagePath: userData.path,
-						userId: values.userId
-					})
-					
-					return updatedUserAvatar;
-				}
+				return updatedUserAvatar;
 			}
 		},
 		onSuccess: async(data) => {
@@ -101,7 +96,7 @@ export const useUpdateAvatar = () => {
 			closeDialog();
 			refresh();
 			
-			await queryClient.invalidateQueries({
+			await qc.invalidateQueries({
 				queryKey: userAvatarQueryKey(user?.id),
 			});
 		},

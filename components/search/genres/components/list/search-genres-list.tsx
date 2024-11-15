@@ -12,8 +12,6 @@ export const SearchGenresList = ({
 	genres
 }: SearchGenresListProps) => {
 	const { cols } = useGrid()
-
-	console.log(cols)
 	
 	return (
 		<div

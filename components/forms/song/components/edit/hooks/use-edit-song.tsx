@@ -20,8 +20,7 @@ type UpdateSongQueryType = {
 }
 
 async function updateSongQuery({
-	userId,
-	values
+	userId, values
 }: UpdateSongQueryType) {
 	const { data: updatedSong, error: updatedSongErr } = await supabase
 	.from("songs")
@@ -33,7 +32,7 @@ async function updateSongQuery({
 	.eq("id", values.id)
 	.select()
 	
-	if (updatedSongErr) throw updatedSongErr;
+	if (updatedSongErr) throw new Error(updatedSongErr.message);
 	
 	return { updatedSong }
 }
@@ -80,9 +79,7 @@ export function useEditSong(
 				),
 			})
 		},
-		onError: e => {
-			throw new Error(e.message)
-		}
+		onError: e => {throw new Error(e.message)}
 	});
 	
 	return { editSongMutation, form };

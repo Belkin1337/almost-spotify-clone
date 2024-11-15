@@ -1,37 +1,44 @@
-import { PostgrestSingleResponse, SupabaseClient } from "@supabase/supabase-js";
-import { PlaylistEntity } from "@/types/playlist";
+"use server"
 
-export async function getPlaylistsByUser(
-	client: SupabaseClient,
-	userId?: string,
+import { PlaylistEntity } from "@/types/playlist";
+import { createClient } from "@/lib/utils/supabase/server/supabase-server";
+
+export type GetPlaylistsByUser = {
+	userId: string,
 	show_hidden_playlists?: boolean,
 	count?: number
-): Promise<PostgrestSingleResponse<PlaylistEntity[]>> {
-	let query = client
-		.from("playlists")
-		.select("*")
-		.eq("user_id", userId)
+}
 
+export async function getPlaylistsByUser({
+	userId, show_hidden_playlists, count
+}: GetPlaylistsByUser): Promise<PlaylistEntity[]> {
+	const supabase = await createClient()
+	
+	let query = supabase
+	.from("playlists")
+	.select("*")
+	.eq("user_id", userId)
+	
 	// по умолчанию show_hidden_playlists = false / count = null
 	//
 	// show_hidden_playlists = если true - показывать приватные плейлисты юзера, иначе скрывать
 	// count - кол-во выводимых элементов в результате запроса
-
+	
 	if (show_hidden_playlists) {
-		if (count) {
-			return query.limit(count)
-		} else {
-			return query
-		}
+		if (count) query.limit(count)
 	} else {
 		if (count) {
-			return query.contains("attributes", {
-				is_public: true
-			}).limit(count)
+			query.contains("attributes", { is_public: true }).limit(count)
 		} else {
-			return query.contains("attributes", {
-				is_public: true
-			})
+			query.contains("attributes", { is_public: true })
 		}
 	}
+	
+	const { data, error } = await query;
+	
+	if (error) {
+		throw new Error(error.message)
+	}
+	
+	return data;
 }

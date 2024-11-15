@@ -21,7 +21,6 @@ export const PlaylistItemPageRecommendationSongs = ({
 
 	useEffect(() => {
 		setCount((prev) => prev + 1);
-
 		refetch();
 	}, [refetch, playlistSongs]);
 

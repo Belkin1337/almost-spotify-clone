@@ -16,7 +16,7 @@ export const useUserFollowedSongsByArtist = (
 	const followedSongsByArtist = useCallback(() => {
 		if (!userFollowedSongs || !artistSongs) return [];
 
-		const likedSongIds = userFollowedSongs.songs?.map(
+		const likedSongIds = userFollowedSongs.map(
 			followedSong => followedSong.id
 		);
 

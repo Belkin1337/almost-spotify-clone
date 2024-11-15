@@ -1,12 +1,14 @@
-import { PostgrestSingleResponse, SupabaseClient } from "@supabase/supabase-js";
-import { FollowedSongs } from "@/types/song";
+"use server"
+
+import { SongEntity } from "@/types/song";
+import { createClient } from "@/lib/utils/supabase/server/supabase-server";
 
 export async function getFollowedSongs(
-  client: SupabaseClient,
-  userId?: string,
-  count?: number
-): Promise<PostgrestSingleResponse<FollowedSongs[]>> {
-  let query = client
+  userId: string, count?: number
+): Promise<SongEntity[]> {
+  const supabase = await createClient()
+  
+  let query = supabase
     .from("liked_songs")
     .select("*, songs(*)")
     .eq("user_id", userId)
@@ -14,7 +16,13 @@ export async function getFollowedSongs(
       ascending: false,
     });
 
-  if (count) return query.limit(count);
+  if (count) query.limit(count);
 
-  return query;
+  const { data, error } = await query;
+  
+  if (error) {
+    throw new Error(error.message)
+  }
+  
+  return data.flatMap(item => item.songs);
 }

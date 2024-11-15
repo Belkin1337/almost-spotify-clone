@@ -1,6 +1,5 @@
 import { USER_QUERY_KEY } from "@/lib/query/user/user-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { usePlaylistsListByUser } from "@/lib/query/playlist/playlists-by-user-query";
 import { PlaylistEntity } from "@/types/playlist";
 import { useToast } from "@/lib/hooks/ui/use-toast";
 import { useRouter } from "next/navigation";
@@ -12,18 +11,19 @@ import { createPlaylist } from "@/components/forms/playlist/queries/create-playl
 import { createPlaylistUsers } from "@/components/forms/playlist/queries/create-playlist-users";
 
 export const useCreatePlaylist = () => {
-	const { toast } = useToast()
-	const { push } = useRouter()
 	const qc = useQueryClient()
 	const user = qc.getQueryData<UserEntity>(USER_QUERY_KEY)
-	const { data: userPlaylists } = usePlaylistsListByUser(user?.id!)
-	
-	const userPlaylistsLength = userPlaylists ? userPlaylists?.length + 1 : 1;
-	const defaultPlaylistTitle = `My Playlist #${userPlaylistsLength}`
+	const { toast } = useToast()
+	const { push } = useRouter()
 	
 	const createPlaylistMutation = useMutation({
 		mutationFn: async() => {
 			if (!user) return;
+			
+			const userPlaylists = qc.getQueryData<PlaylistEntity[]>(userPlaylistsQueryKey(user.id))
+			
+			const userPlaylistsLength = userPlaylists ? userPlaylists?.length + 1 : 1;
+			const defaultPlaylistTitle = `My Playlist #${userPlaylistsLength}`
 			
 			const newPlaylist = await createPlaylist({
 				userId: user.id, title: defaultPlaylistTitle

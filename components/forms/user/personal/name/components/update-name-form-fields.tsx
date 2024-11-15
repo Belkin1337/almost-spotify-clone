@@ -9,19 +9,11 @@ import { Input } from "@/ui/input";
 import { zodNameSchema } from "@/components/forms/user/personal/name/types/update-name-types";
 
 export const UserUpdateNameFormFields = ({
-	form,
-	isLoading,
-	user
-}: {
-	form: UseFormReturn<zodNameSchema>,
-	isLoading: boolean,
-	user: UserEntity
-}) => {
+	form, isLoading, user
+}: { form: UseFormReturn<zodNameSchema>, isLoading: boolean, user: UserEntity }) => {
 	return (
 		<>
-			<Typography>
-				Данные профиля
-			</Typography>
+			<Typography>Данные профиля</Typography>
 			<div className="flex items-center gap-x-6 justify-between gap-y-6">
 				<div className="flex overflow-hidden h-[224px] w-[224px] rounded-full">
 					<UserAvatar user={user!}/>
@@ -29,7 +21,7 @@ export const UserUpdateNameFormFields = ({
 				<div className="flex flex-col gap-y-8 w-1/2">
 					<FormField
 						control={form.control}
-						name="full_name"
+						name="fullName"
 						render={({ field }) => (
 							<FormFieldItem label="Имя" {...field}>
 								<Input
@@ -40,14 +32,8 @@ export const UserUpdateNameFormFields = ({
 							</FormFieldItem>
 						)}
 					/>
-					<Button
-						disabled={isLoading}
-						variant="form"
-						type="submit"
-					>
-						<Typography>
-							Обновить
-						</Typography>
+					<Button disabled={isLoading} variant="form" type="submit">
+						<Typography>Обновить</Typography>
 					</Button>
 				</div>
 			</div>
